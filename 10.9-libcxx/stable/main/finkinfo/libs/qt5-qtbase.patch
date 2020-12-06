@@ -64,12 +64,23 @@ diff -ruN qtbase-opensource-src-5.6.0-orig/mkspecs/features/qt_module.prf qtbase
      CONFIG += create_pc
      QMAKE_PKGCONFIG_DESTDIR = pkgconfig
      host_build: \
-diff -ruN qtbase-opensource-src-5.6.0-orig/mkspecs/macx-clang/qmake.conf qtbase-opensource-src-5.6.0/mkspecs/macx-clang/qmake.conf
---- qtbase-opensource-src-5.6.0-orig/mkspecs/macx-clang/qmake.conf	2016-03-03 05:35:22.000000000 -0600
-+++ qtbase-opensource-src-5.6.0/mkspecs/macx-clang/qmake.conf	2016-03-18 22:02:34.000000000 -0500
+diff -ruN qtbase-opensource-src-5.7.1-orig/mkspecs/macx-clang/qmake.conf qtbase-opensource-src-5.7.1/mkspecs/macx-clang/qmake.conf
+--- qtbase-opensource-src-5.7.1-orig/mkspecs/macx-clang/qmake.conf	2016-12-01 02:17:04.000000000 -0600
++++ qtbase-opensource-src-5.7.1/mkspecs/macx-clang/qmake.conf	2019-03-12 19:54:50.000000000 -0500
 @@ -11,6 +11,6 @@
  include(../common/clang.conf)
  include(../common/clang-mac.conf)
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.8
++QMAKE_MACOSX_DEPLOYMENT_TARGET = @MACOSX_DEPLOYMENT_TARGET@
+ 
+ load(qt_config)
+diff -ruN qtbase-opensource-src-5.7.1-orig/mkspecs/macx-g++/qmake.conf qtbase-opensource-src-5.7.1/mkspecs/macx-g++/qmake.conf
+--- qtbase-opensource-src-5.7.1-orig/mkspecs/macx-g++/qmake.conf	2016-12-01 02:17:04.000000000 -0600
++++ qtbase-opensource-src-5.7.1/mkspecs/macx-g++/qmake.conf	2019-03-12 19:55:15.000000000 -0500
+@@ -14,6 +14,6 @@
+ include(../common/gcc-base-mac.conf)
+ include(../common/g++-macx.conf)
  
 -QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.8
 +QMAKE_MACOSX_DEPLOYMENT_TARGET = @MACOSX_DEPLOYMENT_TARGET@
@@ -149,22 +160,28 @@ diff -ruN qtbase-opensource-src-5.6.0-orig/src/plugins/platforms/cocoa/cocoa.pro
 diff -ruN qtbase-opensource-src-5.7.1-orig/src/corelib/global/qsystemdetection.h qtbase-opensource-src-5.7.1/src/corelib/global/qsystemdetection.h
 --- qtbase-opensource-src-5.7.1-orig/src/corelib/global/qsystemdetection.h	2016-12-01 02:17:04.000000000 -0600
 +++ qtbase-opensource-src-5.7.1/src/corelib/global/qsystemdetection.h	2017-10-23 22:33:56.000000000 -0500
-@@ -270,6 +270,9 @@
+@@ -270,6 +270,12 @@
  #  if !defined(__MAC_10_12)
  #       define __MAC_10_12 101200
  #  endif
 +#  if !defined(__MAC_10_13)
 +#       define __MAC_10_13 101300
 +#  endif
++#  if !defined(__MAC_10_14)
++#       define __MAC_10_14 101400
++#  endif
  #  if !defined(MAC_OS_X_VERSION_10_7)
  #       define MAC_OS_X_VERSION_10_7 1070
  #  endif
-@@ -288,6 +291,9 @@
+@@ -288,6 +294,12 @@
  #  if !defined(MAC_OS_X_VERSION_10_12)
  #       define MAC_OS_X_VERSION_10_12 101200
  #  endif
 +#  if !defined(MAC_OS_X_VERSION_10_13)
 +#       define MAC_OS_X_VERSION_10_13 101300
++#  endif
++#  if !defined(MAC_OS_X_VERSION_10_14)
++#       define MAC_OS_X_VERSION_10_14 101400
 +#  endif
  #
  #  if !defined(__IPHONE_4_3)
@@ -196,3 +213,31 @@ diff -ruN qtbase-opensource-src-5.7.1-orig/src/network/access/access.pri qtbase-
  mac: LIBS_PRIVATE += -framework Security
  
  include($$PWD/../../3rdparty/zlib_dependency.pri)
+From bf131e8d2181b3404f5293546ed390999f760404 Mon Sep 17 00:00:00 2001
+From: Olivier Goffart <ogoffart@woboq.com>
+Date: Fri, 8 Nov 2019 11:30:40 +0100
+Subject: Do not load plugin from the $PWD
+
+I see no reason why this would make sense to look for plugins in the current
+directory. And when there are plugins there, it may actually be wrong
+
+Change-Id: I5f5aa168021fedddafce90effde0d5762cd0c4c5
+Reviewed-by: Thiago Macieira <thiago.macieira@intel.com>
+---
+ src/corelib/plugin/qpluginloader.cpp | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/corelib/plugin/qpluginloader.cpp b/src/corelib/plugin/qpluginloader.cpp
+index cadff4f32b..c2443dbdda 100644
+--- a/src/corelib/plugin/qpluginloader.cpp
++++ b/src/corelib/plugin/qpluginloader.cpp
+@@ -305,7 +305,6 @@ static QString locatePlugin(const QString& fileName)
+         paths.append(fileName.left(slash)); // don't include the '/'
+     } else {
+         paths = QCoreApplication::libraryPaths();
+-        paths.prepend(QStringLiteral(".")); // search in current dir first
+     }
+ 
+     for (const QString &path : qAsConst(paths)) {
+-- 
+cgit v1.2.1

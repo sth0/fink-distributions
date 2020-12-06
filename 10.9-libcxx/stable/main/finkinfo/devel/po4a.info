@@ -1,7 +1,7 @@
 Package: po4a
 Version: 0.47
 Revision: 1
-Distribution: 10.10, 10.11, 10.12, 10.13
+Distribution: 10.10, 10.11, 10.12, 10.13, 10.14
 ###
 ###   *  Unicode::GCString is not installed (Unicode-LineBreak)
 BuildDepends: <<
@@ -11,7 +11,7 @@ BuildDepends: <<
 	sgmls-pm,
 	term-readkey-pm5182,
 	libxslt-bin,
-	module-build-pm
+	module-build-pm (>= 1:0.42.0-1)
 <<
 Depends: <<
 	gettext-tools,

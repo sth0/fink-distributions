@@ -1,11 +1,14 @@
 Info2: <<
 Package: hdf5.10-oldapi-gfortran
+# v1.8.16 is last of the libhdf5_cpp libN=11.
+# v1.8.17 bumps libhdf5_cpp to libN=12.
+# v1.8.21 (last 1.8) bumps libhdf5_cpp to libN=16.
 Version: 1.8.16
-Revision: 2
-Type: gcc (5)
+Revision: 3
+Type: gcc (9)
 Description: HDF5 (v1.6 API)--static FORTRAN libraries
 License: OSI-Approved
-Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+Maintainer: None <fink-devel@lists.sourceforge.net>
 
 BuildDepends: <<
 	gcc%type_pkg[gcc]-compiler,
@@ -39,7 +42,7 @@ Conflicts: <<
 <<
 BuildDependsOnly: true
 
-Source: ftp://ftp.hdfgroup.org/HDF5/current/src/hdf5-%v.tar.gz 
+Source: https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-%v/src/hdf5-%v.tar.gz 
 Source-MD5: b8ed9a36ae142317f88b0c7ef4b9c618
 Source-Checksum: SHA1(ef13468658397a7f5b4b3bc63e75e5ac5be3f449)
 
@@ -117,6 +120,8 @@ Some packages use a configure flag to target the hdf5 tree, i.e.:
 for your package.
 <<
 DescPackaging: <<
+    Former Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+
 	Built separately from the rest of hdf5.*-oldapi so that people who don't need the FORTRAN libs 
 	don't have to build gcc*.
 

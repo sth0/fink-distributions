@@ -9,23 +9,45 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 1.0.2
-Revision: 3
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 1.1.1
+Revision: 2
 Description: Human Readable Formatting of Quantities
-Homepage: https://cran.r-project.org/web/packages/prettyunits/index.html
+Homepage: https://cran.r-project.org/package=prettyunits
 License: BSD
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/prettyunits_%v.tar.gz
-Source-MD5: 0a091a297e8b37df54e7fcf28697ee50
+Source: mirror:custom:prettyunits_%v.tar.gz
+Source-MD5: 0585a928696b8b7c259d2aaf8125762f
 SourceDirectory: prettyunits
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/prettyunits
+<<
 Depends: <<
-	fink (>=0.32),
-	r-base%type_pkg[rversion],
-	cran-assertthat-r%type_pkg[rversion],
-	cran-magrittr-r%type_pkg[rversion]
+	r-base%type_pkg[rversion]
 <<
 BuildDepends: <<
 	fink (>=0.32),
@@ -47,9 +69,9 @@ InstallScript: <<
   pushd %b/.. && $BIN_R --verbose CMD INSTALL --library=%i/lib/R/%type_raw[rversion]/site-library prettyunits
 <<
 DescDetail: <<
-Pretty, human readable formatting of quantities. 
-Time intervals: 1337000 -> 15d 11h 23m 20s. 
-Vague time intervals: 2674000 -> about a month ago. 
+Pretty, human readable formatting of quantities.
+Time intervals: 1337000 -> 15d 11h 23m 20s.
+Vague time intervals: 2674000 -> about a month ago.
 Bytes: 1337 -> 1.34 kB.
 <<
 

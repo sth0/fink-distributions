@@ -1,6 +1,6 @@
 Info2: <<
 Package: typing-py%type_pkg[python]
-Version: 3.6.2
+Version: 3.7.4.1
 Revision: 1
 Description: Type Hints for Python
 License: OSI-Approved
@@ -15,21 +15,18 @@ BuildDepends: <<
 	setuptools-tng-py%type_pkg[python]
 <<
 Source: https://files.pythonhosted.org/packages/source/t/typing/typing-%v.tar.gz
-Source-MD5: 143af0bf3afd1887622771f2f1ffe8e1
-PatchScript: <<
-	# don't use generic py version
-	perl -pi -e 's|python -m|%p/bin/python%type_raw[python] -m|g' tox.ini
-<<
+Source-MD5: 0a1ebd4af65b4769e33459004eb20345
 CompileScript: <<
 	%p/bin/python%type_raw[python] setup.py build
 <<
 InfoTest: <<
-#		pytest-py%type_pkg[python],
-	TestDepends: <<
-		tox-py%type_pkg[python]
-	<<
 	TestScript: <<
-		PYTHONPATH=%b/build/lib:$PYTHONPATH %p/bin/tox-py%type_pkg[python] -e py%type_pkg[python] || exit 2
+		#!/bin/sh -ev
+		if [ "%type_num[python]" -eq "27" ]; then
+			%p/bin/python%type_raw[python] python2/test_typing.py || exit 2
+		else
+			%p/bin/python%type_raw[python] src/test_typing.py || exit 2
+		fi
 	<<
 <<
 InstallScript: <<

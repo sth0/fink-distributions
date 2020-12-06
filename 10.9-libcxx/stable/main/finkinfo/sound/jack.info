@@ -1,12 +1,12 @@
 Package: jack
-Version: 0.124.1
-Revision: 3
+Version: 0.125.0
+Revision: 1
 Maintainer: Adrian Prantl <adrian@f4z.org>
 #
 BuildDepends: <<
 	autoconf2.6,
 	automake1.15,
-	db53-aes,
+	db60-aes,
 	doxygen,
 	fink-package-precedence,
 	libcelt0.2-dev,
@@ -16,7 +16,7 @@ BuildDepends: <<
 	readline6
 <<
 Depends: <<
-	db53-aes-shlibs,
+	db60-aes-shlibs,
 	jack-shlibs (>= %v-%r),
 	libcelt0.2-shlibs,
 	libsamplerate0-shlibs,
@@ -24,10 +24,10 @@ Depends: <<
 	readline6-shlibs
 <<
 Source: http://jackaudio.org/downloads/jack-audio-connection-kit-%v.tar.gz
-Source-MD5: d64e90121be8a54860b870a726fb5b5d
+Source-MD5: d9b7e230aeae2d5b45c7a822b2d2dd15
 SourceDirectory: jack-audio-connection-kit-%v
 PatchFile: %n.patch
-PatchFile-MD5: 873c7fb3d12cd2f0821422b1d2fdfbb1
+PatchFile-MD5: 1c5ff188762d225b4b86109b089f6117
 ConfigureParams: <<
 	--enable-dependency-tracking \
 	--with-html-dir=%i/share/doc/%n \
@@ -35,11 +35,18 @@ ConfigureParams: <<
 	--disable-oss \
 	--with-default-tmpdir=/tmp
 <<
-SetCFLAGS: -I%p/include/db5
+SetCFLAGS: -I%p/include/db6
 PatchScript: <<
+ #!/bin/sh -ev
  %{default_script}
  # Patch configure to not link like Puma on Yosemite
  perl -pi.bak -e 's|10\.\[012\]\*|10.[012][,.]*|g' configure
+ # find Carbon.h if it's hidden inside an SDK
+ if [ ! -f /System/Library/Frameworks/Carbon.framework/Headers/Carbon.h ]; then
+ 	echo "Carbon.h not found. Adding SDK path."
+ 	SDK_PATH=`xcrun -show-sdk-path`
+ 	perl -pi -e "s|include /System/Library/Frameworks/Carbon.framework/Headers/Carbon.h|include $SDK_PATH/System/Library/Frameworks/Carbon.framework/Headers/Carbon.h|g" drivers/coreaudio/Makefile.am
+fi
 <<
 CompileScript: <<
 	# rebuild configure
@@ -52,7 +59,7 @@ SplitOff: <<
  Package: jack-shlibs
  Recommends: jack (= %v-%r)
  Depends: <<
- 	db53-aes-shlibs,
+ 	db60-aes-shlibs,
  	libcelt0.2-shlibs,
  	libsamplerate0-shlibs
  <<

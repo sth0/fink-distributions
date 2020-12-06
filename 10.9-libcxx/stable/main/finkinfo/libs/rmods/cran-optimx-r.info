@@ -9,30 +9,46 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 2013.8.7
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 2020-4.2
 Revision: 1
 Description: Replacement optmin function
-Homepage: https://cran.r-project.org/web/packages/optimx/index.html
+Homepage: https://cran.r-project.org/package=optimx
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: https://cran.r-project.org/src/contrib/optimx_%v.tar.gz
-Source-MD5: 6a38b33357da02ecbbcacb787db24f9c
+Source: mirror:custom:optimx_%v.tar.gz
+Source-MD5: ddcda8be7dfdb586bf88c581c814c9c7
 SourceDirectory: optimx
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/optimx
+<<
 Depends: <<
 	r-base%type_pkg[rversion],
-	cran-bb-r%type_pkg[rversion],
-	cran-dfoptim-r%type_pkg[rversion],
-	cran-minqa-r%type_pkg[rversion],
-	cran-minqa-r%type_pkg[rversion],
-	cran-numderiv-r%type_pkg[rversion],
-	cran-rcgmin-r%type_pkg[rversion],
-	cran-rvmmin-r%type_pkg[rversion],
-	cran-setrng-r%type_pkg[rversion],
-	cran-svunit-r%type_pkg[rversion],
-	cran-ucminf-r%type_pkg[rversion]
+	cran-numderiv-r%type_pkg[rversion]
 <<
 BuildDepends: r-base%type_pkg[rversion]-dev
 CompileScript: <<

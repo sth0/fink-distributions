@@ -1,76 +1,82 @@
 Package: mpv
-Version: 0.27.2
-Revision: 1
+Version: 0.33.0
+Revision: 2
+# Dist restricted by Xcode/swift4
+Distribution: 10.12, 10.13, 10.14, 10.14.5, 10.15, 11.0
 Description: Multimedia player
-License: LGPL
+License: GPL
 Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
 Depends: <<
-	enca-shlibs,
 	lcms2-shlibs (>= 2.6),
+	libarchive31-shlibs,
 	libass5-shlibs (>= 0.12.1-1),
-	libavcodec57-3.0-shlibs (>= 3.2.4),
-	libavdevice57-3.0-shlibs (>= 3.2.4),
-	libavfilter6-3.0-shlibs (>= 3.2.4),
-	libavformat57-3.0-shlibs (>= 3.2.4),
-	libavutil55-3.0-shlibs (>= 3.2.4),
+	libavcodec58-4.0-shlibs (>= 4.1),
+	libavdevice58-4.0-shlibs (>= 4.1),
+	libavfilter7-4.0-shlibs (>= 4.1),
+	libavformat58-4.0-shlibs (>= 4.1),
+	libavutil56-4.0-shlibs (>= 4.1),
 	libbluray1-shlibs,
 	libcaca-shlibs,
-	libcdio-cdda1-shlibs,
-	libcdio-paranoia1-shlibs,
-	libcdio13-shlibs,
-	libguess-shlibs (>= 1.1-1),
+	libcdio-cdda2-shlibs,
+	libcdio-paranoia2-shlibs,
+	libcdio19-2.1-shlibs,
 	libiconv,
 	libjpeg9-shlibs,
 	libncurses5-shlibs,
-	libpostproc54-3.0-shlibs (>= 3.2.4),
+	libpostproc55-4.0-shlibs (>= 4.1),
 	librubberband2-shlibs,
-	libswresample2-3.0-shlibs (>= 3.2.4),
-	libswscale4-3.0-shlibs (>= 3.2.4)
+	libswresample3-4.0-shlibs (>= 4.1),
+	libswscale5-4.0-shlibs (>= 4.1)
 <<
 BuildDepends: <<
-	docutils-py27,
-	enca,
+	docutils-py37,
+	fink (>= 0.32),
 	fink-package-precedence,
 	flag-sort,
 	jack-dev,
 	lcms2 (>= 2.6),
+	libarchive31,
 	libass5-dev (>= 0.12.1-1),
-	libavcodec57-3.0-dev (>= 3.2.4),
-	libavdevice57-3.0-dev (>= 3.2.4),
-	libavfilter6-3.0-dev (>= 3.2.4),
-	libavformat57-3.0-dev (>= 3.2.4),
-	libavutil55-3.0-dev (>= 3.2.4),
+	libavcodec58-4.0-dev (>= 4.1),
+	libavdevice58-4.0-dev (>= 4.1),
+	libavfilter7-4.0-dev (>= 4.1),
+	libavformat58-4.0-dev (>= 4.1),
+	libavutil56-4.0-dev (>= 4.1),
 	libbluray1-dev,
 	libcaca-dev,
-	libcdio-cdda1-dev,
-	libcdio-paranoia1-dev,
-	libcdio13-dev,
-	libguess (>= 1.1-1),
+	libcdio-cdda2-dev,
+	libcdio-paranoia2-dev,
+	libcdio19-2.1-dev,
 	libiconv-dev,
 	libjpeg9,
-	libpostproc54-3.0-dev (>= 3.2.4),
+	libpostproc55-4.0-dev (>= 4.1),
 	librubberband2-dev,
-	libswresample2-3.0-dev (>= 3.2.4),
-	libswscale4-3.0-dev (>= 3.2.4),
-	pkgconfig
+	libswresample3-4.0-dev (>= 4.1),
+	libswscale5-4.0-dev (>= 4.1),
+	pkgconfig,
+	python3,
+	xcode (>= 9.1)
 <<
 Source: https://github.com/mpv-player/mpv/archive/v%v.tar.gz
-Source-MD5: 8cfb48e921e58c0d9d181d96d4809beb
-Source-Checksum: SHA1(764e23136ccec9dc8743f2c63b3d5fbd8a1bf427)
+Source-Checksum: SHA256(f1b9baf5dc2eeaf376597c28a6281facf6ed98ff3d567e3955c95bf2459520b4)
 SourceRename: mpv-%v.tar.gz
-Source2: https://waf.io/waf-1.8.12
-Source2-MD5: cef4ee82206b1843db082d0b0506bf71
-Source2-Checksum: SHA1(45afd4fe66effe6b79b3e6fd7fa0c6076d867488)
+#Source2: https://waf.io/waf-2.0.21
+#Source2-Checksum: SHA256(7cebf2c5efe53cbb9a4b5bdc4b49ae90ecd64a8fce7a3222d58e591b58215306)
+Source3: http://archive.ubuntu.com/ubuntu/pool/universe/m/mpv/mpv_0.32.0-2ubuntu2.debian.tar.xz
+Source3-MD5: 1da33a955d5cdaaf3e948dfc093a2a86
+PatchScript: <<
+	# use Debian's waf script because it is not compiled
+	patch -p1 < ../debian/patches/03_waf.patch
+	# don't use relative -I paths
+	perl -pi -e 's|x.path_from\(cwd\)|x.abspath()|g' waflib/Tools/ccroot.py
+<<
 UseMaxBuildJobs: false
 SetCFLAGS: -MD
 SetCC: flag-sort -v cc
 ConfigureParams: <<
 	--disable-x11 \
-	--disable-libsmbclient \
-	--disable-dvdread \
 	--enable-cdda \
 	--enable-lcms2 \
-	--disable-sdl1 \
 	--disable-sdl2 \
 	--disable-pulse \
 	--disable-jack \
@@ -79,18 +85,19 @@ ConfigureParams: <<
 <<
 CompileScript: <<
 	#!/bin/sh -ev
-	cp ../waf-1.8.12 %b/waf
-	chmod 755 waf
-	./waf configure %c
-	./waf build -v $MAKEFLAGS
+	perl -pi -e 's|path_from|abspath|g' waftools/clang_compilation_database.py
+	#cp ../waf-2.0.21 %b/waf
+	#chmod 755 waf
+	python3 ./waf configure %c
+	python3 ./waf build -v $MAKEFLAGS
 	fink-package-precedence --depfile-ext='\.d' .
 	TOOLS/osxbundle.py -s build/mpv
 <<
 InstallScript: <<
-	DESTDIR=%d ./waf install
+	DESTDIR=%d python3 ./waf install
 <<
 AppBundles: build/mpv.app
-DocFiles: Copyright LICENSE README.md RELEASE_NOTES
+DocFiles: Copyright LICENSE.GPL README.md RELEASE_NOTES
 Homepage: https://github.com/mpv-player/mpv
 DescDetail: <<
 Movie player based on MPlayer and mplayer2. It supports a 
@@ -99,4 +106,5 @@ and subtitle types.
 <<
 DescPort: <<
 * flag-sort needed to push CPPFLAGS=-I%p/include to the end of header search paths to avoid hiding an internal header (!lart waf).
+* As of 0.33, waf needs to be called by a python3. Not all supported systems have /usr/bin/python3, so force a fink python3.
 <<

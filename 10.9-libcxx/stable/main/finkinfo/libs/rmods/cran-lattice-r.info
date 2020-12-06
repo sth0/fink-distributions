@@ -9,18 +9,43 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 0.20-35
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 0.20-41
 Revision: 1
 Description: GNU R Tools for lattice graphics
-Homepage: http://cran.r-project.org/web/packages/lattice/index.html
+Homepage: https://cran.r-project.org/web/packages/lattice/index.html
 License: GPL
 Maintainer: David Fang <fangism@users.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/lattice_%v.tar.gz
-Source-MD5: 07f1814623b3da6278ca61554ff7bfe6
+Source: mirror:custom:lattice_%v.tar.gz
+Source-MD5: c3a51a4fea975722e65207987b04e48f
 SourceDirectory: lattice
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/lattice
+<<
 Depends: <<
 	fink (>= 0.27.2),
 	r-base%type_pkg[rversion],

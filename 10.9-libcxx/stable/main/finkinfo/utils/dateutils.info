@@ -1,0 +1,35 @@
+Package: dateutils
+Version: 0.4.7
+Revision: 1
+Description: Tools for fiddling with dates and times
+License: GPL
+Homepage: http://www.fresse.org/dateutils/
+Maintainer: Hisashi T Fujinaka <htodd@twofifty.com>
+Source: https://bitbucket.org/hroptatyr/dateutils/downloads/dateutils-%v.tar.xz
+Source-checksum: SHA256(49725457f5bef45ea424baade8999a6e54496e357f64280474ff7134a54f599a)
+
+Depends: fink (>= 0.32)
+ConfigureParams: --mandir='${prefix}/share/man'
+
+CompileScript: <<
+  ./configure %c
+  make target=osx
+<<
+
+InstallScript: <<
+	make install DESTDIR=%d
+<<
+
+DocFiles: LICENSE README.md
+
+InfoDocs: dateutils.info
+
+InfoTest: <<
+	TestScript: cd test;make check || exit 2
+<<
+
+DescDetail: <<
+Dateutils are a bunch of tools that revolve around fiddling with dates and
+times in the command line with a strong focus on use cases that arise when
+dealing with large amounts of financial data.
+<<

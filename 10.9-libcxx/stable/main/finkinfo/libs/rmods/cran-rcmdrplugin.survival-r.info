@@ -1,20 +1,47 @@
 Info2: <<
 
 Package: cran-rcmdrplugin.survival-r%type_pkg[rversion]
-Type: rversion (3.4 3.3)
-Version: 1.1-1
+Distribution: <<
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
+<<
+Type: rversion (3.6 3.5 3.4 3.3)
+Version: 1.2-1
 Revision: 1
 Description: R Commander Plug-in for the survival Package
-Homepage: https://cran.r-project.org/web/packages/RcmdrPlugin.survival/index.html
+Homepage: https://cran.r-project.org/package=RcmdrPlugin.survival
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: https://cran.r-project.org/src/contrib/RcmdrPlugin.survival_%v.tar.gz
-Source-MD5: 36f6d0b1d87ad04c81625cb075680797
+Source: mirror:custom:RcmdrPlugin.survival_%v.tar.gz
+Source-MD5: 11ac60fc068455b736ae88977f6737ac
 SourceDirectory: RcmdrPlugin.survival
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/RcmdrPlugin.survival
+<<
 Depends: <<
 	r-base%type_pkg[rversion],
 	cran-date-r%type_pkg[rversion],
-	cran-rcmdr-r%type_pkg[rversion] (>= 2.2-1),
+	cran-rcmdr-r%type_pkg[rversion] (>= 2.4-0-1),
 	cran-survival-r%type_pkg[rversion]
 <<
 BuildDepends: r-base%type_pkg[rversion]-dev

@@ -1,7 +1,7 @@
 Info2: <<
 
 Package: pytoml-py%type_pkg[python]
-Type: python (2.7 3.4 3.5 3.6)
+Type: python (2.7 3.4 3.5 3.6 3.7 3.8)
 
 Version: 0.1.11
 Revision: 1
@@ -30,5 +30,5 @@ InstallScript: <<
 DocFiles: PKG-INFO
 License: BSD
 Homepage: https://pypi.python.org/pypi/pytoml
-Maintainer: Brendan Cully <fink@brendan.cully.org>
+Maintainer: None <fink-devel@lists.sourceforge.net>
 <<

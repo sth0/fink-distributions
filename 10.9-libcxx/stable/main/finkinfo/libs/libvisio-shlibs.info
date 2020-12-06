@@ -1,0 +1,71 @@
+Package: libvisio-shlibs
+# %v > 0.0.31 bumps libN
+# -shlibs only stub
+Version: 0.0.31
+Revision: 4
+Distribution: 10.9, 10.10, 10.11, 10.12, 10.13, 10.14, 10.14.5, 10.15
+Homepage: https://wiki.documentfoundation.org/DLP/Libraries/libvisio
+Maintainer: David Fang <fangism@users.sourceforge.net>
+Description: Library for Visio diagrams
+License: LGPL
+Source: http://dev-www.libreoffice.org/src/libvisio-%v.tar.bz2
+Source-MD5: 82628333418f101a20cd21f980cf9f40
+Conflicts: libvisio (<= 0.0.31-3)
+Replaces: libvisio (<= 0.0.31-3)
+BuildDepends: <<
+	doxygen,
+	fink-package-precedence,
+	boost1.68-nopython,
+	libiconv-dev,
+	libicu55-dev,
+	libxml2 (>= 2.9.1-1),
+	libwpd-0.9-dev (>= 0.9),
+	libwpg-0.2-dev (>= 0.2),
+	pkgconfig (>= 0.20)
+<<
+Depends: <<
+	libicu55-shlibs,
+	libwpd-0.9-shlibs (>= 0.9),
+	libwpg-0.2-shlibs (>= 0.2),
+	libxml2-shlibs (>= 2.9.1-1)
+<<
+SetCPPFLAGS: -I%p/opt/boost-1_68/include
+# doesn't actually link to boost
+ConfigureParams: <<
+	--mandir=%i/share/man \
+	--infodir=%p/share/info \
+	--enable-shared \
+	--disable-static \
+	--disable-werror
+<<
+CompileScript: <<
+	#!/bin/sh -ev
+	./configure %c
+	make V=1
+	fink-package-precedence --prohibit-bdep=libvisio-dev .
+<<
+# there doesn't seem to be any tests
+InfoTest: TestScript: make -k check || exit 2
+InstallScript: <<
+	#!/bin/sh -ev
+	make DESTDIR=%d install
+	rm -r %i/bin
+	rm -r %i/include
+	rm -r %i/lib/libvisio-0.0.{dylib,la}
+	rm -r %i/lib/pkgconfig
+	rm -r %i/share/doc
+<<
+Shlibs: <<
+	%p/lib/libvisio-0.0.0.dylib	1.0.0 %n (>= 0.0.14-0)
+<<
+DocFiles: AUTHORS COPYING.* ChangeLog NEWS README
+DescDetail: <<
+Libvisio is library providing ability to interpret and import visio diagrams 
+into various applications.  You can find it being used in libreoffice.
+<<
+DescUsage: <<
+libvisio comes with 2 programs in bin/: vsd2raw, vsd2xhtml
+<<
+DescPackaging: <<
+-shlibs only package because nothing else is using it anymore.
+<<

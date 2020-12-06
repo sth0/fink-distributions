@@ -1,13 +1,15 @@
 Package: scons
-Version: 3.0.0
-Revision: 1
+Version: 3.0.5
+Revision: 2
 
 BuildDependsOnly: true
+Conflicts: scons, scons2
+Replaces: scons, scons2
 
 Maintainer: None <fink-devel@lists.sourceforge.net>
 
 Source: mirror:sourceforge:scons/scons-src/%v/%n-src-%v.tar.gz
-Source-MD5: 533975e4bdc900efe9da0c8ccdb3ccd3
+Source-MD5: 2b8af50a1eb1e914b11c802c512c9951
 
 PatchScript: <<
 	/usr/bin/find . -type f -name "*.py" -exec perl -pi -e 's|/usr/bin/env python|/usr/bin/python|g' {} \;
@@ -32,10 +34,12 @@ Description: Python-based build tool
 DescDetail: <<
 SCons is an Open Source software construction tool -- that is, a
 build tool; an improved substitute for the classic Make utility;
-a better way to build software. 
+a better way to build software.
+
+Packages needing to compile legacy scons scripts may use scons2 instead.
 <<
 DescPackaging: <<
 Former maintainer: Vincent Beffara
 <<
-Homepage: http://www.scons.org/
+Homepage: https://www.scons.org/
 License: BSD

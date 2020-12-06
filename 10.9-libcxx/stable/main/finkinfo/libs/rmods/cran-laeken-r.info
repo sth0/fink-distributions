@@ -2,25 +2,46 @@ Info2: <<
 
 Package: cran-laeken-r%type_pkg[rversion]
 Distribution: <<
-	(%type_pkg[rversion] = 31 ) 10.9,
-	(%type_pkg[rversion] = 31 ) 10.10,
-	(%type_pkg[rversion] = 31 ) 10.11,
-	(%type_pkg[rversion] = 31 ) 10.12,
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 0.4.6
+Type: rversion (3.6 3.5 3.4 3.3 3.2)
+Version: 0.5.1
 Revision: 1
 Description: Indicators on social exclusion and poverty
-Homepage: https://cran.r-project.org/web/packages/laeken/index.html
+Homepage: https://cran.r-project.org/package=laeken
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/laeken_%v.tar.gz
-Source-MD5: 1af8d11ee66e42db82f774596b6e8275
+Source: mirror:custom:laeken_%v.tar.gz
+Source-MD5: 29d09146121bf130aaeca427f895e04d
 SourceDirectory: laeken
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/laeken
+<<
 Depends: <<
 	r-base%type_pkg[rversion],
 	cran-boot-r%type_pkg[rversion],
@@ -43,11 +64,11 @@ InstallScript: <<
   pushd %b/.. && $BIN_R --verbose CMD INSTALL --library=%i/lib/R/%type_raw[rversion]/site-library laeken
 <<
 DescDetail: <<
-Estimation of indicators on social exclusion and poverty, 
+Estimation of indicators on social exclusion and poverty,
 as well as Pareto tail modeling for empirical income distributions.
 <<
 DescPackaging: <<
-  R (>= 2.10.0), boot, MASS
+  R (>= 3.2.0), boot, MASS
 <<
 
 <<

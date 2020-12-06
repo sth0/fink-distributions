@@ -5,11 +5,11 @@ Package: libmagickcore%type_pkg[-nox]7.q16.2-shlibs
 # defining the pkg "imagemagick" more than once in the same .info.
 Type: -nox ., vers (7.0.5), patch (10), qdepth (16)
 Version: 7.0.5.10
-# 7.0.7-1 bumps libN
-# libmagickcore = 4
-# libmagickwand = 4
-# libmagick++ = 3
-Revision: 3
+# 7.0.8-12 bumps libN
+# libmagickcore = 6
+# libmagickwand = 6
+# libmagick++ = 4
+Revision: 5
 Description: ImageMagick core library (q%type_raw[qdepth])
 License: OSI-Approved
 Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
@@ -220,44 +220,32 @@ SplitOff: <<
 		share/man/man1/MagickCore-config.1
 	<<
 	Conflicts: <<
-		libmagickcore6.q16.2-dev,
-		libmagickcore6.q32.2-dev,
-		libmagickcore6.q64.2-dev,
 		libmagickcore6.9.q16.2-dev,
 		libmagickcore6.9.q32.2-dev,
 		libmagickcore6.9.q64.2-dev,
-		libmagickwand6.q16.2-dev,
-		libmagickwand6.q32.2-dev,
-		libmagickwand6.q64.2-dev,
 		libmagickwand6.9.q16.2-dev,
 		libmagickwand6.9.q32.2-dev,
 		libmagickwand6.9.q64.2-dev,
-		libmagick++6.q16.3-dev,
-		libmagick++6.q32.3-dev,
-		libmagick++6.q64.3-dev,
 		libmagick++6.9.q16.6-dev,
 		libmagick++6.9.q32.6-dev,
-		libmagick++6.9.q64.6-dev
+		libmagick++6.9.q64.6-dev,
+		libmagickcore7.q16.6-dev,
+		libmagickwand7.q16.6-dev,
+		libmagick++7.q16.4-dev
 	<<
 	Replaces: <<
-		libmagickcore6.q16.2-dev,
-		libmagickcore6.q32.2-dev,
-		libmagickcore6.q64.2-dev,
 		libmagickcore6.9.q16.2-dev,
 		libmagickcore6.9.q32.2-dev,
 		libmagickcore6.9.q64.2-dev,
-		libmagickwand6.q16.2-dev,
-		libmagickwand6.q32.2-dev,
-		libmagickwand6.q64.2-dev,
 		libmagickwand6.9.q16.2-dev,
 		libmagickwand6.9.q32.2-dev,
 		libmagickwand6.9.q64.2-dev,
-		libmagick++6.q16.3-dev,
-		libmagick++6.q32.3-dev,
-		libmagick++6.q64.3-dev,
 		libmagick++6.9.q16.6-dev,
 		libmagick++6.9.q32.6-dev,
-		libmagick++6.9.q64.6-dev
+		libmagick++6.9.q64.6-dev,
+		libmagickcore7.q16.6-dev,
+		libmagickwand7.q16.6-dev,
+		libmagick++7.q16.4-dev
 	<<
 	DocFiles: AUTHORS.txt ChangeLog LICENSE NEWS.txt NOTICE README.txt
 <<
@@ -305,44 +293,32 @@ SplitOff3: <<
 		share/man/man1/MagickWand-config.1
 	<<
 	Conflicts: <<
-		libmagickcore6.q16.2-dev,
-		libmagickcore6.q32.2-dev,
-		libmagickcore6.q64.2-dev,
 		libmagickcore6.9.q16.2-dev,
 		libmagickcore6.9.q32.2-dev,
 		libmagickcore6.9.q64.2-dev,
-		libmagickwand6.q16.2-dev,
-		libmagickwand6.q32.2-dev,
-		libmagickwand6.q64.2-dev,
 		libmagickwand6.9.q16.2-dev,
 		libmagickwand6.9.q32.2-dev,
 		libmagickwand6.9.q64.2-dev,
-		libmagick++6.q16.3-dev,
-		libmagick++6.q32.3-dev,
-		libmagick++6.q64.3-dev,
 		libmagick++6.9.q16.6-dev,
 		libmagick++6.9.q32.6-dev,
-		libmagick++6.9.q64.6-dev
+		libmagick++6.9.q64.6-dev,
+		libmagickcore7.q16.6-dev,
+		libmagickwand7.q16.6-dev,
+		libmagick++7.q16.4-dev
 	<<
 	Replaces: <<
-		libmagickcore6.q16.2-dev,
-		libmagickcore6.q32.2-dev,
-		libmagickcore6.q64.2-dev,
 		libmagickcore6.9.q16.2-dev,
 		libmagickcore6.9.q32.2-dev,
 		libmagickcore6.9.q64.2-dev,
-		libmagickwand6.q16.2-dev,
-		libmagickwand6.q32.2-dev,
-		libmagickwand6.q64.2-dev,
 		libmagickwand6.9.q16.2-dev,
 		libmagickwand6.9.q32.2-dev,
 		libmagickwand6.9.q64.2-dev,
-		libmagick++6.q16.3-dev,
-		libmagick++6.q32.3-dev,
-		libmagick++6.q64.3-dev,
 		libmagick++6.9.q16.6-dev,
 		libmagick++6.9.q32.6-dev,
-		libmagick++6.9.q64.6-dev
+		libmagick++6.9.q64.6-dev,
+		libmagickcore7.q16.6-dev,
+		libmagickwand7.q16.6-dev,
+		libmagick++7.q16.4-dev
 	<<
 	DocFiles: AUTHORS.txt ChangeLog LICENSE NEWS.txt NOTICE README.txt
 <<
@@ -392,44 +368,32 @@ SplitOff5: <<
 		share/man/man1/Magick++-config.1
 	<<
 	Conflicts: <<
-		libmagickcore6.q16.2-dev,
-		libmagickcore6.q32.2-dev,
-		libmagickcore6.q64.2-dev,
 		libmagickcore6.9.q16.2-dev,
 		libmagickcore6.9.q32.2-dev,
 		libmagickcore6.9.q64.2-dev,
-		libmagickwand6.q16.2-dev,
-		libmagickwand6.q32.2-dev,
-		libmagickwand6.q64.2-dev,
 		libmagickwand6.9.q16.2-dev,
 		libmagickwand6.9.q32.2-dev,
 		libmagickwand6.9.q64.2-dev,
-		libmagick++6.q16.3-dev,
-		libmagick++6.q32.3-dev,
-		libmagick++6.q64.3-dev,
 		libmagick++6.9.q16.6-dev,
 		libmagick++6.9.q32.6-dev,
-		libmagick++6.9.q64.6-dev
+		libmagick++6.9.q64.6-dev,
+		libmagickcore7.q16.6-dev,
+		libmagickwand7.q16.6-dev,
+		libmagick++7.q16.4-dev
 	<<
 	Replaces: <<
-		libmagickcore6.q16.2-dev,
-		libmagickcore6.q32.2-dev,
-		libmagickcore6.q64.2-dev,
 		libmagickcore6.9.q16.2-dev,
 		libmagickcore6.9.q32.2-dev,
 		libmagickcore6.9.q64.2-dev,
-		libmagickwand6.q16.2-dev,
-		libmagickwand6.q32.2-dev,
-		libmagickwand6.q64.2-dev,
 		libmagickwand6.9.q16.2-dev,
 		libmagickwand6.9.q32.2-dev,
 		libmagickwand6.9.q64.2-dev,
-		libmagick++6.q16.3-dev,
-		libmagick++6.q32.3-dev,
-		libmagick++6.q64.3-dev,
 		libmagick++6.9.q16.6-dev,
 		libmagick++6.9.q32.6-dev,
-		libmagick++6.9.q64.6-dev
+		libmagick++6.9.q64.6-dev,
+		libmagickcore7.q16.6-dev,
+		libmagickwand7.q16.6-dev,
+		libmagick++7.q16.4-dev
 	<<
 	DocFiles: AUTHORS.txt ChangeLog LICENSE NEWS.txt NOTICE README.txt
 <<

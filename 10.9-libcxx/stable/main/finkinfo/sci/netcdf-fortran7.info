@@ -1,15 +1,16 @@
 Info2: <<
 Package: netcdf-fortran7
-Version: 4.4.4
-Revision: 4
+Version: 4.4.5
+Revision: 3
+Distribution: 10.9, 10.10, 10.11, 10.12, 10.13, 10.14, 10.14.5
 BuildDependsOnly: true
-Maintainer: Remko Scharroo <remkos@users.sourceforge.net>
+Maintainer: None <fink-devel@lists.sourceforge.net>
 
-Type: gcc (7)
+Type: gcc (9)
 
 Depends: %n-shlibs (= %v-%r), gcc%type_pkg[gcc]-compiler
 BuildDepends: <<
-	netcdf-c13,
+	netcdf-c15 (>= 4.6.2),
 	netcdf-bin (>= 4.4.0-1),
 	libcurl4, 
 	szip,
@@ -21,19 +22,21 @@ Conflicts: <<
 	netcdf-absoft, 
 	netcdf-g95, 
 	netcdf-gfortran, 
-	netcdf7-gfortran
+	netcdf7-gfortran,
+	netcdf-fortran8
 <<
 Replaces: <<
 	netcdf (<= 3.6.1-1003), 
 	netcdf-absoft, 
 	netcdf-g95, 
 	netcdf-gfortran, 
-	netcdf7-gfortran
+	netcdf7-gfortran,
+	netcdf-fortran8
 <<
 
 Source: ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-%v.tar.gz
-Source-MD5: e855c789cd72e1b8bc1354366bf6ac72
-Source-Checksum: SHA1(f04e4f2a8d9b2f8a676a621d1f552f0cd98ce265)
+Source-MD5: 9a9a469fe623f81b48a9d836ea0f97f5
+Source-Checksum: SHA1(96341a5f714591acda147974f4c14f7b6357a320)
 SourceDirectory: netcdf-fortran-%v
 
 PatchScript: perl -pi -e 's/(10\.\[012\])\*/\1\,.\*/' configure
@@ -58,7 +61,6 @@ CompileScript: <<
 InfoTest: <<
 	TestConfigureParams:   --enable-extra-example-tests
   	TestDepends: sed
-	TestScript: make -j1 check || exit 2
 <<
 InstallScript: <<
   #!/bin/sh -ev
@@ -73,9 +75,9 @@ InstallScript: <<
 <<
 SplitOff: <<
   Package: %N-shlibs
-  Depends: netcdf-c13-shlibs, gcc%type_pkg[gcc]-shlibs
+  Depends: netcdf-c15-shlibs, gcc%type_pkg[gcc]-shlibs
   Files: lib/libnetcdff.*.dylib
-  Shlibs: %p/lib/libnetcdff.6.dylib 8.0.0 %n (>= 4.4.4-1)
+  Shlibs: %p/lib/libnetcdff.6.dylib 9.0.0 %n (>= 4.4.5-1)
   DocFiles: COPYRIGHT README.md RELEASE_NOTES.md F03Interfaces_LICENSE
   Description: Array-based data access, Fortran library
 <<
@@ -88,24 +90,18 @@ and format support the creation, access, and sharing of scientific data.
 
 This package provides a library, documentation, and examples for interfacing
 with Fortran 77 and Fortran 90 code using the gfortran compiler.  Because the
-library links to libraries from gcc4N-shlibs, a particular gcc4N had to be 
+library links to libraries from gccN-shlibs, a particular gccN had to be 
 chosen.
-<<
-DescUsage: <<
-When building by hand against this package, make sure netcdf-c13 is installed,
-since, by policy, this package cannot declare a runtime dependency on it.
-
-It does, however, have a dependency on gcc5-compiler, since that's legit.
 <<
 DescPackaging: <<
 Whoops, this should have been "netcdf-fortran_6_"  Meh.
 
 Manually move docs from the tarball to avoid potentially triggering a rebuild.
 
-Bump revision and versioned dependencies on hdf5.X and netcdf-c13
+Bump revision and versioned dependencies on hdf5.X and netcdf-c15
 when HDF5 (hdf5.X) version is updated.
 
-Specify full path to the "gfortran" executable in gcc4N compiler to avoid 
+Specify full path to the "gfortran" executable in gccN-compiler to avoid 
 extra double-underscores.  (Thanks, libtool!)
 
 Add flag-sort to avoid adding BuildConflict on earlier versions of the package
@@ -113,13 +109,6 @@ or packages built with an earlier gfortran because it picked up
 %p/include/netcdf.mod (in the test suite) with things like this:
 
 -I. -I.. -I../libsrc -I/sw/include -I../fortran
-
-Parallel tests give an error:
-
-/sw/lib/gcc5/bin/gfortran -I../fortran   -I../fortran -O2 -c -o f90tst_parallel.o  f90tst_parallel.f90
-f90tst_parallel.f90:44: Error: Can't open included file 'mpif.h'
-
-so we turn them off.
 <<
 DescPort: <<
 FFLAGS=-O2 FCFLAGS=-O2 is essential to avoid debugging mode flags (-g).

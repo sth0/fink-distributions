@@ -1,6 +1,6 @@
 Info2: <<
 Package: pod-spell-pm%type_pkg[perl]
-Version: 1.15
+Version: 1.20
 Revision: 1
 
 License: Artistic/GPL
@@ -9,18 +9,25 @@ Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
 Homepage: http://search.cpan.org/dist/Pod-Spell/
 
 Source: mirror:cpan:modules/by-module/Pod/Pod-Spell-%v.tar.gz
-Source-MD5: fce6fe5ae7ae8ebf140ddbbec36e4f8c
+Source-Checksum: SHA256(6383f7bfe22bc0d839a08057a0ce780698b046184aea935be4833d94986dd03c)
 
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 UpdatePOD: true
 
 DocFiles: Changes LICENSE README
 
 Depends: <<
 	class-tiny-pm%type_pkg[perl],
-	file-sharedir-projectdistdir-pm%type_pkg[perl] (>= 0.5.2-2),
 	file-slurp-pm,
 	lingua-en-inflect-pm,
+	path-tiny-pm%type_pkg[perl],
 	perl%type_pkg[perl]-core,
 	pod-escapes-pm,
 	pod-parser-pm
@@ -32,7 +39,7 @@ BuildDepends: <<
 Conflicts: pod-spell-pm (<< 1.06-2)
 Replaces: pod-spell-pm (<< 1.60-2)
 
-InfoTest: TestDepends: test-deep-pm%type_pkg[perl]
+InfoTest: TestDepends: test-deep-pm
 
 InstallScript: <<
 	%{default_script}

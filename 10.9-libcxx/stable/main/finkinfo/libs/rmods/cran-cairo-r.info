@@ -9,20 +9,44 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 1.5-9
-Revision: 2
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 1.5-12.2
+Revision: 1
 Description: Graphics device using cairo graphics library
-Homepage: http://cran.r-project.org/web/packages/Cairo/index.html
+Homepage: https://cran.r-project.org/package=Cairo
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/Cairo_%v.tar.gz
-Source-MD5: f9deac4d1b1a58fbae96ab60ee27a739
+Source: mirror:custom:Cairo_%v.tar.gz
+Source-MD5: f37d4d7ced0587d228d465f5bb50442e
 SourceDirectory: Cairo
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/Cairo
+<<
 Depends: <<
-	fink (>= 0.27.2), 
 	r-base%type_pkg[rversion],
 	cairo-shlibs,
 	freetype219-shlibs,
@@ -31,7 +55,7 @@ Depends: <<
 	libtiff5-shlibs
 <<
 BuildDepends: <<
-	fink (>= 0.27.2), 
+	fink (>= 0.27.2),
 	r-base%type_pkg[rversion]-dev,
 	cairo,
 	freetype219,

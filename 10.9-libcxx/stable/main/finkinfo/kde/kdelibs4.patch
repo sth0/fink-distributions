@@ -233,44 +233,6 @@ diff -ruNp kdelibs-4.14.6-orig/kimgio/CMakeLists.txt kdelibs-4.14.6/kimgio/CMake
  
  install(TARGETS kimg_exr  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats/ )
  install( FILES exr.desktop DESTINATION  ${SERVICES_INSTALL_DIR}/qimageioplugins/ )
-diff -ruNp kdelibs-4.14.6-orig/kio/kssl/kopenssl.cpp kdelibs-4.14.6/kio/kssl/kopenssl.cpp
---- kdelibs-4.14.6-orig/kio/kssl/kopenssl.cpp	2015-02-26 18:12:48.000000000 -0600
-+++ kdelibs-4.14.6/kio/kssl/kopenssl.cpp	2015-10-18 07:21:45.000000000 -0500
-@@ -330,11 +330,9 @@ KOpenSSLProxy::KOpenSSLProxy()
-             #ifdef _AIX
-             << "/opt/freeware/lib/"
- 	    #endif
-+	    << "@KDEPREFIX@/lib" KDELIBSUFF "/"
- 	    << "/usr/lib" KDELIBSUFF "/"
- 	    << "/usr/ssl/lib" KDELIBSUFF "/"
--	    << "/usr/local/lib" KDELIBSUFF "/"
--            << "/usr/local/openssl/lib" KDELIBSUFF "/"
--            << "/usr/local/ssl/lib" KDELIBSUFF "/"
- 	    << "/opt/openssl/lib" KDELIBSUFF "/"
- 	    << "/lib" KDELIBSUFF "/"
-             << "";
-@@ -346,8 +344,9 @@ KOpenSSLProxy::KOpenSSLProxy()
-              #elif defined(_AIX)
-              << "libssl.a(libssl.so.0)"
- 	     #elif defined(__APPLE__)
-+	     << "libssl.1.0.0.dylib"
-+	     << "libssl.0.9.8.dylib"
- 	     << "libssl.dylib"
--	     << "libssl.0.9.dylib"
-              #else
-              #ifdef SHLIB_VERSION_NUMBER
-              << "libssl.so." SHLIB_VERSION_NUMBER
-@@ -363,8 +362,9 @@ KOpenSSLProxy::KOpenSSLProxy()
-              #elif defined(_AIX)
-              << "libcrypto.a(libcrypto.so.0)"
- 	     #elif defined(__APPLE__)
-+	     << "libcrypto.1.0.0.dylib"
-+	     << "libcrypto.0.9.8.dylib"
- 	     << "libcrypto.dylib"
--	     << "libcrypto.0.9.dylib"
- 	     #else
-              #ifdef SHLIB_VERSION_NUMBER
-              << "libcrypto.so." SHLIB_VERSION_NUMBER
 diff -ruNp kdelibs-4.14.6-orig/kross/qts/CMakeLists.txt kdelibs-4.14.6/kross/qts/CMakeLists.txt
 --- kdelibs-4.14.6-orig/kross/qts/CMakeLists.txt	2015-02-26 18:12:48.000000000 -0600
 +++ kdelibs-4.14.6/kross/qts/CMakeLists.txt	2015-10-18 06:42:10.000000000 -0500
@@ -294,3 +256,46 @@ diff -ruNp kdelibs-4.14.6-orig/kross/qts/CMakeLists.txt kdelibs-4.14.6/kross/qts
  endif(Q_WS_MAC AND MAC_USE_OSXKEYCHAIN)
  
  if(NOT WINCE)
+diff -ruN kdelibs-4.14.6-orig/kdecore/localization/klocale_kde.cpp kdelibs-4.14.6/kdecore/localization/klocale_kde.cpp
+--- kdelibs-4.14.6-orig/kdecore/localization/klocale_kde.cpp	2015-02-26 18:12:48.000000000 -0600
++++ kdelibs-4.14.6/kdecore/localization/klocale_kde.cpp	2019-09-13 19:33:34.000000000 -0500
+@@ -2438,8 +2438,8 @@
+ 
+ bool KLocalePrivate::use12Clock() const
+ {
+-    if ((timeFormat().contains(QString::fromLatin1("%I")) > 0) ||
+-        (timeFormat().contains(QString::fromLatin1("%l")) > 0)) {
++    if ((timeFormat().contains(QString::fromLatin1("%I")) != NULL) ||
++        (timeFormat().contains(QString::fromLatin1("%l")) != NULL)) {
+         return true;
+     } else {
+         return false;
+diff -ruN kdelibs-4.14.6-orig/kio/kfile/kopenwithdialog.cpp kdelibs-4.14.6/kio/kfile/kopenwithdialog.cpp
+--- kdelibs-4.14.6-orig/kio/kfile/kopenwithdialog.cpp	2015-02-26 18:12:48.000000000 -0600
++++ kdelibs-4.14.6/kio/kfile/kopenwithdialog.cpp	2019-09-13 19:34:15.000000000 -0500
+@@ -713,7 +713,7 @@
+         // ### indicate that default value was restored
+         d->terminal->setChecked(d->curService->terminal());
+         QString terminalOptions = d->curService->terminalOptions();
+-        d->nocloseonexit->setChecked((terminalOptions.contains(QLatin1String("--noclose")) > 0));
++        d->nocloseonexit->setChecked((terminalOptions.contains(QLatin1String("--noclose")) != NULL));
+         d->m_terminaldirty = false; // slotTerminalToggled changed it
+     }
+ }
+diff -ruN kdelibs-4.14.6-orig/kio/kfile/kpropertiesdialog.cpp kdelibs-4.14.6/kio/kfile/kpropertiesdialog.cpp
+--- kdelibs-4.14.6-orig/kio/kfile/kpropertiesdialog.cpp	2015-02-26 18:12:48.000000000 -0600
++++ kdelibs-4.14.6/kio/kfile/kpropertiesdialog.cpp	2019-09-13 19:35:36.000000000 -0500
+@@ -3306,7 +3306,7 @@
+ 
+     if (preferredTerminal == "konsole")
+     {
+-        terminalCloseBool = (d->m_terminalOptionStr.contains( "--noclose" ) > 0);
++        terminalCloseBool = (d->m_terminalOptionStr.contains( "--noclose" ) != NULL);
+         w.terminalCloseCheck->setChecked(terminalCloseBool);
+         d->m_terminalOptionStr.remove( "--noclose");
+     }
+@@ -3427,4 +3427,3 @@
+ 
+ #include "kpropertiesdialog.moc"
+ #include "kpropertiesdialog_p.moc"
+-

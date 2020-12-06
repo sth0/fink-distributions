@@ -1,6 +1,6 @@
 Info2: <<
 Package: r-base34
-Version: 3.4.3
+Version: 3.4.4
 Revision: 1
 Description: R Framework
 Type: rversion (3.4)
@@ -37,7 +37,7 @@ BuildDepends: <<
 	flag-sort (>= 0.5)
 <<
 Source: http://cran.r-project.org/src/base/R-3/R-%v.tar.gz
-Source-MD5: bc55db54f992fda9049201ca62d2a584
+Source-MD5: 9d6f73be072531e95884c7965ff80cd8
 PatchFile: %n.patch
 PatchFile-MD5: 91322330a295078b120c1b2c8f2a4497
 PatchScript: <<
@@ -258,7 +258,9 @@ SplitOff2: <<
 		r-base31-dev,
 		r-base32-dev,
 		r-base33-dev,
-		r-base34-dev
+		r-base34-dev,
+		r-base35-dev,
+		r-base36-dev
   <<
   Conflicts: <<
 		r-base213-dev,
@@ -268,7 +270,9 @@ SplitOff2: <<
 		r-base31-dev,
 		r-base32-dev,
 		r-base33-dev,
-		r-base34-dev
+		r-base34-dev,
+		r-base35-dev,
+		r-base36-dev
   <<
   BuildDependsOnly: True
   Files: <<

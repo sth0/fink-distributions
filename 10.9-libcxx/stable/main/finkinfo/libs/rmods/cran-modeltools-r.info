@@ -9,18 +9,43 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 0.2-21
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 0.2-23
 Revision: 1
 Description: Tools and Classes for Statistical Models
-Homepage: http://cran.r-project.org/web/packages/modeltools/index.html
+Homepage: https://cran.r-project.org/package=modeltools
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/modeltools_%v.tar.gz
-Source-MD5: 3bf56b2e7bf78981444385d87eeccdd7
+Source: mirror:custom:modeltools_%v.tar.gz
+Source-MD5: 954e3f72a5fd9086f070f7fcc41a08f1
 SourceDirectory: modeltools
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/modeltools
+<<
 Depends: r-base%type_pkg[rversion]
 BuildDepends: r-base%type_pkg[rversion]-dev
 CompileScript: <<

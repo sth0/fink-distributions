@@ -9,18 +9,43 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 2.10
-Revision: 2
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 2.12
+Revision: 1
 Description: Demonstrations for Teaching and Learning
-Homepage: http://cran.r-project.org/web/packages/TeachingDemos/index.html
+Homepage: https://cran.r-project.org/package=TeachingDemos
 License: Artistic
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/TeachingDemos_%v.tar.gz
-Source-MD5: 7e87e05fd878261927903896cdea801a
+Source: mirror:custom:TeachingDemos_%v.tar.gz
+Source-MD5: e8163919b46cd8ea6feaa4b74fbf1dcc
 SourceDirectory: TeachingDemos
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/TeachingDemos
+<<
 Depends: <<
 	fink (>= 0.27.2),
 	r-base%type_pkg[rversion]

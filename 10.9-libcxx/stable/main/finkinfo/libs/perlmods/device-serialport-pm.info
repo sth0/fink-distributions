@@ -1,31 +1,42 @@
 Info2: <<
 Package: device-serialport-pm%type_pkg[perl]
 Version: 1.04
-Revision: 1
-Type: perl (5.16.2 5.18.2)
+Revision: 2
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 Description: Perl5 interface to serial ports
 License: Artistic
-Maintainer: Kevin Horton <khorton02@gmail.com>
+Maintainer: None <fink-devel@lists.sourceforge.net>
 
 # Dependencies.
 Depends: perl%type_pkg[perl]-core
-#BuildDepends: 
+#BuildDepends:
 
 # Unpack Phase.
 Source: mirror:cpan:authors/id/C/CO/COOK/Device-SerialPort-%v.tar.gz
 Source-MD5: 82c698151f934eb28c65d1838cee7d9e
+# upstream patch for pod syntax errors:
+#  https://rt.cpan.org/Ticket/Display.html?id=93235
+PatchFile: %{ni}.patch
+PatchFile-MD5: fdde75d020bfe8e89a4860c32f35206e
 
 # Compile Phase.
 # The module can test the communication with the serial port, if it is
 # specified during the build process.  These tests are disabled by default.
-# If you want to run the tests, copy this .info file to your local tree, 
-# uncomment the following line, edit it to specify the serial port and 
+# If you want to run the tests, copy this .info file to your local tree,
+# uncomment the following line, edit it to specify the serial port and
 # comment out the NoPerlTests line.
 #ConfigureParams: TESTPORT=/dev/tty.USA49W1b1P1.1
 NoPerlTests: true
 
 # Install Phase.
-DocFiles: README TODO MANIFEST Changes
+DocFiles: README TODO Changes
 UpdatePOD: true
 
 InstallScript: <<
@@ -36,7 +47,7 @@ InstallScript: <<
 
 
 # Additional Info:
-DescDetail: << 
+DescDetail: <<
   This module is a POSIX emulation of the Win32::SerialPort module.
 <<
 DescPackaging:<<
@@ -47,8 +58,10 @@ DescPackaging:<<
   The tests are very sensitive to timing issues, and they are more likely to
   pass if they are not competing with other applications for CPU time.  Stop
   other applications if the tests fail and try to install again.
+
+  Previous maintainer: Kevin Horton <khorton02@gmail.com>
 <<
-Homepage: http://search.cpan.org/~cook/Device-SerialPort-1.04/
+Homepage: https://metacpan.org/release/Device-SerialPort
 
 # End of Info2
 <<

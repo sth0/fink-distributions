@@ -1,10 +1,9 @@
 Info4: <<
 Package: qt5-%type_pkg[qt]-qtbase
-# OPENSSL110 FTBFS (see also qt4)
 # If we did not build with -openssl-linked, would have to deal with
 # dlopen/dlsym symbol-wrapper signatures also.
 Version: 5.7.1
-Revision: 5
+Revision: 9
 Description: Cross-Platform framework (%type_pkg[qt])
 Type: qt (mac)
 License: LGPL/OpenSSL
@@ -40,7 +39,7 @@ BuildDepends: <<
 	libjpeg9,
 	libpcre1,
 	libpng16,
-	openssl100-dev,
+	openssl110-dev,
 	pkgconfig,
 	sqlite3-dev,
 	xcode (>= 5.1.1),
@@ -49,10 +48,14 @@ BuildDepends: <<
 <<
 BuildConflicts: uuid, libevent1.4, libevent2, libev4, libev4
 BuildDependsOnly: true
-Source: http://download.qt.io/official_releases/qt/5.7/%v/submodules/qtbase-opensource-src-%v.tar.xz
+Source: http://download.qt.io/archive/qt/5.7/%v/submodules/qtbase-opensource-src-%v.tar.xz
 Source-MD5: f0809befe04160fbb73bbf38a06a2073
 PatchFile: qt5-qtbase.patch
-PatchFile-MD5: 9404faff70022796b21598905f9c6f3e
+PatchFile-MD5: 9d85317238f0dbea95758293d78165f3
+PatchFile2: qt5-qtbase-openssl111.patch
+PatchFile2-MD5: 5e1e0b77b9163e4959cd4e0a944a81ac
+PatchFile3: qt5-qtbase-e70324f.patch
+PatchFile3-MD5: 0ed81693f071f9e6733105c766505c0b
 #PatchFile2: qt5-x11-qtbase.patch
 #PatchFile2-MD5: a997e3de7f53d776915fd732eabec0f9
 PatchScript: <<
@@ -69,6 +72,8 @@ PatchScript: <<
 		-e "s|@SDK_PATH@|$SDK_PATH|g" \
 		-e 's|@PATH_TO_PG_CONFIG@|/usr/bin|g' \
 		-e "s|@QT_PLUGINS_DIR@|$QT_FINK_PREFIX/plugins|g" < %{PatchFile} | patch -p1
+	patch -p1 < %{PatchFile2}
+	patch -p1 < %{PatchFile3}
 	### X11 only patches
 	#if [ "%type_raw[qt]" == "x11" ]; then
 		#patch -p1 < %{PatchFile2}
@@ -97,6 +102,7 @@ CompileScript: <<
 	if [ "%type_raw[qt]" == "mac" ]; then
 		PLATFORM_CONFIGS="-no-xinput2 -no-xcb-xlib -no-xcb -framework"
 	fi
+
 	./configure \
 		-prefix ${QT_FINK_PREFIX} \
 		-bindir ${QT_FINK_PREFIX}/bin \
@@ -157,7 +163,7 @@ CompileScript: <<
 		${PLATFORM_CONFIGS}
 
 	# build broken with Fink make-4.1
-	/usr/bin/make
+	/usr/bin/make || /usr/bin/make -w -j1
 	fink-package-precedence --depfile-ext='\.d' --prohibit-bdep=%N .
 <<
 
@@ -303,7 +309,7 @@ SplitOff5: <<
 	Description: Qt networking library (%type_pkg[qt])
 	Depends: <<
 		qt5-%type_pkg[qt]-qtcore-shlibs (>= %v-%r),
-		openssl100-shlibs
+		openssl110-shlibs
 	<<
 	Files: <<
 		( %type_pkg[qt] = mac ) lib/qt5-%type_pkg[qt]/lib/QtNetwork.framework/Versions/5/QtNetwork
@@ -557,6 +563,19 @@ Rest of patch goes into QtConnectivity package to build on 10.13+.
 src/gui/text/qfontengine_coretext.mm
 clang-5 (Xcode9.3) fix for constructor vs type usage
 https://bugreports.qt.io/browse/QTBUG-67545
+
+OpenSSL1.1 support backported from Qt5.10.0rc3 where first introduced in
+commit cfbe03a6e035ab3cce5f04962cddd06bd414dcea
+Extra files changed as necessary.
+
+src/corelib/plugin/qpluginloader.cpp
+CVE-2020-0569
+commit bf131e8d2181b3404f5293546ed390999f760404
+
+src/corelib/tools/q*
+Remove _bit_scan_{forward,reverse} which fail on redefinition with Xcode11.4
+Use qCountTrailingZeroBits and qCountLeadingZeroBits from qalgorithms.h instead.
+commit e70324f8dd1f191556599cf60100dd0ad0b16708 adapted with minor changes.
 <<
 <<
 # End Info4

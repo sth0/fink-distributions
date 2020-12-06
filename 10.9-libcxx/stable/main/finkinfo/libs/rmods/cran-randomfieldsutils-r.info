@@ -1,26 +1,53 @@
 Info2: <<
 
 Package: cran-randomfieldsutils-r%type_pkg[rversion]
-Type: rversion (3.4 3.3)
-Version: 0.3.25
-Revision: 1
+Distribution: <<
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
+<<
+Type: rversion (3.6 3.5 3.4 3.3)
+Version: 0.5.3
+Revision: 2
 Description: Utilities for Random Fields
-Homepage: https://cran.r-project.org/web/packages/RandomFieldsUtils/index.html
+Homepage: https://cran.r-project.org/package=RandomFieldsUtils
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/RandomFieldsUtils_%v.tar.gz
-Source-MD5: 026c15a23296c9726012135891f016d5
+Source: mirror:custom:RandomFieldsUtils_%v.tar.gz
+Source-MD5: b166e2ddefbc39d6a24c5eb2578e39fa
 SourceDirectory: RandomFieldsUtils
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/RandomFieldsUtils
+<<
 Depends: <<
 	fink (>= 0.27.2),
 	r-base%type_pkg[rversion],
-	gcc5-shlibs,
+	(%type_raw[rversion] << 3.6) gcc5-shlibs | (%type_raw[rversion] >= 3.6) gcc9-shlibs,
 	libgettext8-shlibs
 <<
 BuildDepends: <<
 	fink (>= 0.27.2),
 	r-base%type_pkg[rversion]-dev,
-	gcc5-compiler,
+	(%type_raw[rversion] << 3.6) gcc5-compiler | (%type_raw[rversion] >= 3.6) gcc9-compiler,
 	libgettext8-dev
 <<
 CompileScript: <<
@@ -62,7 +89,7 @@ of the matrix before any algorithm is used. Furthermore,
 it includes the Struve functions.
 <<
 DescPackaging: <<
-  R (>= 2.13.1)
+  R (>= 3.0)
 <<
 
 <<

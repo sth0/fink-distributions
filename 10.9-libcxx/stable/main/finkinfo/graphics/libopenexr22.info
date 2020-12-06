@@ -1,7 +1,7 @@
 Package: libopenexr22
 # 2.2.1 changes libN
 Version: 2.2.0
-Revision: 2
+Revision: 3
 Description: Example programs using OpenEXR
 License: BSD
 Maintainer: David Fang <fangism@users.sourceforge.net>
@@ -12,8 +12,8 @@ BuildDepends: <<
 	flag-sort,
 	ilmbase12
 <<
-Conflicts: openexr-dev, libopenexr6
-Replaces: openexr-dev, libopenexr6
+Conflicts: libopenexr22, libopenexr24-dev
+Replaces: libopenexr22, libopenexr24-dev
 BuildDependsOnly: true
 GCC: 4.0
 
@@ -28,9 +28,10 @@ PatchScript: <<
 		-e '/^LDADD =/s|IlmImf[a-z]*|&/lib&.la|g' IlmImfExamples/Makefile.in IlmImfTest/Makefile.in
 	perl -pi -e 's|-L\$\(top_builddir\)/IlmImf \@ILMBASE_LIBS\@ -lIlmImf|\$\(top_builddir\)/IlmImf/libIlmImf.la \@ILMBASE_LIBS\@|g' IlmImfUtil/Makefile.in 
 <<
-# flag-sort to prevent compiling/linking against own installed library
+# flag-sort and NoSetLDFLAGS to prevent compiling/linking against own installed library
 SetCC: flag-sort -r gcc
 SetCXX: flag-sort -r g++
+NoSetLDFLAGS: true
 ConfigureParams: <<
 	--enable-shared \
 	--disable-static \
@@ -40,7 +41,7 @@ ConfigureParams: <<
 CompileScript: <<
 	#!/bin/sh -ev
 	%{default_script}
-	fink-package-precedence --prohibit-bdep=openexr-dev,%n .
+	fink-package-precedence --prohibit-bdep=openexr-dev,%n,libopenexr24-dev .
 <<
 InfoTest: <<
 	TestSource: https://raw.githubusercontent.com/openexr/openexr/master/OpenEXR/IlmImfTest/comp_dwaa_v1.exr

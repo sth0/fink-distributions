@@ -2,37 +2,57 @@ Info2: <<
 # patched for glib << 2.24 NEWGLIB24
 # packages using this should Dep on %v >= 2.20.33-2
 Package: cran-rgtk2-r%type_pkg[rversion]
-Type: rversion (3.4)
-Version: 2.20.33
-Revision: 2
+Distribution: <<
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
+<<
+Type: rversion (3.6 3.5 3.4)
+Version: 2.20.36
+Revision: 1
 Description: R bindings for Gtk 2.8.0 and above
-Homepage: http://cran.r-project.org/web/packages/RGtk2/index.html
+Homepage: https://cran.r-project.org/package=RGtk2
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/RGtk2_%v.tar.gz
-Source-MD5: 300dfe09f4460f7bfaf80ffc1d5fab54
+Source: mirror:custom:RGtk2_%v.tar.gz
+Source-MD5: cdbdbb9eaf45938406c7fb3fd0ef0423
 SourceDirectory: RGtk2
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/RGtk2
+<<
 Depends: <<
-	r-base%type_pkg[rversion], 
-	atk1-shlibs, 
-	cairo-shlibs, 
-	freetype219-shlibs, 
-	fontconfig2-shlibs, 
-	gtk+2-shlibs, 
-	glib2-shlibs, 
-	libgettext8-shlibs, 
-	pango1-xft2-ft219-shlibs
+	r-base%type_pkg[rversion],
+	atk1-shlibs (>= 1.10.0),
+	cairo-shlibs (>= 1.0.0),
+	freetype219-shlibs,
+	fontconfig2-shlibs,
+	gtk+2-shlibs (>= 2.8.0),
+	glib2-shlibs (>= 2.8.0),
+	libgettext8-shlibs,
+	pango1-xft2-ft219-shlibs (>= 1.10.0)
 <<
 BuildDepends: <<
-	r-base%type_pkg[rversion]-dev, 
-	atk1, 
-	cairo, 
-	freetype219, 
-	fontconfig2-dev, 
-	gtk+2-dev, 
-	glib2-dev, 
-	libgettext8-dev, 
-	pango1-xft2-ft219-dev,
+	r-base%type_pkg[rversion]-dev,
+	atk1 (>= 1.10.0),
+	cairo (>= 1.0.0),
+	freetype219,
+	fontconfig2-dev,
+	gtk+2-dev (>= 2.8.0),
+	glib2-dev (>= 2.8.0),
+	libgettext8-dev,
+	pango1-xft2-ft219-dev (>= 1.10.0),
 	pkgconfig
 <<
 PatchFile: %{ni}.patch

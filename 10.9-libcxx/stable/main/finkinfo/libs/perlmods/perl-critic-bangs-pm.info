@@ -1,6 +1,6 @@
 Info2: <<
 Package: perl-critic-bangs-pm%type_pkg[perl]
-Version: 1.10
+Version: 1.12
 Revision: 1
 
 License: Artistic
@@ -35,12 +35,19 @@ Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
 Homepage: http://search.cpan.org/dist/Perl-Critic-Bangs/
 
 Source: mirror:cpan:authors/id/P/PE/PETDANCE/Perl-Critic-Bangs-%v.tar.gz
-Source-MD5: 924ac5417f52474e03e12ef91a2d4738
+Source-Checksum: SHA256(73242b27da2feb601e4a47e7975d864df7279317f1b0565474be3cfc31bfa119)
 
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 UpdatePOD: true
 
-DocFiles: Changes README
+DocFiles: Changes README.md
 
 Depends: <<
 	perl-critic-pm%type_pkg[perl],

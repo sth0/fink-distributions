@@ -1,10 +1,17 @@
 Info2: <<
 Package: pdf-api2-pm%type_pkg[perl]
-Version: 2.033
+Version: 2.038
 Revision: 1
 Source: mirror:cpan:authors/id/S/SS/SSIMMS/PDF-API2-%v.tar.gz
-Source-MD5: 4223a38add42741f996bd67d5f2f8e5b
-Type: perl (5.16.2 5.18.2)
+Source-MD5: 2d6683d01b95f554ec5bb2e29f31ff03
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 UpdatePOD: true
 Depends: <<
 	font-ttf-pm,
@@ -29,11 +36,11 @@ Description: TheNextGen PDF Create/Modify API
 Maintainer: None <fink-devel@lists.sourceforge.net>
 Homepage: http://search.cpan.org/dist/PDF-API2
 DescPackaging: <<
- Report bugs to the maintainer or the CPAN bug tracker:
- http://rt.cpan.org/NoAuth/Bugs.html?Dist=PDF-API2
+	Report bugs to the maintainer or the CPAN bug tracker:
+	http://rt.cpan.org/NoAuth/Bugs.html?Dist=PDF-API2
 
 	Former Maintainer: Chris Dolan <chrisdolan@users.sourceforge.net>
 
- Building docs takes over half an hour, so leave it disabled
+	Building docs takes over half an hour, so leave it disabled
 <<
 <<

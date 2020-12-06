@@ -1,7 +1,7 @@
 Info4: <<
 Package: apache2
 Version: 2.4.23
-Revision: 5.4
+Revision: 6.5
 Type: apiver (20120211)
 ###
 Provides: <<
@@ -10,17 +10,20 @@ Provides: <<
 <<
 # debhelper (>= 9.20131213)
 # dpkg-dev (>= 1.16.1)
+# Switch to libpcre1 cause pcre-config was removed from pcre2??
 BuildDepends: <<
 	fink (>= 0.32),
 	fink-package-precedence,
 	libaprutil.0-dev (>= 1.5.0),
 	libapr.0-dev (>= 1.5.0),
 	libnghttp2.14,
-	libpcre2,
+	libpcre1,
+	libxml2,
 	pkgconfig,
 	openssl,
-	openssl100-dev,
-	openldap24-dev
+	openssl110-dev,
+	openldap24-dev,
+	sed
 <<
 Depends: <<
 	mime-support,
@@ -55,15 +58,17 @@ Suggests: <<
 	%N-suexec-pristine | %N-suexec-custom
 <<
 ###
-Source: mirror:debian:pool/main/a/%n/%n_%v.orig.tar.bz2
+Source: https://launchpad.net/debian/+archive/primary/+sourcefiles/apache2/%v-5/%n_%v.orig.tar.bz2
+#Source: mirror:debian:pool/main/a/%n/%n_%v.orig.tar.bz2
 Source-Checksum: SHA1(5101be34ac4a509b245adb70a56690a84fcc4e7f)
 SourceDirectory: httpd-%v
-Source2: mirror:debian:/pool/main/a/%n/%n_%v-5.debian.tar.xz
+Source2: https://launchpad.net/debian/+archive/primary/+sourcefiles/%n/%v-5/%n_%v-5.debian.tar.xz
+#Source2: mirror:debian:/pool/main/a/%n/%n_%v-5.debian.tar.xz
 Source2-Checksum: SHA1(46b289b6df0ddce43c4c74c1523887aafa823e8c)
 Source2ExtractDir: httpd-%v
 ###
 PatchFile: %n.patch
-PatchFile-MD5: f35ea1f92a39b0762434ed7e6c8cefc5
+PatchFile-MD5: 17cbd0a097f7b74c6e1567d1093fe691
 PatchScript: <<
 # make sure api hasn't changed or bail
 if [ "$(perl -ne 'print $1 if m/define\s+MODULE_MAGIC_NUMBER_MAJOR\s+?(.*)$/' < include/ap_mmn.h)" != "%type_raw[apiver]" ]; then echo New API is $(perl -ne 'print $1 if m/define\s+MODULE_MAGIC_NUMBER_MAJOR\s+?(.*)$/' < include/ap_mmn.h); exit 1; fi
@@ -170,16 +175,18 @@ ConfigureParams: <<
 --with-apr=%p/bin/apr-1-config \
 --with-apr-util=%p/bin/apu-1-config \
 --with-pcre=yes \
---enable-pie \
+--with-libxml2=%p/include/libxml2 \
 --enable-mpms-shared=all \
 --enable-mods-shared="all cgi ident authnz_fcgi imagemap cern_meta proxy_fdpass proxy_http2" \
 --enable-mods-static="unixd logio watchdog version"
 <<
 ###
 CompileScript: <<
-./configure %c \
+### Configure shared
+sdkpath=`xcrun --sdk macosx --show-sdk-path 2>/dev/null` \
+./configure %c --with-z=${sdkpath}/usr \
 	CFLAGS="-pipe ${CFLAGS}" \
-	CPPFLAGS="-DPLATFORM='\"Fink\"' -DBUILD_DATETIME='\"$(gdate -u --date="`grep -- "^ --" debian/changelog | head -n1 | sed -e "s;.*  ;;"`" +%%FT%%T)\"' ${CPPFLAGS}" \
+	CPPFLAGS="-DPLATFORM='\"Fink\"' -DBUILD_DATETIME='\"$(gdate -u --date="`grep -- "^ --" debian/changelog | head -n1 | sed -e "s;.*  ;;"`" +%%FT%%T)\"' ${CPPFLAGS} -I%p/include/libxml2" \
 	LTFLAGS="--no-silent" \
 	SHELL=/bin/bash
 make
@@ -463,7 +470,7 @@ SplitOff4: <<
 	Recommends: <<
 		libapr.0-dev,
 		libaprutil.0-dev,
-		openssl100-dev
+		openssl110-dev
 	<<
 	Conflicts: <<
 		%N-prefork-dev,
@@ -597,9 +604,10 @@ SplitOff6: <<
 		libaprutil.0-shlibs,
 		libaprutil.0-sqlite3 | libaprutil.0-postgresql | libaprutil.0-mysql | libaprutil.0-odbc,
 		libnghttp2.14-shlibs,
-		libpcre2-shlibs,
+		libpcre1-shlibs,
+		libxml2-shlibs,
 		openldap24-shlibs,
-		openssl100-shlibs
+		openssl110-shlibs
 	<<
 	Provides: <<
 		%N-api-%type_raw[apiver]
@@ -668,7 +676,7 @@ SplitOff7: <<
 	Depends: <<
 		libapr.0-shlibs,
 		libaprutil.0-shlibs,
-		openssl100-shlibs
+		openssl110-shlibs
 	<<
 	InstallScript: <<
 install -d -m755 %i/sbin

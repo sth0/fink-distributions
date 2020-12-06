@@ -9,18 +9,43 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 0.0-23
-Revision: 3
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 0.0-24
+Revision: 1
 Description: TK Rplot
-Homepage: http://cran.r-project.org/web/packages/tkrplot/index.html
+Homepage: https://cran.r-project.org/package=tkrplot
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/tkrplot_%v.tar.gz
-Source-MD5: fc5f678322e3dc13ec953817bb322c4f
+Source: mirror:custom:tkrplot_%v.tar.gz
+Source-MD5: 60f0565b9b0c1f865e007287e65a4e39
 SourceDirectory: tkrplot
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/tkrplot
+<<
 Depends: <<
 	fink (>= 0.27.2),
 	r-base%type_pkg[rversion],
@@ -40,7 +65,7 @@ CompileScript: <<
   BIN_R=%p/Library/Frameworks/R.framework/Versions/%type_raw[rversion]/Resources/bin/R
   
   pushd ..
-  $BIN_R --verbose CMD build --no-build-vignettes tkrplot 
+  $BIN_R --verbose CMD build --no-build-vignettes tkrplot
 <<
 InstallScript: <<
   #!/bin/sh -ev

@@ -1,6 +1,6 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Package: ruby24
-Version: 2.4.4
+Version: 2.4.10
 Revision: 1
 Description: Interpreted, object-oriented language
 License: BSD
@@ -14,7 +14,7 @@ Depends: <<
 	gmp5-shlibs,
 	libffi6-shlibs,
 	libyaml-shlibs,
-	openssl110-shlibs (>= 1.1.0h-1),
+	openssl110-shlibs (>= 1.1.1c-1),
 	readline7-shlibs
 <<
 BuildDepends: <<
@@ -24,14 +24,15 @@ BuildDepends: <<
 	gmp5,
 	libffi6,
 	libyaml,
-	openssl110-dev (>= 1.1.0h-1),
+	openssl110-dev (>= 1.1.1c-1),
 	readline7
 <<
 
 # Unpack Phase.
 Source: http://ftp.ruby-lang.org/pub/ruby/2.4/ruby-%v.tar.xz
-Source-MD5: 4f30cefb7d50c6fa4d801f47ed9d82ca
-
+Source-Checksum: SHA256(d5668ed11544db034f70aec37d11e157538d639ed0d0a968e2f587191fc530df)
+PatchFile: %n.patch
+PatchFile-MD5: bcbdef900f1328b4b5f414d7a9fbe9e8
 # Patch Phase.
 PatchScript: <<
   %{default_script}
@@ -49,6 +50,10 @@ PatchScript: <<
   rm test/ruby/test_dir.rb
   # This test fails intermittently.
   rm test/webrick/test_httpserver.rb
+  rm test/net/http/test_https.rb
+  rm test/rubygems/test_gem_remote_fetcher.rb
+  rm test/rinda/test_rinda.rb
+  perl -pi -e 's/timeout: 60/timeout: 600/' test/ruby/test_io.rb
   # Fix library install_name
   perl -pi -e 's/\@RUBY_SO_NAME\@/ruby.2.4.0/' Makefile.in
 <<
@@ -159,4 +164,7 @@ always link with Fink's to get consistent results.
 
 Move mkmf script into -dev to make extension configuration error out
 instead of failing all tests.
+
+test_io.rb patch is change implemented in ruby25 to allow
+TestIO#test_select_leak test to consistently pass.
 <<

@@ -1,9 +1,16 @@
 Info2: <<
 Package: term-readline-gnu-pm%type_pkg[perl]
-Version: 1.35
-Revision: 2
+Version: 1.36
+Revision: 1
 Description: Perl extension for the GNU Readline
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
 BuildDepends: <<
@@ -17,12 +24,7 @@ Depends: <<
 	readline7-shlibs
 <<
 Source: mirror:cpan:authors/id/H/HA/HAYASHI/Term-ReadLine-Gnu-%v.tar.gz
-Source-MD5: 514619d68bda1618da61b19d04b5cefe
-# Parts of some upstream patches:
-#   https://rt.cpan.org/Public/Bug/Display.html?id=123398
-#   https://rt.cpan.org/Public/Bug/Display.html?id=123728
-PatchFile: %{ni}.patch
-PatchFile-MD5: 023e99583da24c0453938a8f971b9ea0
+Source-MD5: f8636c8e17b3266f3a686521a0c06886
 ConfigureParams: DEFINE=-MD --includedir=%p/include --libdir=%p/lib
 CompileScript: <<
 	%{default_script}
@@ -44,7 +46,6 @@ fi
 PreRmScript: <<
 if [ "$1" = remove ]; then
 	update-alternatives --remove perlsh %p/bin/perlsh-%type_raw[perl]
-[perl]
 fi
 <<
 DescDetail: <<

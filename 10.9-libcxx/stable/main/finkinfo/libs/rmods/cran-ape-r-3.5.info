@@ -9,7 +9,14 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5
 <<
 Type: rversion (3.3 3.2 3.1)
 Version: 3.5
@@ -18,9 +25,13 @@ Description: Analyses of Phylogenetics and Evolution
 Homepage: http://cran.r-project.org/web/packages/ape/index.html
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: https://cran.r-project.org/src/contrib/Archive/ape/ape_%v.tar.gz
+Source: mirror:custom:Archive/ape/ape_%v.tar.gz
 Source-MD5: 83a4388059575440a3a3d5975bf328a4
 SourceDirectory: ape
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/ape
+<<
 Depends: <<
 	( %type_raw[rversion] = 3.3 ) r-base%type_pkg[rversion],
 	( %type_raw[rversion] = 3.2 ) r-base%type_pkg[rversion] (>= 3.2.0-2),

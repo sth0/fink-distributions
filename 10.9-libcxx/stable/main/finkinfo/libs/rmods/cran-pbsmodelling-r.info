@@ -2,25 +2,28 @@ Info2: <<
 
 Package: cran-pbsmodelling-r%type_pkg[rversion]
 Distribution: <<
-	(%type_pkg[rversion] = 31 ) 10.9,
-	(%type_pkg[rversion] = 31 ) 10.10,
-	(%type_pkg[rversion] = 31 ) 10.11,
-	(%type_pkg[rversion] = 31 ) 10.12,
-	(%type_pkg[rversion] = 32 ) 10.9,
-	(%type_pkg[rversion] = 32 ) 10.10,
-	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 2.67.266
+Type: rversion (3.6 3.5)
+Version: 2.68.8
 Revision: 1
 Description: GUI Tools Made Easy
-Homepage: https://cran.r-project.org/web/packages/PBSmodelling/index.html
+Homepage: https://cran.r-project.org/package=PBSmodelling
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: https://cran.r-project.org/src/contrib/PBSmodelling_%v.tar.gz
-Source-MD5: 515c17493451b7117580240d5ec42828
+Source: mirror:custom:PBSmodelling_%v.tar.gz
+Source-MD5: 0c80b9a3233010c8126d1cbac4f34b6b
 SourceDirectory: PBSmodelling
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/PBSmodelling
+<<
 Depends: <<
 	r-base%type_pkg[rversion],
 	cran-xml-r%type_pkg[rversion],
@@ -71,7 +74,7 @@ offers a complete user guide PBSmodelling-UG.pdf. To use this package
 effectively, please consult the guide.
 <<
 DescPackaging: <<
-  R (>= 2.15.0)
+  R (>= 3.5.0)
   Doesn't compile against x11-dev or tcltk-dev headers, but does test tcltk/x11
   support during installation packaging phase.
 <<

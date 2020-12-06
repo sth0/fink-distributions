@@ -3,7 +3,7 @@ Info2: <<
 Package: unittest2-py%type_pkg[python]
 Version: 1.1.0
 Revision: 1
-Type: python (2.7 3.4 3.5 3.6 3.7)
+Type: python (2.7 3.4 3.5 3.6 3.7 3.8)
 Description: Backport of Python 2.7 unittest
 DescDetail: <<
 	unittest2 is a backport of the new features added to the unittest
@@ -15,7 +15,7 @@ DescDetail: <<
 <<
 Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
 License: BSD
-Homepage: http://pypi.python.org/pypi/unittest2
+Homepage: https://pypi.org/project/unittest2
 
 Source: https://files.pythonhosted.org/packages/source/u/unittest2/unittest2-%v.tar.gz
 Source-MD5: f72dae5d44f091df36b6b513305ea000

@@ -1,0 +1,46 @@
+Package: libebml3-shlibs
+### library only.  No more -dev.
+Version: 1.2.2
+Revision: 2
+Description: C++ (shared) library to parse EBML files
+License: LGPL
+Maintainer: David Fang <fangism@users.sourceforge.net>
+Homepage: http://matroska-org.github.io/libebml/
+Conflicts: libebml3 (<= 1.2.2-1) 
+Replaces: libebml3 (<= 1.2.2-1)
+
+GCC: 4.0
+
+Source: https://dl.matroska.org/downloads/libebml/libebml-%v.tar.bz2
+Source-MD5: 726cc2bd1a525929ff35ff9854c0ebab
+
+NoSetCPPFLAGS: true
+NoSetLDFLAGS: true
+PatchScript: <<
+  #!/bin/sh -ev
+  sed -i.orig -e 's|\.so\.3|.3.dylib|g' -e 's|\.so|.dylib|g' \
+	-e 's|-fPIC|& -fno-common|g' \
+	-e 's|-shared|-dynamiclib -compatibility_version 4 -current_version 4.0|' \
+	-e 's|-Wl,-soname,|-install_name $(prefix)/lib/|' \
+	make/linux/Makefile
+<<
+CompileScript: <<
+  cd make/linux && make -w prefix=%p sharedlib
+<<
+
+InstallScript: <<
+  cd make/linux && make -w prefix=%i install_sharedlib
+  rm %i/lib/libebml.dylib
+<<
+
+DocFiles: ChangeLog LICENSE.LGPL
+
+DescDetail: <<
+libebml is a C++ library to parse EBML files. It is available in LGPL
+license as a source code that should compile on many platforms
+including Windows, Linux, Mac OSX and BeOS.
+This package only includes a shared library for backwards compatibility.
+<<
+Shlibs: <<
+	%p/lib/libebml.3.dylib 4.0.0 %n (>= 1.2.2-1)
+<<

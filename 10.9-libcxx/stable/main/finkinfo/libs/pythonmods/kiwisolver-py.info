@@ -1,0 +1,48 @@
+Info2: <<
+Package: kiwisolver-py%type_pkg[python]
+Version: 1.2.0
+Revision: 1
+Description: Fast Cassowary constraint solver
+License: BSD
+# Free to modify, update, and take over
+Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
+Type: python (3.5 3.6 3.7 3.8)
+Depends: <<
+	python%type_pkg[python]
+<<
+BuildDepends: <<
+	setuptools-tng-py%type_pkg[python]
+<<
+Source: https://files.pythonhosted.org/packages/source/k/kiwisolver/kiwisolver-%v.tar.gz
+Source-Checksum: SHA256(247800260cd38160c362d211dcaf4ed0f7816afb5efe56544748b21d6ad6d17f)
+PatchScript: <<
+	# fix mismatched input and expected type
+	perl -pi -e 's|assert \"str\" in|assert "int" in|g' py/tests/test_constraint.py
+<<
+GCC: 4.0
+CompileScript: <<
+	%p/bin/python%type_raw[python] setup.py build
+<<
+
+InfoTest: <<
+	TestDepends: <<
+		pytest-py%type_pkg[python]
+	<<
+	TestScript: PYTHONPATH=$(ls -d %b/build/lib.macosx-*-%type_raw[python]) %p/bin/python%type_raw[python] -m pytest py/tests || exit 2
+<<
+
+InstallScript: <<
+	%p/bin/python%type_raw[python] setup.py install --root %d
+<<
+DocFiles: LICENSE releasenotes.rst README.rst
+Homepage: https://github.com/nucleic/kiwi
+DescDetail: <<
+Kiwi is an efficient C++ implementation of the Cassowary constraint
+solving algorithm. Kiwi is an implementation of the algorithm based on
+the seminal Cassowary paper. It is not a refactoring of the original C++
+solver. Kiwi has been designed from the ground up to be lightweight and
+fast. Kiwi ranges from 10x to 500x faster than the original Cassowary
+solver with typical use cases gaining a 40x improvement. Memory savings
+are consistently > 5x.
+<<
+<<

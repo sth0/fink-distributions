@@ -1,0 +1,23 @@
+Package: cwd-guard-pm
+Version: 0.05
+Revision: 1
+Type: perl
+BuildDepends: <<
+	fink (>= 0.30.2),
+	module-build-pm,
+	test-requires-pm
+<<
+Source: mirror:cpan:authors/id/K/KA/KAZEBURO/Cwd-Guard-%v.tar.gz
+Source-MD5: 3d9c31722ab475fcb095716fe80c6bb1
+DefaultScript: ModuleBuild
+InfoTest: <<
+	  TestDepends: <<
+	  	file-copy-link-pm
+	<<
+<<
+UpdatePOD: true
+DocFiles: Changes LICENSE README.md
+Description: Temporary changing working directory (chdir)
+Homepage: http://search.cpan.org/dist/Cwd-Guard/
+License: Artistic/GPL
+Maintainer: Daniel Macks <dmacks@netspace.org>

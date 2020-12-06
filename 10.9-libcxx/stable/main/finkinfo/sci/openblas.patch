@@ -1,0 +1,152 @@
+diff -uNr a/Makefile.system b/Makefile.system
+--- a/Makefile.system	2020-02-09 23:16:28.000000000 +0100
++++ b/Makefile.system	2020-02-20 18:06:14.000000000 +0100
+@@ -490,8 +490,10 @@
+ endif
+ 
+ ifeq ($(C_COMPILER), CLANG)
++ifneq ($(OSNAME), Darwin)
+ CCOMMON_OPT    += -fopenmp
+ endif
++endif
+ 
+ ifeq ($(C_COMPILER), INTEL)
+ CCOMMON_OPT    += -fopenmp
+@@ -1258,8 +1260,8 @@
+ endif
+
+
+-REVISION = -r$(VERSION)
+ MAJOR_VERSION = $(word 1,$(subst ., ,$(VERSION)))
++REVISION = .$(MAJOR_VERSION)
+
+ ifeq ($(DEBUG), 1)
+ COMMON_OPT += -g
+@@ -1328,19 +1330,19 @@
+ 
+ ifneq ($(DYNAMIC_ARCH), 1)
+ ifndef SMP
+-LIBNAME		= $(LIBPREFIX)_$(LIBCORE)$(REVISION).$(LIBSUFFIX)
+-LIBNAME_P	= $(LIBPREFIX)_$(LIBCORE)$(REVISION)_p.$(LIBSUFFIX)
++LIBNAME		= $(LIBPREFIX)$(REVISION).$(LIBSUFFIX)
++LIBNAME_P	= $(LIBPREFIX)_p$(REVISION).$(LIBSUFFIX)
+ else
+-LIBNAME		= $(LIBPREFIX)_$(LIBCORE)p$(REVISION).$(LIBSUFFIX)
+-LIBNAME_P	= $(LIBPREFIX)_$(LIBCORE)p$(REVISION)_p.$(LIBSUFFIX)
++LIBNAME		= $(LIBPREFIX)$(REVISION).$(LIBSUFFIX)
++LIBNAME_P	= $(LIBPREFIX)_p$(REVISION).$(LIBSUFFIX)
+ endif
+ else
+ ifndef SMP
+ LIBNAME		= $(LIBPREFIX)$(REVISION).$(LIBSUFFIX)
+-LIBNAME_P	= $(LIBPREFIX)$(REVISION)_p.$(LIBSUFFIX)
++LIBNAME_P	= $(LIBPREFIX)_p$(REVISION).$(LIBSUFFIX)
+ else
+-LIBNAME		= $(LIBPREFIX)p$(REVISION).$(LIBSUFFIX)
+-LIBNAME_P	= $(LIBPREFIX)p$(REVISION)_p.$(LIBSUFFIX)
++LIBNAME		= $(LIBPREFIX)$(REVISION).$(LIBSUFFIX)
++LIBNAME_P	= $(LIBPREFIX)_p$(REVISION).$(LIBSUFFIX)
+ endif
+ endif
+
+diff -uNr a/benchmark/Makefile b/benchmark/Makefile
+--- a/benchmark/Makefile   2020-06-14 22:03:04.000000000 +0200
++++ b/benchmark/Makefile   2020-07-01 16:47:19.000000000 +0200
+@@ -19,8 +19,13 @@
+ #LIBATLAS = -fopenmp $(ATLAS)/liblapack_atlas.a  $(ATLAS)/libptcblas.a  $(ATLAS)/libptf77blas.a  $(ATLAS)/libatlas.a -lgfortran -lm
+ 
+ # Atlas RHEL and Fedora
+-ATLAS=/usr/lib64/atlas
+-LIBATLAS = -fopenmp $(ATLAS)/liblapack.a  $(ATLAS)/libptcblas.a  $(ATLAS)/libptf77blas.a  $(ATLAS)/libatlas.a -lgfortran -lm
++#ATLAS=/usr/lib64/atlas
++#LIBATLAS = -fopenmp $(ATLAS)/liblapack.a  $(ATLAS)/libptcblas.a  $(ATLAS)/libptf77blas.a  $(ATLAS)/libatlas.a -lgfortran -lm
++
++# Atlas MacOS X Fink (Xcode clang does not support -fopenmp)
++ATLAS=@PREFIX@/lib
++LIBATLAS = $(FOPENMP) $(ATLAS)/liblapack.a  $(ATLAS)/libptcblas.a  $(ATLAS)/libptf77blas.a  $(ATLAS)/libatlas.a -lgfortran -lm
++
+ 
+ # Intel standard
+ # MKL=/opt/intel/mkl/lib/intel64
+@@ -3431,7 +3436,7 @@
+ 
+ 
+ smallscaling: smallscaling.c ../$(LIBNAME)
+-	$(CC) $(CFLAGS) -o $(@F) $^ $(EXTRALIB) -fopenmp -lm -lpthread
++	$(CC) $(CFLAGS) -o $(@F) $^ $(EXTRALIB) $(FOPENMP) -lm -lpthread
+ 
+ clean ::
+ 	@rm -f *.goto *.mkl *.acml *.atlas *.veclib *.essl smallscaling
+diff -uNr a/benchmark/smallscaling.c b/benchmark/smallscaling.c
+--- a/benchmark/smallscaling.c   2020-02-09 23:16:28.000000000 +0100
++++ b/benchmark/smallscaling.c   2020-02-25 22:29:50.000000000 +0100
+@@ -10,6 +10,32 @@
+ #define MAX_SIZE 60
+ #define NB_SIZE 10
+ 
++// Workaround for missing CLOCK_MONOTONIC on OS X El Capitan & earlier
++#ifndef CLOCK_MONOTONIC
++#include <mach/clock_types.h>
++#include <mach/mach_time.h>
++#define CLOCK_MONOTONIC SYSTEM_CLOCK
++#define MACH_CLOCK_NEEDS_INIT 1
++
++double sec_factor;
++double nsec_factor;
++
++void clock_gett_init() {
++    mach_timebase_info_data_t timebase;
++    mach_timebase_info(&timebase);
++    nsec_factor = ((double)timebase.numer)/((double)timebase.denom);
++    sec_factor = ((double)timebase.numer)/((double)timebase.denom * 1e-9);
++}
++
++int clock_gettime(clock_id_t clk_id, struct timespec *tp) {
++    uint64_t time;
++    time = mach_absolute_time();
++    tp->tv_sec = (double)time * sec_factor;
++    tp->tv_nsec = (double)time * nsec_factor;
++    return 0;
++}
++#endif // CLOCK_MONOTONIC
++
+ // number of loop for a 1x1 matrix. Lower it if the test is
+ // too slow on you computer.
+ #define NLOOP 2e7
+@@ -169,6 +194,9 @@
+ }
+ 
+ int main(int argc, char * argv[]) {
++#ifdef MACH_CLOCK_NEEDS_INIT
++    clock_gett_init();
++#endif
+     double inc_factor = exp(log((double)MAX_SIZE / MIN_SIZE) / NB_SIZE);
+     BenchParam param;
+     int test_id;
+diff -uNr a/Makefile b/Makefile
+--- a/Makefile		2019-08-11 23:23:27.000000000 +0100
++++ b/Makefile		2019-11-06 19:18:15.000000000 +0100
+@@ -124,8 +124,10 @@
+ ifeq ($(OSNAME), Darwin)
+	@$(MAKE) -C exports dyn
+	@ln -fs $(LIBDYNNAME) $(LIBPREFIX).dylib
++ifneq ($(LIBDYNNAME), $(LIBPREFIX).$(MAJOR_VERSION).dylib)
+	@ln -fs $(LIBDYNNAME) $(LIBPREFIX).$(MAJOR_VERSION).dylib
+ endif
++endif
+ ifeq ($(OSNAME), WINNT)
+	@$(MAKE) -C exports dll
+ endif
+diff -uNr a/Makefile.install b/Makefile.install
+--- a/Makefile.install	2019-08-11 23:23:27.000000000 +0100
++++ b/Makefile.install	2019-11-06 2019-11-06 20:13:02.000000000 +0100
+@@ -84,8 +84,7 @@
+	@-cp $(LIBDYNNAME) "$(DESTDIR)$(OPENBLAS_LIBRARY_DIR)"
+	@-install_name_tool -id "$(OPENBLAS_LIBRARY_DIR)/$(LIBPREFIX).$(MAJOR_VERSION).dylib" "$(DESTDIR)$(OPENBLAS_LIBRARY_DIR)/$(LIBDYNNAME)"
+	@cd "$(DESTDIR)$(OPENBLAS_LIBRARY_DIR)" ; \
+-	ln -fs $(LIBDYNNAME) $(LIBPREFIX).dylib ; \
+-	ln -fs $(LIBDYNNAME) $(LIBPREFIX).$(MAJOR_VERSION).dylib
++	ln -fs $(LIBDYNNAME) $(LIBPREFIX).dylib
+ endif
+ ifeq ($(OSNAME), WINNT)
+	@-cp $(LIBDLLNAME) "$(DESTDIR)$(OPENBLAS_BINARY_DIR)"

@@ -1,9 +1,9 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Info2: <<
 Package: pysocks-py%type_pkg[python]
-Version: 1.6.8
+Version: 1.7.0
 Revision: 1
-Type: python (2.7 3.4 3.5 3.6 3.7)
+Type: python (2.7 3.4 3.5 3.6 3.7 3.8)
 Description: Python SOCKS client module
 
 Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
@@ -11,10 +11,12 @@ License: BSD
 Homepage: https://pypi.org/project/PySocks
 
 Source: https://files.pythonhosted.org/packages/source/P/PySocks/PySocks-%v.tar.gz
-Source-Checksum: SHA256(3fe52c55890a248676fd69dc9e3c4e811718b777834bcaab7a8125cf9deac672)
+Source-Checksum: SHA256(d9031ea45fdfacbe59a99273e9f0448ddb33c1580fe3831c1b09557c5718977c)
 
 Depends: python%type_pkg[python]
 BuildDepends: fink (>= 0.24.12), setuptools-tng-py%type_pkg[python]
+Conflicts: socksipy-py%type_pkg[python]
+Replaces: socksipy-py%type_pkg[python]
 
 CompileScript: %p/bin/python%type_raw[python] setup.py build
 

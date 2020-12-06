@@ -12,7 +12,7 @@ diff -ruN netpbm-10.81.02-orig/Makefile.config.fink netpbm-10.81.02/Makefile.con
 +STATICLIB_TOO	= n
 +NETPBMLIB_RUNTIME_PATH = @PREFIX@/lib
 +CC		= cc -no-cpp-precomp
-+CFLAGS = -O3 -ffast-math  -pedantic -fno-common -Wall -Wno-uninitialized -Wmissing-declarations -Wimplicit -Wwrite-strings -Wmissing-prototypes -Wundef -Wno-unknown-pragmas -MD
++CFLAGS = -O3 -ffast-math  -pedantic -fno-common -Wall -Wno-uninitialized -Wmissing-declarations -Wimplicit -Wwrite-strings -Wmissing-prototypes -Wundef -Wno-unknown-pragmas -MD -Wno-error=implicit-function-declaration
 +CFLAGS_SHLIB	= -fno-common
 +LDSHLIB		= -dynamiclib -install_name $(NETPBMLIB_RUNTIME_PATH)/libnetpbm.$(MAJ).dylib -compatibility_version $$(($(MAJ)+1)) -current_version $$(($(MAJ)+1)).$(MIN)
 +LINKERISCOMPILER	= Y
@@ -82,8 +82,8 @@ diff -ruN netpbm-10.81.02-orig/converter/other/pnmtopng.c netpbm-10.81.02/conver
      unsigned int alphas_first_index[MAXPALETTEENTRIES];
 -    unsigned int alphas_of_color_cnt[MAXPALETTEENTRIES];
 +    unsigned int alphas_of_color_cnt[MAXPALETTEENTRIES + 1];
-  
-     getChv(ifP, rasterPos, cols, rows, maxval, format, MAXCOLORS, 
+ 
+     getChv(ifP, rasterPos, cols, rows, maxval, format, MAXCOLORS,
             &chv, &colors);
 @@ -2691,7 +2691,7 @@
          /* The color part of the color/alpha palette passed to the PNG

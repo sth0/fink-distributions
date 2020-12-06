@@ -1,0 +1,140 @@
+Info2: <<
+Package: django-py%type_pkg[python]
+# 1.11.x is last release series to support python27
+Type: python (2.7 3.4 3.5 3.6 3.7), geos (3.6.1)
+Version: 1.11.20
+Revision: 1
+
+Depends: <<
+  bcrypt-py%type_pkg[python],
+  docutils-py%type_pkg[python],
+  python%type_pkg[python],
+  pytz-py%type_pkg[python]
+<<
+BuildDepends: setuptools-tng-py%type_pkg[python]
+
+#  mysql-python-py%type_pkg[python]
+Recommends: psycopg2-py%type_pkg[python], yaml-py%type_pkg[python]
+
+#Source: https://files.pythonhosted.org/packages/source/D/Django/Django-%v.tar.gz
+Source: https://www.djangoproject.com/m/releases/1.11/Django-%v.tar.gz
+Source-Checksum: SHA256(43a99da08fee329480d27860d68279945b7d8bf7b537388ee2c8938c709b2041)
+
+DocFiles: AUTHORS INSTALL LICENSE README.rst docs
+
+PatchScript: <<
+  #!/bin/bash -ev
+  perl -pi -e "s|'geos_c'|'libgeos_c.1.dylib'|g" django/contrib/gis/geos/libgeos.py
+  perl -pi -e "s|lib_path = None|lib_path = '%p/opt/libgeos%type_raw[geos]/lib/libgeos_c.1.dylib'|g" django/contrib/gis/geos/libgeos.py
+  perl -pi -e "s|lib_path = None|lib_path = '%p/lib/libgdal.1.dylib'|g" django/contrib/gis/gdal/libgdal.py
+<<
+
+CompileScript: <<
+  %p/bin/python%type_raw[python] setup.py build
+<<
+
+InstallScript: <<
+  #!/bin/sh -ev
+  %p/bin/python%type_raw[python] setup.py install --root=%d
+  mkdir -p %i/share/doc/%n
+  cp -pr docs %i/share/doc/%n
+  install -d %i/etc/bash_completion.d
+  install extras/django_bash_completion %i/etc/bash_completion.d/django-py%type_pkg[python]
+  mv %i/bin/django-admin.py %i/bin/django-admin.py%type_raw[python]
+  mv %i/bin/django-admin %i/bin/django-admin%type_raw[python]
+<<
+
+InfoTest: <<
+  TestDepends: <<
+    bcrypt-py%type_pkg[python],
+    docutils-py%type_pkg[python],
+    jinja2-py%type_pkg[python] (>= 2.9.2),
+    (%type_pkg[python] = 27) mysql-python-py%type_pkg[python],
+    numpy-py%type_pkg[python],
+    pil-py%type_pkg[python] (>= 5.4.1),
+    pytz-py%type_pkg[python],
+    yaml-py%type_pkg[python]
+  <<
+  TestScript: <<
+    #!/bin/sh -ev
+    export PYTHONPATH=%b/build/lib LANG=en_US.UTF-8
+    cd tests
+    # Run tests in parallel on all available cores (default) - set to 1 for better diagnostics
+    %p/bin/python%type_raw[python] -B runtests.py --parallel=0 || exit 2
+  <<
+<<
+
+SplitOff: <<
+  Package: django-gis-py%type_pkg[python]
+  Description: GIS/geo contrib application for django
+  # FIX: bring these back when mysql lands in 10.7
+  # gdal-mysql-shlibs| gdal-pgsql-mysql-shlibs
+  # See docs/ref/contrib/gis/install/geolibs.txt for
+  # information about supported versions
+  # note: does runtime loading (not compiled dynamic linking), so must
+  # be careful about ABI changes
+  Depends: <<
+    django-py%type_pkg[python],
+    gdal-shlibs | gdal-pgsql-shlibs,
+    libgeos%type_raw[geos]-shlibs
+  <<
+  Files: <<
+    lib/python%type_raw[python]/site-packages/django/contrib/gis
+    lib/python%type_raw[python]/site-packages/django/contrib/admin/static/admin/img/gis
+  <<
+
+<<
+
+PostInstScript: <<
+ update-alternatives --install %p/bin/django-admin.py django-admin.py %p/bin/django-admin%type_raw[python] %type_pkg[python]
+<<
+
+PreRmScript: <<
+ if [ $1 != "upgrade" ]; then
+   update-alternatives --remove django-admin.py %p/bin/django-admin%type_raw[python]
+ fi
+<<
+
+Description: Python web framework
+
+DescDetail: <<
+Django is a high-level Python Web framework that encourages rapid development
+and clean, pragmatic design.
+
+Developed and used over two years by a fast-moving online-news operation,
+Django was designed to handle two challenges: the intensive deadlines of a
+newsroom and the stringent requirements of the experienced Web developers who
+wrote it. It lets you build high-performing, elegant Web applications quickly.
+<<
+
+DescUsage:<<
+See http://www.djangoproject.com/documentation/
+
+If you developed for a version of Django prior to 1.0 (such as 0.95 or 0.96),
+refer to http://docs.djangoproject.com/en/dev/releases/1.0-porting-guide/
+<<
+
+DescPort:<<
+The documentation in the admin interface should work, now that docutils has
+been split into -py* variants.
+
+Need to improve the load process for libgeosc1-shlibs for python
+ctypes.  It's too version dependent.  May need to update what is in
+the libgeosc1-shlibs package.
+<<
+
+DescPackaging:<<
+$LastChangedRevision: 538 $ in Charles Lepple local repository.
+Maintainer was Charles Lepple <clepple+fink@ghz.cc> until 1.0.
+
+Included only packages already available in Fink in TestDepends
+(missing from full list in requirements/py3.txt are argon2-cffi >= 16.1.0,
+geoip2, pylibmc, python-memcached, pywatchman, selenium, sqlparse, tblib).
+<<
+
+License: BSD
+Homepage: http://www.djangoproject.com/
+Maintainer: Kurt Schwehr <goatbar@users.sourceforge.net>
+
+# Info2:
+<<

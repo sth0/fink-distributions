@@ -1,6 +1,6 @@
 Info4: <<
 Package: postgresql%type_pkg[postgresql]
-Version: 9.6.10
+Version: 9.6.19
 Revision: 1
 Epoch: 1
 Type: postgresql 9.6
@@ -31,13 +31,16 @@ BuildDepends: <<
 Provides: postgresql-server
 GCC: 4.0
 
-Source: http://ftp.postgresql.org/pub/source/v%v/postgresql-%v.tar.bz2
-Source-MD5: 9a7f465252c0fbe2212566e3c079e062
-Source-Checksum: SHA1(860ff3e2ce42246f45db1fc4519f972228168242)
+Source: https://ftp.postgresql.org/pub/source/v%v/postgresql-%v.tar.bz2
+Source-MD5: 96d5f5f8e78eea6cada9d2e02718cc28
+Source-Checksum: SHA256(61f93a94ccddbe0b2d1afaf03f04ba605d8af5b774ff9b830e5adeb50ab55cb0)
 PatchScript: <<
 	#!/bin/sh -ex
 	sed -e 's|@BUILDDIR@|%b|g' -e 's|@INSTPREFIX@|%p|g' -e 's|@PGVERSION@|%type_raw[postgresql]|g' < %{PatchFile} | patch -p1
 	
+	# Use xcrun instead of xcodebuild to support Xcode Command Line Tools only (so not the full Xcode).
+	sed -i.orig -e 's|xcodebuild -version -sdk macosx Path|xcrun --sdk macosx --show-sdk-path|g' src/template/darwin
+
 	# If we have fink ExtUtils::ParseXS, it is early in PERL5LIB;
 	# therefore we need the xsubpp program (also part of that
 	# pkg). Handcoded makefiles for perl modules are bad, m'kay?
@@ -212,7 +215,9 @@ SplitOff: <<
 		postgresql94-dev,
 		postgresql95-dev,
 		postgresql96-dev,
-		postgresql10-dev
+		postgresql10-dev,
+		postgresql11-dev,
+		postgresql12-dev
 	<<
 	Replaces: <<
 		postgresql92-dev,
@@ -220,7 +225,9 @@ SplitOff: <<
 		postgresql94-dev,
 		postgresql95-dev,
 		postgresql96-dev,
-		postgresql10-dev
+		postgresql10-dev,
+		postgresql11-dev,
+		postgresql12-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<

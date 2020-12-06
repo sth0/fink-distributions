@@ -1,33 +1,38 @@
 Package: libyaml
-Version: 0.1.6
+Version: 0.2.5
 Revision: 1
+BuildDepends: fink-package-precedence
 Depends: %N-shlibs (= %v-%r)
 BuildDependsOnly: true
-Source: http://pyyaml.org/download/%n/yaml-%v.tar.gz
-Source-MD5: 5fe00cda18ca5daeb43762b80c38e06e
-PatchScript: <<
-	# Patch configure to not link like Puma on Yosemite
-	perl -pi.bak -e 's|10\.\[012\]\*|10.[012][,.]*|g' configure
-<<
+Source: https://pyyaml.org/download/%n/yaml-%v.tar.gz
+Source-Checksum: SHA256(c642ae9b75fee120b2d96c712538bd2cf283228d2337df2cf2988e3c02678ef4)
+
 SetCFLAGS: -Os
-ConfigureParams: --disable-dependency-tracking --disable-static
+ConfigureParams: --disable-static
+CompileScript: <<
+  %{default_script}
+  fink-package-precedence --prohibit-bdep=%n .
+<<
+
 InfoTest: <<
-	TestScript: make check || exit 2
+  TestScript: <<
+    make check || exit 2
+    fink-package-precedence --prohibit-bdep=%n .
+  <<
 <<
+
 InstallScript: make install DESTDIR=%d
-DocFiles: LICENSE README
+DocFiles: License ReadMe.md
+
 Splitoff: <<
-  Package: %N-shlibs
-  Files: <<
-    lib/libyaml-0.2.dylib
-  <<
-  Shlibs: <<
-    %p/lib/libyaml-0.2.dylib 3.0.0 %n (>= 0.1.3-2)
-  <<
-  DocFiles: LICENSE
+  Package:  %N-shlibs
+  Files:    lib/libyaml-0.2.dylib
+  Shlibs:   %p/lib/libyaml-0.2.dylib 3.0.0 %n (>= 0.1.3-2)
+  DocFiles: License
 <<
+
 License: BSD
-Homepage: http://pyyaml.org/wiki/LibYAML
+Homepage: https://pyyaml.org/wiki/LibYAML
 Maintainer: Jack Fink <jackfink@users.sourceforge.net>
 Description: YAML 1.1 parser and emitter written in C
 

@@ -2,29 +2,32 @@ Info2: <<
 
 Package: cran-metafor-r%type_pkg[rversion]
 Distribution: <<
-	(%type_pkg[rversion] = 31 ) 10.9,
-	(%type_pkg[rversion] = 31 ) 10.10,
-	(%type_pkg[rversion] = 31 ) 10.11,
-	(%type_pkg[rversion] = 31 ) 10.12,
-	(%type_pkg[rversion] = 32 ) 10.9,
-	(%type_pkg[rversion] = 32 ) 10.10,
-	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2)
-Version: 2.0-0
+Type: rversion (3.6 3.5)
+Version: 2.4-0
 Revision: 1
 Description: Meta-Analysis Package for R
-Homepage: https://cran.r-project.org/web/packages/metafor/index.html
+Homepage: https://cran.r-project.org/package=metafor
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: https://cran.r-project.org/src/contrib/metafor_%v.tar.gz
-Source-MD5: 251372f7456dbd90e1b6849057fbaf86
+Source: mirror:custom:metafor_%v.tar.gz
+Source-MD5: 751cb240a6c1bd0bc473fb5e839536da
 SourceDirectory: metafor
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/metafor
+<<
 Depends: <<
 	r-base%type_pkg[rversion],
-	cran-nlme-r%type_pkg[rversion],
-	cran-matrix-r%type_pkg[rversion]
+	cran-matrix-r%type_pkg[rversion],
+	cran-nlme-r%type_pkg[rversion]
 <<
 BuildDepends: r-base%type_pkg[rversion]-dev
 CompileScript: <<
@@ -62,7 +65,7 @@ known correlation structures (e.g., due to phylogenetic relatedness)
 can also be conducted.
 <<
 DescPackaging: <<
-  R (>= 3.2.0)
+  R (>= 3.5.0)
 <<
 
 <<

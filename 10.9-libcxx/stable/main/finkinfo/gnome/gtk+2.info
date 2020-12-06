@@ -1,6 +1,6 @@
 Package: gtk+2
 Version: 2.18.9
-Revision: 13
+Revision: 111
 Description: The Gimp Toolkit
 License: LGPL
 Maintainer: The Gnome Core Team <fink-gnome-core@lists.sourceforge.net>
@@ -14,7 +14,7 @@ Depends: <<
 BuildDepends: <<
 	atk1 (>= 1.32.0-1),
 	cairo (>= 1.12.14-1),
-	fink (>= 0.24.12-1),
+	fink (>= 0.30.0),
 	fink-package-precedence,
 	fontconfig2-dev (>= 2.10.0-1),
 	freetype219 (>= 2.6-1),
@@ -35,13 +35,17 @@ Conflicts: %N-common
 Replaces: %N-common
 Source: mirror:gnome:sources/gtk+/2.18/gtk+-%v.tar.bz2
 Source-MD5: f680d38c973635365acababacb1730ec
-Source2: mirror:debian:pool/main/g/gtk+2.0/gtk+2.0_2.18.7-1.diff.gz
+#Source2: mirror:debian:pool/main/g/gtk+2.0/gtk+2.0_2.18.7-1.diff.gz
+Source2: https://ftp.gnome.org/mirror/archive/ftp.sunet.se/pub/mac/fink/gtk+2.0_2.18.7-1.diff.gz
 Source2-MD5: 4a41c6d2b5d29833759610abe1268686
 PatchFile: %n.patch
 PatchFile-MD5: ff65044275710a14327d9c813ab2fc4e
+PatchFile2: %n-cups.patch
+PatchFile2-MD5: 267147c8bbd7f2611354dfda3650daaf
 PatchScript: <<
 #!/bin/sh -ev
 	sed -e 's|@PREFIX@|%p|g' <%{PatchFile} | patch -p1
+	patch -p1 < %{PatchFile2}
 	gzip -dc ../gtk*.diff.gz | patch -p1
 	for file in \
 		015_default-fallback-icon-theme.patch \
@@ -329,6 +333,12 @@ DescPort: <<
 	upstream patch to import local copy of that function for
 	platforms where system cups is too old.
 	https://bugzilla.gnome.org/show_bug.cgi?id=610176
+
+	Upgrade cups usage to CUPS-1.6, which is available as of
+	macOS10.8. Xcode11 deprecated direct access to several
+	functions which must now be called via accessor functions.
+	New patch by Tom Liehe submitted to fink-beginners.
+	https://sourceforge.net/p/fink/mailman/message/36916041/
 
 	Hidden-visibility is only partially supported on non-ELF and
 	causes problems on 10.7 due to use of weak aliases. Removed in

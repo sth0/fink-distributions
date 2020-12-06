@@ -9,28 +9,59 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 0.3-6
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 0.4.5
 Revision: 1
 Description: Mesh generation and surface tesselation
-Homepage: https://cran.r-project.org/web/packages/geometry/index.html
+Homepage: https://cran.r-project.org/package=geometry
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: https://cran.r-project.org/src/contrib/geometry_%v.tar.gz
-Source-MD5: 82c05b2b9cf6d36d70472c88aae9dde8
+Source: mirror:custom:geometry_%v.tar.gz
+Source-MD5: f6b987bf32a6f679bc7d50530dbc3696
 SourceDirectory: geometry
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/geometry
+<<
 Depends: <<
 	r-base%type_pkg[rversion],
+	cran-linprog-r%type_pkg[rversion],
+	cran-lpsolve-r%type_pkg[rversion],
 	cran-magic-r%type_pkg[rversion],
+	cran-rcpp-r%type_pkg[rversion],
+	cran-rcppprogress-r%type_pkg[rversion],
 	libgettext8-shlibs
 <<
 BuildDepends: <<
 	fink (>= 0.27.2),
 	r-base%type_pkg[rversion]-dev,
+	cran-rcpp-r%type_pkg[rversion]-dev,
 	libgettext8-dev
 <<
+GCC: 4.0
 CompileScript: <<
   #!/bin/bash -ev
   export TMPDIR=%b/tmp
@@ -68,7 +99,7 @@ allow for this. Currently the package only gives access to Delaunay
 triangulation and convex hull computation.
 <<
 DescPackaging: <<
-  R (>= 2.5.0)
+  R (>= 3.0.0)
 <<
 
 <<

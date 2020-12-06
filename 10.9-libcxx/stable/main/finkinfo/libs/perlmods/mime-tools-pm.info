@@ -4,11 +4,18 @@ Version: 5.509
 Revision: 1
 Epoch: 1
 Description: Perl module for manipulating MIME data
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 License: Artistic
 Maintainer: Benjamin Reed <mime-tools-pm@fink.raccoonfink.com>
 BuildDepends: <<
-	test-deep-pm%type_pkg[perl]
+	test-deep-pm
 <<
 Depends: <<
 	convert-binhex-pm,

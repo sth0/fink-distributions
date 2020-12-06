@@ -5,14 +5,14 @@ Revision: 1
 Description: Replacement for plain tuple used in _version_
 License: LGPL
 Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
-Type: python (2.7 3.4 3.5 3.6 3.7)
+Type: python (2.7 3.4 3.5 3.6 3.7 3.8)
 Depends: <<
 	python%type_pkg[python]
 <<
 BuildDepends: <<
 	setuptools-tng-py%type_pkg[python]
 <<
-Source: https://pypi.python.org/packages/source/v/versiontools/versiontools-%v.tar.gz
+Source: https://files.pythonhosted.org/packages/source/v/versiontools/versiontools-%v.tar.gz
 Source-MD5: 602b7db8eea30dd29a1d451997adf251
 CompileScript: <<
 	%p/bin/python%type_raw[python] setup.py build

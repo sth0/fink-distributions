@@ -1,0 +1,67 @@
+Info2: <<
+
+Package: libspatialindex3-shlibs
+
+Version: 1.8.0
+Revision: 7
+Description: Libraries for Spatial Index
+License: BSD
+Homepage: http://libspatialindex.github.com
+Maintainer: BABA Yoshihiko <babayoshihiko@mac.com>
+DescDetail: <<
+The purpose of this library is to provide:
+  1. An extensible framework that will support robust 
+     spatial indexing methods.
+  2. Support for sophisticated spatial queries. Range, 
+     point location, nearest neighbor and k-nearest 
+     neighbor as well as parametric queries (defined 
+     by spatial constraints) should be easy to deploy 
+     and run.
+  3. Easy to use interfaces for inserting, deleting 
+     and updating information.
+  4. Wide variety of customization capabilities. Basic 
+     index and storage characteristics like the page size, 
+     node capacity, minimum fan-out, splitting algorithm, 
+     etc. should be easy to customize.
+  5. Index persistence. Internal memory and external 
+  memory structures should be supported. Clustered and 
+  non-clustered indices should be easy to be persisted.
+<<
+
+# Dependencies.
+Conflicts: libspatialindex3 (<< 1.8.0-6)
+Replaces: libspatialindex3 (<< 1.8.0-6)
+BuildDepends: fink-package-precedence
+
+# Unpack Phase.
+Source: http://download.osgeo.org/libspatialindex/spatialindex-src-%v.tar.gz
+Source-MD5: aa78e2c641c472df257f49cd140669c4
+
+PatchScript: <<
+  # Patch configure to not link like Puma on Yosemite
+  perl -pi.bak -e 's|10\.\[012\]\*|10.[012][,.]*|g' configure
+<<
+
+# Compile Phase.
+GCC: 4.0
+ConfigureParams: --disable-static
+CompileScript: <<
+  %{default_script}
+  fink-package-precedence --prohibit-bdep=libspatialindex3 .
+<<
+InstallScript: <<
+#!/bin/bash -ev
+  make install DESTDIR=%d
+  rm -rf %i/include
+  rm -rf %i/lib/libspatialindex.{dylib,la}
+  rm -rf %i/lib/libspatialindex_c.{dylib,la}
+  rm -rf %i/lib/pkgconfig
+<<
+DocFiles: AUTHORS ChangeLog COPYING README
+
+Shlibs: <<
+  %p/lib/libspatialindex.3.dylib     4.0.0 %n (>= 1.8.0-1)
+  %p/lib/libspatialindex_c.3.dylib   4.0.0 %n (>= 1.8.0-1)
+<<
+
+<<

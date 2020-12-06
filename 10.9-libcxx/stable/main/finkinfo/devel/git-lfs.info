@@ -1,6 +1,6 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Package: git-lfs
-Version: 2.5.1
+Version: 2.9.0
 Revision: 1
 Description: Git Large File Storage extension
 DescDetail: <<
@@ -17,17 +17,18 @@ License: BSD
 Homepage: https://git-lfs.github.com
 Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
 
-Source: https://codeload.github.com/github/%n/tar.gz/v%v
-Source-Checksum: SHA256(85c3148c7cbd9216e356b9317bc726ff8d982b37654ec1b26c537238ba9bfd8e)
-SourceRename: %n-%v.tar.gz
+Source: https://github.com/%n/%n/releases/download/v%v/%n-v%v.tar.gz
+Source-Checksum: SHA256(f1963ad88747577ffeeb854649aeacaa741c59be74683da4d46b129a72d111b7)
+SourceDirectory: %n-%v
 
 Depends: git (>= 2.11.0-1)
-BuildDepends: go (>= 1.10.1-1), ronn-rb25 | ronn-rb24 | ronn-rb23 | ronn-rb22 | ronn-rb21 | ronn-rb20
+BuildDepends: go (>= 1.13.4-1), ronn-rb25 | ronn-rb24 | ronn-rb23 | ronn-rb22 | ronn-rb21 | ronn-rb20
 
 CompileScript: <<
 	#!/bin/sh -ev
 	export GOPATH=%b
 	
+	rm $GOPATH/go.mod
 	mkdir -p src/github.com/git-lfs
 	ln -s %b src/github.com/git-lfs/git-lfs
 	
@@ -47,4 +48,4 @@ InstallScript: <<
 	
 <<
 
-DocFiles: man/*.1.html CHANGELOG.md CONTRIBUTING.md LICENSE.md README.md ROADMAP.md
+DocFiles: man/*.1.html CHANGELOG.md CONTRIBUTING.md LICENSE.md README.md

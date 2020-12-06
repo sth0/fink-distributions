@@ -1,9 +1,9 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Info2: <<
 Package: future-py%type_pkg[python]
-Version: 0.16.0
+Version: 0.17.1
 Revision: 1
-Type: python (2.7 3.4 3.5 3.6 3.7)
+Type: python (2.7 3.4 3.5 3.6 3.7 3.8)
 
 Description: Single-source support for Python 3 and 2
 DescDetail: <<
@@ -22,10 +22,10 @@ DescPackaging: <<
 <<
 Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
 License: BSD
-Homepage: http://pypi.python.org/pypi/future
+Homepage: https://pypi.org/project/future
 
 Source: https://files.pythonhosted.org/packages/source/f/future/future-%v.tar.gz
-Source-MD5: 3e8e88a2bda48d54b1da7634d04760d7
+Source-Checksum: SHA256(67045236dcfd6816dc439556d009594abf643e5eb48992e36beac09c2ca659b8)
 
 Depends: python%type_pkg[python]
 BuildDepends: fink (>= 0.24.12), setuptools-tng-py%type_pkg[python]

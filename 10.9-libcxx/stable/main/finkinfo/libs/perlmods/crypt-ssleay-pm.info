@@ -2,7 +2,14 @@ Info2: <<
 Package: crypt-ssleay-pm%type_pkg[perl]
 Version: 0.73.06
 Revision: 1
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 Depends: <<
 	bytes-random-secure-pm,
 	openssl110-shlibs,
@@ -18,6 +25,9 @@ BuildDepends: <<
 <<
 Source: mirror:cpan:authors/id/N/NA/NANIS/Crypt-SSLeay-0.73_06.tar.gz
 Source-MD5: b00758ea402963ed78bcc7d7172fc335
+PatchFile: %{ni}.patch
+PatchFile-MD5: 695e586780ec442d8fb886e2139803af
+
 ConfigureParams: <<
 	--no-live-tests \
 	--incpath=%p/include \
@@ -36,11 +46,15 @@ InstallScript: <<
 UpdatePOD: true
 DocFiles: Changes README.md TODO
 
-Description: Perl module, allows perl to use OpenSSL 
+Description: Perl module, allows perl to use OpenSSL
 DescPackaging: <<
 	Former maintainer: Max Horn
 
 	Live network test disabled (requires a network connection)
+<<
+DescPort: <<
+Add '.' to @INC (needed for perl5.26+, OK on earlier perls)
+https://github.com/nanis/Crypt-SSLeay/pull/7
 <<
 License: Artistic
 Maintainer: Daniel Macks <dmacks@netspace.org>

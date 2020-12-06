@@ -1,7 +1,7 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Info4: <<
 Package: libcurl4
-Version: 7.61.0
+Version: 7.71.1
 Revision: 1
 Description: Lib. for transferring files with URL syntax
 DescDetail: <<
@@ -42,18 +42,17 @@ License: BSD
 
 Source: http://curl.haxx.se/download/curl-%v.tar.xz
 #Source: mirror:custom:curl-%v.tar.xz
-Source-MD5: 7ed6a932de56c870c42c33906a3eb69c
-Source-Checksum: SHA256(ef6e55192d04713673b4409ccbcb4cb6cd723137d6e10ca45b0c593a454e1720)
+Source-Checksum: SHA256(40f83eda27cdbeb25cd4da48cefb639af1b9395d6026d2da1825bf059239658c)
 
 Depends: %N-shlibs (= %v-%r)
 BuildDepends: <<
 	fink (>= 0.32),
 	fink-package-precedence,
-	libbrotli1 (>= 1.0.3-1),
+	libbrotli1 (>= 1.0.7-1),
 	libmetalink3 (>= 0.1.3-1),
-	libnghttp2.14 (>= 1.32.0-1),
+	libnghttp2.14 (>= 1.41.0-1),
 	librtmp (>= 2.3-8),
-	libssh2.1 (>= 1.7.0-1),
+	libssh2.1 (>= 1.9.0-1),
 	pkgconfig (>= 0.20-1)
 <<
 BuildConflicts: openldap24-dev
@@ -72,8 +71,13 @@ PatchScript: <<
 	perl -pi -e 's|10\.\[012\]\*|10.[012][,.]*|g' configure
 	
 	#Set up to use system's ldap
-	/bin/cp /usr/include/lber*.h .
-	/bin/cp /usr/include/ldap*.h .
+	InclPREFIX="/usr/include"
+	if [ "$(uname -r | cut -d. -f1)" -ge 18 ]; then
+		InclPREFIX="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include" 
+	fi
+
+	/bin/cp $InclPREFIX/lber*.h .
+	/bin/cp $InclPREFIX/ldap*.h .
 	/bin/cp /usr/lib/libldap.dylib .
 <<
 
@@ -123,14 +127,14 @@ SplitOff: <<
 	Package: %N-shlibs
   
 	Depends: <<
-		libbrotli1-shlibs (>= 1.0.3-1),
-		libnghttp2.14-shlibs (>= 1.32.0-1),
+		libbrotli1-shlibs (>= 1.0.7-1),
+		libnghttp2.14-shlibs (>= 1.41.0-1),
 		librtmp-shlibs (>= 2.3-8),
-		libssh2.1-shlibs (>= 1.7.0-1)
+		libssh2.1-shlibs (>= 1.9.0-1)
 	<<
     
 	Files: lib/libcurl.4.*dylib
-	Shlibs: %p/lib/libcurl.4.dylib 10.0.0 %n (>= 7.56.0-1)
+	Shlibs: %p/lib/libcurl.4.dylib 11.0.0 %n (>= 7.66.0-1)
 	DocFiles: CHANGES COPYING README RELEASE-NOTES
 <<
 
@@ -142,7 +146,7 @@ SplitOff2: <<
   Depends: %N-shlibs (= %v-%r), libmetalink3-shlibs (>= 0.1.3-1)
   
   Files: bin/curl share/man/man1/curl.1
-  DocFiles: CHANGES COPYING README RELEASE-NOTES docs/BINDINGS.md docs/BUGS docs/CONTRIBUTE.md docs/FAQ docs/FEATURES docs/HISTORY.md docs/KNOWN_BUGS docs/INTERNALS.md docs/MANUAL docs/RESOURCES docs/THANKS docs/TODO docs/TheArtOfHttpScripting docs/LICENSE-MIXING.md docs/SSLCERTS.md docs/VERSIONS
+  DocFiles: CHANGES COPYING README RELEASE-NOTES docs/BINDINGS.md docs/BUGS docs/CONTRIBUTE.md docs/FAQ docs/FEATURES docs/HISTORY.md docs/KNOWN_BUGS docs/INTERNALS.md docs/RESOURCES docs/THANKS docs/TODO docs/TheArtOfHttpScripting docs/LICENSE-MIXING.md docs/SSLCERTS.md docs/VERSIONS.md
 <<
 
 InfoTest: <<
@@ -200,6 +204,8 @@ InfoTest: <<
 	
 	echo '2056' >>tests/data/DISABLED
 	echo '2057' >>tests/data/DISABLED
+
+	echo '1452' >>tests/data/DISABLED
 
 	#The SSH tests will also be skipped as root but this isn't fatal.
 	

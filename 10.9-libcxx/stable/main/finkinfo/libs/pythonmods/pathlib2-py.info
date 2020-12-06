@@ -1,9 +1,9 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Info2: <<
 Package: pathlib2-py%type_pkg[python]
-Version: 2.3.2
+Version: 2.3.4
 Revision: 1
-Type: python (2.7 3.4 3.5 3.6 3.7)
+Type: python (2.7 3.4 3.5 3.6 3.7 3.8)
 Description: Object-oriented filesystem paths
 DescDetail: <<
 	Backport of pathlib from py34+.
@@ -13,7 +13,7 @@ License: BSD
 Homepage: https://pypi.org/project/pathlib2
 
 Source: https://files.pythonhosted.org/packages/source/p/pathlib2/pathlib2-%v.tar.gz
-Source-Checksum: SHA256(8eb170f8d0d61825e09a95b38be068299ddeda82f35e96c3301a8a5e7604cb83)
+Source-Checksum: SHA256(446014523bb9be5c28128c4d2a10ad6bb60769e78bd85658fe44a450674e0ef8)
 
 Depends: <<
 	python%type_pkg[python],

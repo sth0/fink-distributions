@@ -3,7 +3,14 @@ Package: http-body-pm%type_pkg[perl]
 Version: 1.22
 Revision: 1
 Description: HTTP body parser
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 License: Artistic/GPL
 Maintainer: Benjamin Reed <http-body-pm@fink.raccoonfink.com>
 
@@ -13,7 +20,7 @@ Depends: <<
 	perl%type_pkg[perl]-core
 <<
 BuildDepends: <<
-	test-deep-pm%type_pkg[perl]
+	test-deep-pm
 <<
 
 Source: mirror:cpan:modules/by-module/HTTP/HTTP-Body-%v.tar.gz

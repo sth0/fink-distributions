@@ -1,26 +1,20 @@
 Info2: <<
 
 Package: cran-rocr-r%type_pkg[rversion]
-Distribution: <<
-	(%type_pkg[rversion] = 31 ) 10.9,
-	(%type_pkg[rversion] = 31 ) 10.10,
-	(%type_pkg[rversion] = 31 ) 10.11,
-	(%type_pkg[rversion] = 31 ) 10.12,
-	(%type_pkg[rversion] = 32 ) 10.9,
-	(%type_pkg[rversion] = 32 ) 10.10,
-	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
-<<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 1.0-7
+Type: rversion (3.6)
+Version: 1.0-11
 Revision: 1
 Description: Visualizing scoring classifier performance
-Homepage: https://cran.r-project.org/web/packages/ROCR/index.html
+Homepage: https://cran.r-project.org/package=ROCR
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: https://cran.r-project.org/src/contrib/ROCR_%v.tar.gz
-Source-MD5: 46cbd43ae87fc4e1eff2109529a4820e
+Source: mirror:custom:ROCR_%v.tar.gz
+Source-MD5: 6b535985a22c7e0519ad85027c55dc3a
 SourceDirectory: ROCR
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/ROCR
+<<
 Depends: <<
 	r-base%type_pkg[rversion],
 	cran-gplots-r%type_pkg[rversion]
@@ -59,6 +53,11 @@ be quickly adjusted using a flexible parameter dispatching
 mechanism. Despite its flexibility, ROCR is easy to use, with
 only three commands and reasonable default values for all
 optional parameters.
+<<
+DescPackaging: <<
+  Package version   R version
+  1.0-10            >= 3.6.0
+  1.0-7             >= 3.1.0
 <<
 
 <<

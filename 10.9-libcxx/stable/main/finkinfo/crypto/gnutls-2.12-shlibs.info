@@ -1,0 +1,82 @@
+Package: gnutls-2.12-shlibs
+# Shlibs only stub. Nothing uses this.
+Version: 2.12.24
+Revision: 10
+Distribution: 10.9, 10.10, 10.11, 10.12, 10.13, 10.14, 10.14.5
+Source: ftp://ftp.gnutls.org/gcrypt/gnutls/v2.12/gnutls-%v.tar.xz
+Source-MD5: b09960551d963f1187bb9f87f1577bfa
+GCC: 4.0
+Replaces: gnutls-2.12 (<< 2.12.24-10)
+Conflicts: gnutls-2.12 (<< 2.12.24-10)
+BuildDepends: <<
+  fink (>= 0.32-1), fink-package-precedence, gmp5,
+  libtool2, libgettext8-dev, libiconv-dev, nettle4a, pkgconfig,
+  libtasn1-3, readline7
+<<
+UseMaxBuildJobs: false
+PatchFile: gnutls-2.12.patch
+PatchFile-MD5: cd1db6b95cd74c8c55cf866b610ee4a4
+PatchScript: <<
+  %{default_script}
+  perl -pi -e 's|_WIN32|_DARWIN_C_SOURCE|g' tests/chainverify.c
+  perl -pi -e 's|LTLIBTASN1|LIBTASN1_LIBS|g' libextra/Makefile.in
+<<
+ConfigureParams: <<
+  --libdir=%p/lib/gnutls-2.12 \
+  --without-p11-kit \
+  --mandir=%p/share/man \
+  --infodir=%p/share/info \
+  --enable-dependency-tracking \
+  --disable-guile \
+  --disable-openpgp-authentication \
+  --disable-doc \
+  --disable-static
+<<
+CompileScript: <<
+  %{default_script}
+  fink-package-precedence --prohibit-bdep=gnutls26,gnutls-2.12,gnutls28,gnutls30 .
+<<
+InstallScript: <<
+  make install DESTDIR=%d
+  cd %i; rm -r bin include lib/gnutls-2.12/*.la lib/gnutls-2.12/libgnutls{-extra,,-openssl,xx}.dylib \
+  	lib/gnutls-2.12/pkgconfig share/locale
+<<  
+Depends: <<
+	gmp5-shlibs, libgettext8-shlibs, libhogweed-shlibs,
+	libiconv, libtasn1-3-shlibs, nettle4a-shlibs, readline7-shlibs
+<<
+Shlibs: <<
+	%p/lib/gnutls-2.12/libgnutls.26.dylib         49.0.0 %n (>= 2.12.20-1)
+	%p/lib/gnutls-2.12/libgnutls-extra.26.dylib   49.0.0 %n (>= 2.12.20-1)
+	%p/lib/gnutls-2.12/libgnutls-openssl.27.dylib 28.0.0 %n (>= 2.12.7-1)
+	%p/lib/gnutls-2.12/libgnutlsxx.27.dylib       28.0.0 %n (>= 2.12.7-1)
+<<
+InfoTest: TestScript: make check || exit 2
+DocFiles: COPYING README lib/COPYING:COPYING.lib libextra/COPYING:COPYING.libextra
+Description: GNU TLS encryption library
+DescDetail: <<
+GnuTLS is a project that aims to develop a library which provides
+a secure layer, over a reliable transport layer. Currently the GnuTLS
+library implements the proposed standards by the IETF's TLS working group. 
+
+  Quoting from RFC2246 - the TLS 1.0 protocol specification: 
+  "The TLS protocol provides communications privacy over the Internet.
+   The protocol allows client/server applications to communicate in a way that
+   is designed to prevent eavesdropping, tampering, or message forgery."
+<<
+DescPort: <<
+   GnuTLS now uses an internal opencdk, even if the independent lib and headers are installed.
+   Version 2.12.? bumped the libversion of the openssl and xx shlibs without increasing
+   the libversion of libgnutls or libgnutls-extra -- so all 4 shlibs are installed in a private dir
+   to allow prior shlibs with the same libversion to exist according to policy.
+   
+   Chainverify test is disabled via patchscript because upstream redefines time()
+   for chainverify test, which will not work for us.
+<<
+DescPackaging: <<
+	*shlibs-only stub as of 2.12.4-10 because nothing else is using it.
+	*Does not seem compatible with libtasn1-6 API.
+<<
+License: GPL/LGPL
+Maintainer: Dave Reiser <dbreiser@users.sourceforge.net>
+Homepage: http://www.gnutls.org/

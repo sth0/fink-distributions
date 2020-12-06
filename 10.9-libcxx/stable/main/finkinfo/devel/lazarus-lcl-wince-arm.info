@@ -1,18 +1,18 @@
 Package: lazarus-lcl-wince-arm
-Version: 1.8.4
+Version: 2.0.8
 Revision: 1
 License: GPL/LGPL
 
 Depends: <<
-  lazarus-aqua (>= 1.8) | lazarus-gtk2 (>= 1.8) | lazarus-qt4 (>= 1.8) | 
-  lazarus-qt5 (>= 1.8),
+  lazarus-aqua (>= 2.0) | lazarus-cocoa (>= 2.0) | lazarus-gtk2 (>= 2.0) | 
+  lazarus-qt4 (>= 2.0) | lazarus-qt5 (>= 2.0),
   fpc-cross-arm-wince (>= 3.0.4)
 <<
 
 Recommends: fpc-doc, lazarus-doc
 
 Source: mirror:sourceforge:lazarus/lazarus-%v.tar.gz
-Source-MD5: 57aee3f53202f069fbbf4304fd810990
+Source-MD5: 4479133eb1b3cfa678b9526408c2356f
 
 SourceDirectory: lazarus
 
@@ -62,6 +62,6 @@ DescPort: <<
   - grep removes the directories, which do not contain unit files 
 <<
 
-Homepage: http://wiki.freepascal.org/Main_Page
+Homepage: https://wiki.freepascal.org/Main_Page
 
 Maintainer: Karl-Michael Schindler <karl-michael.schindler@web.de>

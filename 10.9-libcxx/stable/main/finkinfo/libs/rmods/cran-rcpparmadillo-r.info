@@ -2,41 +2,54 @@ Info2: <<
 
 Package: cran-rcpparmadillo-r%type_pkg[rversion]
 Distribution: <<
-	(%type_pkg[rversion] = 31 ) 10.9,
-	(%type_pkg[rversion] = 31 ) 10.10,
-	(%type_pkg[rversion] = 31 ) 10.11,
-	(%type_pkg[rversion] = 31 ) 10.12,
-	(%type_pkg[rversion] = 32 ) 10.9,
-	(%type_pkg[rversion] = 32 ) 10.10,
-	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 0.7.960.1.1
+Type: rversion (3.6 3.5 3.4 3.3)
+Version: 0.9.900.1.0
 Revision: 1
 Description: Rcpp integration for Armadillo
-Homepage: http://cran.r-project.org/web/packages/RcppArmadillo/index.html
+Homepage: https://cran.r-project.org/package=RcppArmadillo 
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/RcppArmadillo_%v.tar.gz
-Source-MD5: ff6beb3ff320ccf374b0037609cec70b
+Source: mirror:custom:RcppArmadillo_%v.tar.gz
+Source-MD5: 2e16f1059a5403175fc29fddff8b57ed
 SourceDirectory: RcppArmadillo
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/RcppArmadillo
+<<
 Depends: <<
 	fink (>= 0.27.2), 
-	( %type_raw[rversion] >= 3.3 ) r-base%type_pkg[rversion],
-	( %type_raw[rversion] = 3.2 ) r-base%type_pkg[rversion] (>= 3.2.0-2),
-	( %type_raw[rversion] = 3.1 ) r-base%type_pkg[rversion] (>= 3.1.3-3),
-	cran-rcpp-r%type_pkg[rversion] (>= 0.11.0),
-	gcc5-shlibs,
+	r-base%type_pkg[rversion],
+	cran-rcpp-r%type_pkg[rversion] (>= 0.11.0-1),
+	(%type_raw[rversion] << 3.6) gcc5-shlibs | (%type_raw[rversion] >= 3.6) gcc9-shlibs,
 	libgettext8-shlibs
 <<
 BuildDepends: <<
 	fink (>= 0.27.2), 
-	( %type_raw[rversion] >= 3.3 ) r-base%type_pkg[rversion]-dev,
-	( %type_raw[rversion] = 3.2 ) r-base%type_pkg[rversion]-dev (>= 3.2.0-2),
-	( %type_raw[rversion] = 3.1 ) r-base%type_pkg[rversion]-dev (>= 3.1.3-3),
-	cran-rcpp-r%type_pkg[rversion]-dev (>= 0.11.0),
-	gcc5-compiler,
+	r-base%type_pkg[rversion]-dev,
+	cran-rcpp-r%type_pkg[rversion]-dev (>= 0.11.0-1),
+	(%type_raw[rversion] << 3.6) gcc5-compiler | (%type_raw[rversion] >= 3.6) gcc9-compiler,
 	libgettext8-dev
 <<
 CompileScript: <<
@@ -53,10 +66,10 @@ InstallScript: <<
   
   mkdir -p %i/lib/R/%type_raw[rversion]/site-library
   pushd %b/.. && $BIN_R --verbose CMD INSTALL --library=%i/lib/R/%type_raw[rversion]/site-library RcppArmadillo
-  if (( $(echo "%type_raw[rversion] > 3.3" |bc -l) )); then
-  install_name_tool -id %p/lib/R/%type_raw[rversion]/site-library/RcppArmadillo/libs/RcppArmadillo.so %i/lib/R/%type_raw[rversion]/site-library/RcppArmadillo/libs/RcppArmadillo.so
+  if [ "%type_num[rversion]" -lt "34" ]; then
+	  install_name_tool -id %p/lib/R/%type_raw[rversion]/site-library/RcppArmadillo/libs/RcppArmadillo.dylib %i/lib/R/%type_raw[rversion]/site-library/RcppArmadillo/libs/RcppArmadillo.dylib
   else
-  install_name_tool -id %p/lib/R/%type_raw[rversion]/site-library/RcppArmadillo/libs/RcppArmadillo.dylib %i/lib/R/%type_raw[rversion]/site-library/RcppArmadillo/libs/RcppArmadillo.dylib
+	  install_name_tool -id %p/lib/R/%type_raw[rversion]/site-library/RcppArmadillo/libs/RcppArmadillo.so %i/lib/R/%type_raw[rversion]/site-library/RcppArmadillo/libs/RcppArmadillo.so
   fi
 <<
 SplitOff: <<
@@ -92,6 +105,9 @@ integration. Armadillo is licensed under the MPL 2.0, while
 RcppArmadillo (the Rcpp bindings/bridge to Armadillo) is
 licensed under the GNU GPL version 2 or later, as is the
 rest of Rcpp.
+<<
+DescPackaging: <<
+  R (>= 3.3)
 <<
 
 <<

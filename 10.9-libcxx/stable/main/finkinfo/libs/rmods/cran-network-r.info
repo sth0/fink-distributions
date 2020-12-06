@@ -9,21 +9,48 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 1.13.0
-Revision: 2
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 1.16.0
+Revision: 1
 Description: Classes for Relational Data
-Homepage: http://cran.r-project.org/web/packages/network/index.html
+Homepage: https://cran.r-project.org/package=network
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/network_%v.tar.gz
-Source-MD5: d0b967d6f1aad43b6479d72f29b705de
+Source: mirror:custom:network_%v.tar.gz
+Source-MD5: e4a1607d0b2c5bd0edc3fe115563a212
 SourceDirectory: network
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/network
+<<
 Depends: <<
 	fink (>= 0.27.2),
 	r-base%type_pkg[rversion],
+	cran-magrittr-r%type_pkg[rversion],
+	cran-tibble-r%type_pkg[rversion],
 	libgettext8-shlibs
 <<
 BuildDepends: <<

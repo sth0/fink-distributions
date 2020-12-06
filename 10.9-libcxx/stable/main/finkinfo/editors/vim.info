@@ -1,14 +1,14 @@
 Info2: <<
 Package: vim%type_pkg[-nox]
 Type: -nox (boolean)
-Version: 8.1.346
+Version: 8.2.2083
 Revision: 1
 Description: Improved version of the editor "vi"
 License: Restrictive/Distributable
 Maintainer: Hisashi Todd Fujinaka <htodd@twofifty.com>
 Source: http://www.i8u.org/~htodd/finksrc/vim-%v.tar.bz2
-Source-MD5: efe8382a54afc1f72a543d087c73bd89
-Source-Checksum: SHA256(ddb406378b86bb40477569dbf8f211eaddd401b12fcbf3878db4f135a860789c)
+Source-MD5: aa203b40129e1109ac2cf01677423a30
+Source-Checksum: SHA256(5d62337707d6cfabe4fe0b65dae9ee7f659bd1fe4c60b3d16d602b2b98110484)
 SourceDirectory: vim
 PatchScript: <<
 	# autoconf2.6ish patch for modern XQuartz paths
@@ -53,28 +53,51 @@ Conflicts: vim, vim-nox
 Replaces: vim, vim-nox
 
 SetCPPFLAGS: -MD
+ConfigureParams: <<
+	(%type_raw[-nox] = .) --with-gnome=%p \
+	(%type_raw[-nox] = -nox) --disable-gui \
+	(%type_raw[-nox] = -nox) --without-x \
+	--mandir=%i/share/man \
+	--enable-cscope \
+	--enable-multibyte \
+	--with-features=big \
+	--enable-gui=gtk2 \
+	--disable-darwin \
+	--with-local-dir=%p \
+	--enable-pythoninterp \
+	--disable-canberra
+<<
 CompileScript: <<
-	#!/bin/sh -ev
-	cd src
-	if [ "%type_raw[-nox]" == "." ]; then
-		./configure --prefix=%p --with-gnome=%p --mandir=%i/share/man --enable-cscope --enable-multibyte --with-features=big --enable-gui=gtk2 --disable-darwin --with-local-dir=%p --enable-pythoninterp
-	fi
-	if [ "%type_raw[-nox]" == "-nox" ]; then
-		./configure --prefix=%p --mandir=%i/share/man --enable-cscope --enable-multibyte --with-features=big --disable-gui --disable-darwin --without-x --with-local-dir=%p --enable-pythoninterp
-	fi
-	make
+        #!/bin/sh -ev
+        cd src
+	%{default_script}
 	fink-package-precedence --depfile-ext='\.d' .
 <<
 
-# InstallScript: <<
-# 	cd src; make install prefix=%i
-# 	perl -pi -e 's,%i,%p,g' %i/share/man/man1/*
-# <<
+#InstallScript: <<
+#	cd src; make install DESTDIR=%d
+#	perl -pi -e 's,%i,%p,g' %i/share/man/man1/*
+#<<
 
-# InfoTest: <<
-# 	UseMaxBuildJobs: false
-# 	Testscript: make test
-# <<
+PostInstScript: <<
+	[ "%type_raw[-nox]" == "." -a -x %p/bin/update-desktop-database ] && update-desktop-database -q || :
+	[ "%type_raw[-nox]" == "." ] && gtk-update-icon-cache -f -t %p/share/icons/hicolor || :
+<<
+
+PostRmScript: <<
+	[ "%type_raw[-nox]" == "." -a -x %p/bin/update-desktop-database ] && update-desktop-database -q || :
+	[ "%type_raw[-nox]" == "." ] && gtk-update-icon-cache -f -t %p/share/icons/hicolor || :
+<<
+
+InfoTest: <<
+        UseMaxBuildJobs: false
+        Testscript: <<
+                #!/bin/sh -ev
+                cd src
+                make scripttests || echo fail
+                make run_json_test run_kword_test run_memfile_test run_message_test unittest
+        <<
+<<
 
 DocFiles: README.txt src/INSTALL
 Homepage: http://www.vim.org/

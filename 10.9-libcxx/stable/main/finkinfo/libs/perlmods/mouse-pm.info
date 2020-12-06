@@ -1,9 +1,16 @@
 Info4: <<
 Package: mouse-pm%type_pkg[perl]
-Version: 2.5.1
+Version: 2.5.10
 Revision: 1
 Description: Object system for Perl based on Moose
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 License: Artistic
 Maintainer: Benjamin Reed <mouse-pm@fink.raccoonfink.com>
 
@@ -30,11 +37,11 @@ TestDepends: <<
 	path-class-pm%type_pkg[perl],
 	pod-coverage-moose-pm%type_pkg[perl],
 	regexp-common-pm,
-	test-deep-pm%type_pkg[perl],
+	test-deep-pm,
 	test-exception-pm,
 	test-fatal-pm,
 	test-leaktrace-pm%type_pkg[perl],
-	test-output-pm%type_pkg[perl],
+	test-output-pm,
 	test-simple-pm%type_pkg[perl] (>= 0.94-1),
 	uri-pm%type_pkg[perl]
 <<
@@ -46,7 +53,7 @@ TestScript: <<
 <<
 
 Source: mirror:cpan:authors/id/S/SK/SKAJI/Mouse-v%v.tar.gz
-Source-MD5: 90372e8137047008f8990a4b084054db
+Source-MD5: 0dd19d703e14af71d723ba787d631858
 PatchFile: %{ni}.patch
 PatchFile-MD5: 24a1276c74e0d6fb219440e84d706176
 

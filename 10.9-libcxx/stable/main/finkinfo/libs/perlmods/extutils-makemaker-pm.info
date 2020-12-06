@@ -1,10 +1,17 @@
 # -*- coding: ascii; tab-width: 4; x-counterpart: extutils-makemaker-pm.patch -*-
 Info2: <<
 Package: extutils-makemaker-pm%type_pkg[perl]
-Version: 7.34
-Revision: 1
+Version: 7.44
+Revision: 2
 
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 Description: Perl module to create a module Makefile
 License: Artistic
 Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
@@ -21,6 +28,10 @@ DescPort: <<
 	
 	It appears that Cwd::cwd can't get the cwd from within fink's build
 	environment but Cwd::getcwd can. Patch MakeMaker.pm to use getcwd.
+	
+	On 10.15, Apple hardened system-perl to disallow loading from relative
+	paths. So patch INST_ARCHLIB to be an absolute path. The relative path
+	test "CHILD INST_ARCHLIB" is patched to use full paths.
 <<
 
 # Dependencies:
@@ -35,6 +46,7 @@ Depends: <<
 	scalar-list-utils-pm%type_pkg[perl],
 	version-pm%type_pkg[perl] (>= 1:0.88-1)
 <<
+BuildDepends: fink (>= 0.30.0)
 
 Replaces: %{Ni}586-bin, %{Ni}588-bin
 Provides: %N-bin
@@ -42,14 +54,24 @@ Provides: %N-bin
 # Unpack Phase:
 #Source: mirror:cpan:modules/by-module/ExtUtils/ExtUtils-MakeMaker-%v.tar.gz
 Source: mirror:cpan:authors/id/B/BI/BINGOS/ExtUtils-MakeMaker-%v.tar.gz
-Source-MD5: 073c0fb4eebf3953de2a1e94fa189bac
-Source-Checksum: SHA256(95f1eb44de480d00b28d031b574ec868f7aeeee199eb5abe5666f6bcbbf68480)
+Source-Checksum: SHA256(52a18f8271250faf5f3527499dd2b78d3b4fd3b064408d0cfdda9a3538887188)
 
 PatchFile: %{ni}.patch
-PatchFile-MD5: 4e690e03f0f654f0922c2261038f1c4e
+PatchFile-MD5: 4f00b40fb3b44fa11c0fb36bb509720c
+PatchFile2: %{ni}-sdk.patch
+PatchFile2-MD5: b528e11f18f145224a423088f730b7a4 
 PatchScript: <<
 	#!/bin/bash -ev
 	/usr/bin/sed 's|@PREFIX@|%p|g' < %{PatchFile} | patch -p1
+	darwin_vers=`uname -r | cut -d. -f1`
+	# only apply SDK fix for 10.14/10.15 (which hide system-headers) and their systemperl
+	if [[ ("$darwin_vers" -eq 18 || "$darwin_vers" -eq 19) && %type_num[perl] -eq 5184 ]]; then
+	  patch -p1 < %{PatchFile2}
+	fi
+	# Apply SDK fix for 11.0 and its systemperl
+	if [[ "$darwin_vers" -eq 20 && %type_num[perl] -eq 5282 ]]; then
+	  patch -p1 < %{PatchFile2}
+	fi
 
 	/usr/bin/sed -i '' "s/'\.\$perlflags\.'//" lib/ExtUtils/MM_Unix.pm
 <<

@@ -1,11 +1,12 @@
 Info2: <<
 Package: hdf5.9-gfortran
+# v1.8.14 is last of the libN=9. 1.8.15 bumps SONAME to 10.
 Version: 1.8.14
-Revision: 3
-Type: gcc (5)
+Revision: 4
+Type: gcc (9)
 Description: HDF5 (v1.8 API)--static FORTRAN libraries
 License: OSI-Approved
-Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+Maintainer: None <fink-devel@lists.sourceforge.net>
 
 BuildDepends: <<
 	gcc%type_pkg[gcc]-compiler,
@@ -41,7 +42,7 @@ Conflicts: <<
 <<	
 BuildDependsOnly: true
 
-Source: ftp://ftp.hdfgroup.org/HDF5/current/src/hdf5-%v.tar.gz 
+Source: https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-%v/src/hdf5-%v.tar.gz 
 Source-MD5: a482686e733514a51cde12d6fe5c5d95
 Source-Checksum: SHA1(3ad44ba89410ca21a370382522c617a95a2f6c78)
 
@@ -117,8 +118,10 @@ Fink's "%N*" packages are intended to replace the corresponding ones from
 DescUsage: <<
 <<
 DescPackaging: <<
+    Former Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+
 	Built separately from the rest of hdf5.9 so that people who don't need the FORTRAN libs 
-	don't have to build gcc4N.
+	don't have to build gccN.
 
 	No BuildDepends on hdf5.9 because we build _all_ of HDF5 and then strip out the C and 
 	C++ libs, as well as anything that is also in the hdf5.8-oldapi package.

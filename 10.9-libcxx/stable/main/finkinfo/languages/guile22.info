@@ -1,6 +1,6 @@
 Info3: <<
 Package: guile22
-Version: 2.2.4
+Version: 2.2.7
 Revision: 1
 BuildDepends: <<
 	fink (>= 0.32),
@@ -28,9 +28,9 @@ Depends: <<
 # BuildConflicts: guile22-dev
 GCC: 4.0
 Source: mirror:gnu:guile/guile-%v.tar.xz
-Source-MD5: d2ee223fdb7570b68469e339a7074d1d
-Source2: http://archive.ubuntu.com/ubuntu/pool/universe/g/guile-2.2/guile-2.2_2.2.3+1-5.debian.tar.xz
-Source2-MD5: 288ab7939d53021bb292fbc1022e2745
+Source-MD5: 7a7e8def41678c567148c26a8a0a0873
+Source2: http://archive.ubuntu.com/ubuntu/pool/main/g/guile-2.2/guile-2.2_2.2.6+1-1.debian.tar.xz
+Source2-MD5: 9542eac69576e054a3e46004e0e14b96
 #PatchFile: %n.patch
 #PatchFile-MD5: 2dbc4ca9cc216dd0418b0482f8a8d3a6
 PatchScript: <<
@@ -42,23 +42,12 @@ perl -i -pe 's|(lt_dlinit\s*\(\s*\))|\1; lt_dladdsearchdir("\%p/lib")|' libguile
 for f in lib/iconv*.c
 do sed -i.orig '/^#undef/d' $f
 done
-# lines marked #REMOVE225 can be removed at version 2.2.5 to simplify PatchScript
-#REMOVE225 fix enum decl for ANSI strict C
-#REMOVE225 sed -i.orig '/SCM_ARRAY_ELEMENT_TYPE_LAST/s|,$||' libguile/array-handle.h
 # fix typedef for function pointer
 sed -i.orig 's|void.*scm_t_subr|void (*scm_t_subr)()|' libguile/__scm.h
 # fix framework flag for CoreFoundation (defined in aclocal.m4)
 sed -i.orig 's|-Wl,-framework -Wl,CoreFoundation|-Wl,-framework,CoreFoundation|g' configure
-#REMOVE225 noreturn is a macro defined by clang's headers (since 3.3)
-#REMOVE225 sed -i.orig -e '/scm_ithrow/s|int noreturn|&_arg|' libguile/throw.h libguile/throw.c
-# release accidentally botched #! lines in automake-provided scripts
-for f in `grep -lr "/nix/" build-aux`
-do sed -i.orig -e '1s|#\!.*/bin/sh|#\!/bin/sh|' $f
-done
-#REMOVE225 clang from XCode 5.1 miscompiles(?) vm.c 
-#REMOVE225if [[ ! "$(clang --version | head -n1 | cut -d- -f2 | cut -d')' -f1)" < "503.0.38" ]] 
-#REMOVE225then sed -i.orig -e '/libguile_@GUILE_EFFECTIVE_VERSION@_la-vm.Tpo/s|\$(CFLAGS)|& -O0|' libguile/Makefile.in
-#REMOVE225fi
+# make sure sed usage is portable to BSD sed
+perl -pi -e 's|\$\(SED\) -i -e|\$\(SED\) -i.bak -e|g' libguile/Makefile.in
 # convenient build script for use by other packages
 {
 echo '#!/bin/sh'
@@ -70,37 +59,24 @@ echo 'eval "$@"'
 } > guile22-build
 chmod +x guile22-build
 ### apply debian patches, which mostly deal with known possible failing tests
-#glibc specific
-rm ../debian/patches/0006-i18n.test-accommodate-formatting-changes-in-glibc-2..patch
-# present upstream (2.2.4)
-rm ../debian/patches/0007-load-thunk-from-memory-reports-the-correct-error.patch
-rm ../debian/patches/0008-Fix-error-reporting-in-load-thunk-from-memory.patch
-rm ../debian/patches/0009-compile-Load-language-modules-upfront.patch
-# no need to crosscompile and present in 2.2.4
-rm ../debian/patches/0010-elisp-Fix-cross-compilation-support.patch
 for patch in ../debian/patches/*.patch; do
 	patch -p1 < $patch
 done
 <<
-# gl_cv_func_svid_putenv=yes
 ConfigureParams: <<
+	--disable-static \
 	--infodir=%p/share/info \
 	--program-transform-name="s|guile|guile-2.2|g; s|guild|guild-2.2|g" \
-	$threads \
+	ac_cv_path_SED=/usr/bin/sed \
 	-C
 <<
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
-# SetCPPFLAGS: -Dmacosx
-# SetCFLAGS: -g -O2 -W -Wall -ansi -pedantic-errors
-# SetCC: %p/opt/llvm-3.3/bin/clang
-UseMaxBuildJobs: true
 CompileScript: <<
   #!/bin/sh -ex
   mkdir build
   pushd build
-  # darwin8 missing some essential POSIX thread features, so disabled
-  ../configure %c ac_cv_have_thread_storage_class=no
+  ../configure %c
   make
   popd
   fink-package-precedence --prohibit-bdep=%n-dev .
@@ -145,7 +121,7 @@ SplitOff: <<
   <<
   DocFiles: COPYING.LESSER
   Shlibs: <<
-  %p/lib/libguile-2.2.1.dylib 5.0.0 %n (>= 2.2.3-1)
+  %p/lib/libguile-2.2.1.dylib 6.0.0 %n (>= 2.2.5-1)
   <<
   Description: Shared libraries for guile22
 <<
@@ -195,7 +171,6 @@ SplitOff3: <<
     include
     share/aclocal
     lib/guile/2.2/extensions/guile-readline.*a
-    lib/libguile-2.2.a
     lib/libguile-2.2.la
     lib/libguile-2.2.dylib
     lib/pkgconfig
@@ -234,7 +209,7 @@ DocFiles: README COPYING.LESSER AUTHORS HACKING NEWS THANKS
 #
 Description: Embedable Scheme interpreter
 DescPort: <<
-* Made the main packages not conflict with guile-1.4, -1.6, -1.8.
+* Made the main packages not conflict with guile-1.4, -1.6, -1.8, -2.0.
 * Make sure to declare the darwinish _environ symbol before using it.
 * 10.7's libffi is missing symbols, resulting in undefined references,
 thus we use fink's libffi.

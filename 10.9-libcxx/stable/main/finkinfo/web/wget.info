@@ -1,7 +1,6 @@
 Info2: <<
 Package:  wget%type_pkg[-gnutls]%type_pkg[-idn]
-# OPENSSL110 FTBFS; on hold pending issue #19
-Version: 1.19.5
+Version: 1.20.3
 Revision: 1
 Type: -gnutls (boolean), -idn (boolean)
 Description: Automatic web site retriever (SSL)
@@ -22,39 +21,38 @@ Replaces: <<
 <<	
 BuildDepends: <<
 	fink-package-precedence,
-	gpgme11,
-	libgettext8-dev,
 	gettext-bin ( >= 0.17-19 ),
 	gettext-tools ( >= 0.17-17 ),
+	libgettext8-dev,
 	libgpg-error,
+	libgpgme11-1.9-dev,
 	libiconv-dev,
 	libmetalink3,
-	libpcre1,
+	libpcre2,
 	libunistring2,
 	pkgconfig,
 	( %type_raw[-gnutls] = . )		 	openssl110-dev,
-	( %type_raw[-gnutls] = -gnutls )	gnutls28,
-	( %type_raw[-gnutls] = -gnutls )	nettle4a,
+	( %type_raw[-gnutls] = -gnutls )	gnutls30,
+	( %type_raw[-gnutls] = -gnutls )	nettle7,
 	( %type_raw[-idn] = -idn )			libidn2.0-dev
 <<
 Depends: <<
-	gpgme11-shlibs,
 	libgettext8-shlibs,
+	libgpgme11-1.9-shlibs,
 	libiconv,
 	libmetalink3-shlibs,
-	libpcre1-shlibs,
+	libpcre2-shlibs,
 	libunistring2-shlibs,
 	( %type_raw[-gnutls] = . )		 	openssl110-shlibs,
-	( %type_raw[-gnutls] = -gnutls )	gnutls28-shlibs,
-	( %type_raw[-gnutls] = -gnutls )	nettle4a-shlibs,
+	( %type_raw[-gnutls] = -gnutls )	gnutls30-shlibs,
+	( %type_raw[-gnutls] = -gnutls )	nettle7-shlibs,
 	( %type_raw[-idn] = -idn ) 			libidn2.0-shlibs
 <<
 Provides: gnu-wget
 Suggests: ca-bundle
 
 Source: mirror:gnu:%{ni}/%{ni}-%v.tar.gz
-Source-MD5: 2db6f03d655041f82eb64b8c8a1fa7da
-Source-Checksum: SHA1(43b3d09e786df9e8d7aa454095d4ea2d420ae41c)
+Source-Checksum: SHA256(31cccfc6630528db1c8e3a06f6decf2a370060b982841cfab2b8677400a5092e)
 
 PatchScript: <<
 #!/bin/sh -ev
@@ -77,6 +75,7 @@ ConfigureParams: <<
 	--infodir=%p/share/info \
  	--mandir=%p/share/man \
  	--enable-dependency-tracking \
+	--disable-pcre --enable-pcre2 \
  	--disable-silent-rules
 <<
 
@@ -107,7 +106,7 @@ The recursive retrieval of HTML pages, as well as FTP sites is
 supported -- you can use Wget to make mirrors of archives and home
 pages, or traverse the web like a WWW robot.
 
-There have been significant changes in the 1.13.x line.
+There have been significant changes since version 1.13.x:
 * All variants include internationalization support.
 * The "wget-gnutls" package uses GNUTLS instead of OpenSSL.
 * The "wget-idn" and "wget-gnutls-idn" packages add IDN/IRIs support.
@@ -135,9 +134,13 @@ DescPackaging: <<
  Automatically replaces prior vintages of wget or wget-ssl.
  No non-ssl version anymore.
 
- Conflicts with versions of fink that rely on the --non-verbose flag to  be 
+ Conflicts with versions of fink that rely on the --non-verbose flag to be 
  present, because wget-1.10.x switched to a more GNU-standard 
  --no-verbose.
+
+ To avoid that the configure script selects either libpcre1 or libpcre2
+ to link to, --disable-pcre --enable-pcre2 was added to ConfigureParams, so
+ that only libpcre2 will be used.
 
  Now uses gettext8.
 
@@ -152,6 +155,6 @@ DescPackaging: <<
  and Sylvain Cuaz (zauc@users.sourceforge.net)
 <<
 License: GPL
-Maintainer: Remko Scharroo <remkos@users.sourceforge.net>
+Maintainer: None <fink-devel@lists.sourceforge.net>
 Homepage: http://www.gnu.org/software/wget/wget.html
 <<

@@ -2,12 +2,19 @@ Info2: <<
 Package: chi-pm%type_pkg[perl]
 Version: 0.60
 Revision: 1
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 Source: mirror:cpan:authors/id/J/JS/JSWARTZ/CHI-%v.tar.gz
 Source-MD5: e559c52c12de4a27b0210caa1c790e65
 BuildDepends: <<
 	test-class-pm%type_pkg[perl],
-	test-deep-pm%type_pkg[perl],
+	test-deep-pm,
 	test-exception-pm,
 	test-warn-pm
 <<

@@ -1,17 +1,21 @@
 Package: gromacs-mpi
-Version: 5.1.4
-Revision: 100
+# last version for this libN
+Version: 5.1.5
+Revision: 102
 Depends: <<
 	gromacs1-mpi-shlibs (= %v-%r),
 	fftw3-shlibs (>= 3.3.4-2),
+	openblas-shlibs,
 	openmpi (>= 1.10.0-1),
 	x11
 <<
 BuildDepends: <<
-	boost1.58-nopython,
 	cmake,
 	fftw3 (>= 3.3.4-2),
 	fink (>= 0.38.3),
+	fink-package-precedence,
+	libxml2,
+	openblas,
 	openmpi (>= 1.10.0-1),
 	x11-dev
 <<
@@ -37,7 +41,7 @@ Replaces: <<
 BuildDependsOnly: False
 UseMaxBuildJobs: True
 Source: mirror:custom:gromacs-%v.tar.gz
-Source-MD5: ba2e34d59b3982603b4935d650c08040
+Source-MD5: 831fe741bcd9f1612155dffc919885f2
 PatchFile: gromacs-libxml2.patch
 PatchFile-MD5: 463830df2e50a5df49bbbd4b0299cf76
 CustomMirror: <<
@@ -47,7 +51,7 @@ DocFiles: AUTHORS COPYING README
 InfoTest: <<
  TestSuiteSize: medium
  TestSource: http://gerrit.gromacs.org/download/regressiontests-%v.tar.gz
- TestSource-MD5: 8902358ab19343f17997d1bf85f8e69c
+ TestSource-MD5: 50faec31eb083ba852edcc09a917dbe6
  TestScript: <<
    mv ../regressiontests-%v regressiontests-%v
    # sentinel-file is flag to activate testing during InstallScript as
@@ -56,11 +60,11 @@ InfoTest: <<
  <<
 << 
 PatchScript: <<
-  sed 's|@FINKPREFIX@|%p|g' < %{PatchFile} | patch -p1
-  perl -pi.bak -e 's|512|4096|g'  src/gmxlib/futil.c
+  #sed 's|@FINKPREFIX@|%p|g' < %{PatchFile} | patch -p1
   perl -pi.bak -e 's|/bin/csh|/bin/csh -f|g' share/**/* 2>/dev/null
   perl -pi.bak -e 's|/lib/cpp|/usr/bin/cpp|g' share/**/* 2>/dev/null
 <<
+GCC: 4.0
 CompileScript: <<
 mkdir build
 # Moved build to InstallScript to allow download of testsuite to be optional.
@@ -68,7 +72,10 @@ mkdir build
 InstallScript: <<
 #!/bin/bash -efv
 cd build
-CMAKE_OPTIONS="-DBOOST_ROOT=%p/opt/boost-1_58 \
+CMAKE_OPTIONS="-LAH \
+		-DCMAKE_VERBOSE_MAKEFILE=ON
+		-DCMAKE_C_FLAGS="-MD" \
+		-DCMAKE_CXX_FLAGS="-MD" \
 		-DGMX_GPU="OFF" \
 		-DGMX_FFT_LIBRARY=fftw3 \
 		-DGMX_X11="ON" \
@@ -90,6 +97,8 @@ fi
 cmake $CMAKE_OPTIONS ..
 perl -pi -e 's|-install_name %p/lib|-install_name \@rpath|g' src/gromacs/CMakeFiles/libgromacs.dir/link.txt
 make
+fink-package-precedence --depfile-ext='\.d' ..
+
 if [ -f %b/INSTALL_MAKE_CHECK ]; then
   make -j 1 check
 fi
@@ -111,6 +120,7 @@ SplitOff: <<
 Package: gromacs1-mpi-shlibs
 Depends: <<
 	fftw3-shlibs (>= 3.3.4-2),
+	openblas-shlibs,
 	openmpi-shlibs (>= 1.10.0-1),
 	x11
 <<
@@ -129,15 +139,18 @@ Package: %N-dev
 Depends: <<
 	gromacs1-mpi-shlibs (= %v-%r)
 <<
+# 5.1.5-101 had share/cmake in %N
 Conflicts: <<
-	gromacs (<= 4.6-1),
-	gromacs-mpi (<= 4.6-1),
-	gromacs-dev
+	gromacs (<= 5.1.5-101),
+	gromacs-mpi (<= 5.1.5-101),
+	gromacs-dev,
+	gromacs-mpi-dev
 <<
 Replaces: <<
-	gromacs (<= 4.6-1),
-	gromacs-mpi (<= 4.6-1),
-	gromacs-dev
+	gromacs (<= 5.1.5-101),
+	gromacs-mpi (<= 5.1.5-101),
+	gromacs-dev,
+	gromacs-mpi-dev
 <<
 BuildDependsOnly: True
 Files: <<

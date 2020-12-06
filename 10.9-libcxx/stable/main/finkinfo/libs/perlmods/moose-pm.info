@@ -1,7 +1,7 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Info3: <<
 Package: moose-pm%type_pkg[perl]
-Version: 2.2010
+Version: 2.2011
 Revision: 1
 
 License: Artistic/GPL
@@ -10,14 +10,21 @@ Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
 Homepage: http://search.cpan.org/dist/Moose/
 
 Source: mirror:cpan:authors/id/E/ET/ETHER/Moose-%v.tar.gz
-Source-MD5: 636238ac384818ee1e92eff6b9ecc50a
+Source-Checksum: SHA256(973d0a35d9f39bf93bbc5206c25f5ec3651f96356f082d31873c0ac9a5c1cd82)
 
 PatchScript: <<
 	# this test needs data-visitor-pm which appears busted.
 	rm t/immutable/inline_close_over.t
 <<
 
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 UpdatePOD: true
 
 DocFiles: Changes LICENSE TODO
@@ -72,10 +79,10 @@ InfoTest: <<
 		super-pm%type_pkg[perl],
 		test-checkdeps-pm%type_pkg[perl],
 		test-cleannamespaces-pm%type_pkg[perl],
-		test-deep-pm%type_pkg[perl],
+		test-deep-pm,
 		test-fatal-pm,
 		test-leaktrace-pm%type_pkg[perl],
-		test-output-pm%type_pkg[perl],
+		test-output-pm,
 		test-requires-pm,
 		test-simple-pm%type_pkg[perl] (>= 0.94-1),
 		test-warnings-pm%type_pkg[perl] (>= 0.016-1),

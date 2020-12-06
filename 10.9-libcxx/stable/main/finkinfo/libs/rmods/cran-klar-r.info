@@ -9,22 +9,47 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 0.6-12
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 0.6-15
 Revision: 1
 Description: Classification and visualization
-Homepage: https://cran.r-project.org/web/packages/klaR/index.html
+Homepage: https://cran.r-project.org/package=klaR
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: https://cran.r-project.org/src/contrib/klaR_%v.tar.gz
-Source-MD5: 388eb742759ff2c9168a1934502d6ecf
+Source: mirror:custom:klaR_%v.tar.gz
+Source-MD5: 34a188cba4978bea090f0e71d5a2b52f
 SourceDirectory: klaR
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/klaR
+<<
 Depends: <<
 	r-base%type_pkg[rversion],
 	cran-combinat-r%type_pkg[rversion],
-	cran-mass-r%type_pkg[rversion]
+	cran-questionr-r%type_pkg[rversion]
 <<
 BuildDepends: r-base%type_pkg[rversion]-dev
 CompileScript: <<

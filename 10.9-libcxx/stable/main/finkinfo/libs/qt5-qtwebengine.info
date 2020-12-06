@@ -1,8 +1,7 @@
 Info4: <<
 Package: qt5-%type_pkg[qt]-qtwebengine
-# OPENSSL110 not bothering to try, keep in sync with qt5-qtbase
 Version: 5.7.1
-Revision: 4
+Revision: 7
 Description: Cross-Platform framework (%type_pkg[qt])
 Type: qt (mac)
 License: LGPL
@@ -30,27 +29,33 @@ BuildDepends: <<
 	libsrtp,
 	pkgconfig,
 	python27,
-	openssl100-dev,
-	xcode (>= 5.1.1),
-	xcode.app (>= 5.1.1),
+	openssl110-dev,
+	xcode (>= 6.1),
+	xcode.app (>= 6.1),
 	( %type_pkg[qt] = x11 ) x11-dev
 <<
 BuildConflicts: uuid, libevent1.4, libevent2, libev4
 BuildDependsOnly: true
-Source: http://download.qt.io/official_releases/qt/5.7/%v/submodules/qtwebengine-opensource-src-%v.tar.xz
+Source: http://download.qt.io/archive/qt/5.7/%v/submodules/qtwebengine-opensource-src-%v.tar.xz
 Source-MD5: c90fba515fb33c091904fe2cadbb345a
 
 PatchFile: qt5-qtwebengine.patch
-PatchFile-MD5: 317127d09ad75a5860d000f0a0de30ca
+PatchFile-MD5: 30fa8b243bc9217e8c06d089ba7a1477
+PatchFile2: qt5-qtwebengine-bluetooth.patch
+PatchFile2-MD5: 0f66c1c8a3099bffa5dae23277be5beb
 
 PatchScript: <<
+	#!/bin/sh -ev
 	sed -e 's|@FINK_ARCH@|%m|g' \
 		-e 's|@FINK_PREFIX@|%p|g' \
 		-e "s|@MACOSX_DEPLOYMENT_TARGET@|$MACOSX_DEPLOYMENT_TARGET|g" \
 		-e "s|@SDK_PATH@|$SDK_PATH|g" \
 		-e 's|@PATH_TO_PG_CONFIG@|/usr/bin|g' \
 		-e "s|@QT_PLUGINS_DIR@|$QT_FINK_PREFIX/plugins|g" < %{PatchFile} | patch -p1
-	# Fix tests
+	pushd src/3rdparty/chromium
+		patch -p1 < %{PatchFile2}
+	popd
+	# Fix library detection tests
 	perl -pi -e's|^linux:||g' tools/qmake/config.tests/snappy/snappy.pro
 	perl -pi -e's|^linux:||g' tools/qmake/config.tests/srtp/srtp.pro
 	echo "INCLUDEPATH += %p/include" >> tools/qmake/config.tests/snappy/snappy.pro
@@ -271,11 +276,26 @@ In this case, it's still a good idea to set your PATH to contain
 DescPackaging: <<
 We follow Ubuntu's lead in using the separate tarballs and separate most
 of the packages the same way they do.
+
+Fix xocde comparison (string-compare fails for xcode >= 10.0)
+https://codereview.qt-project.org/c/qt/qtwebengine/+/240853
 <<
 DescPort: <<
 src/3rdparty/chromium/net/cert/x509_certificate_mac.cc
 https://bugs.chromium.org/p/chromium/issues/detail?id=684590
 Fix qualified reference to "Time"
+
+src/3rdparty/chromium/base/mac/foundation_util.h
+https://bugreports.qt.io/browse/QTBUG-78997
+Fix typdef redefinitions in Xcode11.5
+
+src/core/config/mac_osx.pri
+https://bugreports.qt.io/browse/QTBUG-83318
+fix major.minor.patch string parsing
+
+src/3rdparty/chromium/device/bluetooth/bluetooth_socket_mac.*
+Remove APIs that have long been deprecated and removed with Xcode11.5
+chromium bug: 650836
 <<
 <<
 # End Info4

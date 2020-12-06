@@ -9,18 +9,43 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 1.2-3
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 1.4-2
 Revision: 1
 Description: GNU R classes and methods for spatial data
-Homepage: http://cran.r-project.org/web/packages/sp/index.html
+Homepage: https://cran.r-project.org/package=sp
 License: GPL
-Maintainer:  BABA Yoshihiko <babayoshihiko@mac.com>
-Source: http://cran.r-project.org/src/contrib/sp_%v.tar.gz
-Source-MD5: f0e24d993dec128642ee66b6b47b10c1
+Maintainer: BABA Yoshihiko <babayoshihiko@mac.com>
+Source: mirror:custom:sp_%v.tar.gz
+Source-MD5: c722e997fda4c56581de83d80fb25e67
 SourceDirectory: sp
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/sp
+<<
 PatchFile: cran-sp-r.patch
 PatchFile-MD5: 3b497f44efaa66cfd91cd14248fc3a39
 Depends: <<

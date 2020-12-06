@@ -9,30 +9,57 @@ Distribution: <<
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 32 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.9,
+	(%type_pkg[rversion] = 33 ) 10.10,
+	(%type_pkg[rversion] = 33 ) 10.11,
+	(%type_pkg[rversion] = 33 ) 10.12,
+	(%type_pkg[rversion] = 33 ) 10.13,
+	(%type_pkg[rversion] = 33 ) 10.14,
+	(%type_pkg[rversion] = 33 ) 10.14.5,
+	(%type_pkg[rversion] = 34 ) 10.9,
+	(%type_pkg[rversion] = 34 ) 10.10,
+	(%type_pkg[rversion] = 34 ) 10.11,
+	(%type_pkg[rversion] = 34 ) 10.12,
+	(%type_pkg[rversion] = 34 ) 10.13,
+	(%type_pkg[rversion] = 34 ) 10.14,
+	(%type_pkg[rversion] = 34 ) 10.14.5,
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 1.10.0
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 1.16.2
 Revision: 1
 Description: Display and analyze ROC curves
 Homepage: http://expasy.org/tools/pROC/
 License: GPL
 Maintainer:  BABA Yoshihiko <babayoshihiko@mac.com>
-Source: http://cran.r-project.org/src/contrib/pROC_%v.tar.gz
-Source-MD5: efb3278a510e1407c1495257ef17232f
+Source: mirror:custom:pROC_%v.tar.gz
+Source-MD5: 6c9dfc6c91dcbb48c209535a989d5f83
 SourceDirectory: pROC
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/pROC
+<<
 Depends: <<
 	fink (>= 0.27.2), 
 	r-base%type_pkg[rversion], 
 	cran-plyr-r%type_pkg[rversion], 
-	cran-rcpp-r%type_pkg[rversion], 
-	cran-ggplot2-r%type_pkg[rversion]
+	cran-rcpp-r%type_pkg[rversion] (>= 0.11.1-1), 
+	libgettext8-shlibs
 <<
 BuildDepends: <<
 	fink (>= 0.27.2), 
 	r-base%type_pkg[rversion]-dev, 
-	cran-rcpp-r%type_pkg[rversion]-dev
+	cran-rcpp-r%type_pkg[rversion]-dev (>= 0.11.1-1), 
+	libgettext8-dev
 <<
+GCC: 4.0
 CompileScript: <<
   #!/bin/sh -ev
   export TMPDIR=%b/tmp

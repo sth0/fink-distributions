@@ -1,0 +1,77 @@
+Info4: <<
+Package: flint2.5
+Version: 2.5.2
+Revision: 1
+Maintainer: None <fink-devel@lists.sourceforge.net>
+
+Depends: %N-shlibs
+BuildDepends: gmp5 (>= 5.1.3-3), libmpfr4 (>= 3.0.0), fink-package-precedence
+BuildDependsOnly: true
+Conflicts: flint2.4
+Replaces: flint2.4
+
+Source: http://www.flintlib.org/flint-%v.tar.gz
+Source-MD5: cda885309362150196aed66a5e0f0383
+
+PatchFile: %n.patch
+PatchFile-MD5: c1fe89f4c9bd79906f11e931561b2186
+
+ConfigureParams: --with-gmp=%p --with-mpfr=%p
+CompileScript: <<
+#!/bin/sh -ev
+  ./configure %c
+  make
+  fink-package-precedence --no-headers .
+<<
+InstallScript: <<
+#!/bin/sh -ev
+  make install DESTDIR=%d
+<<
+
+# test fails because it tries to link against the installed version
+# of the library, which is not yet installed at the time we run the test
+#InfoTest: TestScript: make check || exit 2
+
+DocFiles: AUTHORS NEWS README
+
+SplitOff: <<
+ Package: %N-shlibs
+ Depends: gmp5-shlibs (>= 5.1.1), libmpfr4-shlibs (>= 3.0.0)
+ Files: lib/*-13.dylib
+ Shlibs: <<
+   %p/%lib/libflint-13.dylib 13.5.0 %n (>= 2.5-1)
+ <<
+ DocFiles: AUTHORS NEWS README
+<<
+
+#
+Description: Library for doing number theory
+DescDetail: <<
+FLINT is a C library for doing number theory. It supports arithmetic
+with numbers, polynomials, power series and matrices over many base
+rings, including:
+
+* Multiprecision integers and rationals
+* Integers modulo n
+* p-adic numbers
+* Finite fields (prime and non-prime order)
+* Real and complex numbers (via the Arb extension library)
+<<
+# TODO: Make an -mpir variant?
+DescPackaging: <<
+ According to the flint authors, the binary interface *should* not
+ change between minor relases, but it still *might*. Hence the name of
+ this package includes the full MAJOR.MINOR version (but not the
+ patchlevel).
+
+ Moreover, the shlibs produced by the flint buildsystem are not
+ versioned. Hence we modify it to add a compatibility and current
+ version based on MAJOR.MINOR.
+ 
+ Finally, GMP 6 changed the documented behaviour of mpz_invert (yuck)
+ so a patch is needed to make things work consistently across GMP
+ versions.
+<<
+License: GPL
+Homepage: http://www.flintlib.org/
+<<

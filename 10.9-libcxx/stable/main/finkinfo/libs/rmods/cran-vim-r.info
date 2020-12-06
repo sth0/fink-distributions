@@ -2,34 +2,39 @@ Info2: <<
 
 Package: cran-vim-r%type_pkg[rversion]
 Distribution: <<
-	(%type_pkg[rversion] = 31 ) 10.9,
-	(%type_pkg[rversion] = 31 ) 10.10,
-	(%type_pkg[rversion] = 31 ) 10.11,
-	(%type_pkg[rversion] = 31 ) 10.12,
-	(%type_pkg[rversion] = 32 ) 10.9,
-	(%type_pkg[rversion] = 32 ) 10.10,
-	(%type_pkg[rversion] = 32 ) 10.11,
-	(%type_pkg[rversion] = 32 ) 10.12
+	(%type_pkg[rversion] = 35 ) 10.9,
+	(%type_pkg[rversion] = 35 ) 10.10,
+	(%type_pkg[rversion] = 35 ) 10.11,
+	(%type_pkg[rversion] = 35 ) 10.12,
+	(%type_pkg[rversion] = 35 ) 10.13,
+	(%type_pkg[rversion] = 35 ) 10.14,
+	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (3.4 3.3 3.2 3.1)
-Version: 4.7.0
+Type: rversion (3.6 3.5)
+Version: 6.0.0
 Revision: 1
 Description: Missing Values Visualization and Imputation
-Homepage: http://cran.r-project.org/web/packages/VIM/index.html
+Homepage: https://cran.r-project.org/package=VIM
 License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: http://cran.r-project.org/src/contrib/VIM_%v.tar.gz
-Source-MD5: 3b46c644e64dc9b6c1ca326a2fea6ca2
+Source: mirror:custom:VIM_%v.tar.gz
+Source-MD5: a613612f06bef6f4cf2df808a6b37d11
 SourceDirectory: VIM
+CustomMirror: <<
+	Primary: https://cran.r-project.org/src/contrib
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/VIM
+<<
 Depends: <<
 	r-base%type_pkg[rversion],
 	cran-car-r%type_pkg[rversion],
 	cran-colorspace-r%type_pkg[rversion],
-	cran-data.table-r%type_pkg[rversion] (>= 1.9-4),
+	cran-data.table-r%type_pkg[rversion] (>= 1.9-4-1),
 	cran-e1071-r%type_pkg[rversion],
 	cran-laeken-r%type_pkg[rversion],
+	cran-magrittr-r%type_pkg[rversion],
 	cran-mass-r%type_pkg[rversion],
 	cran-nnet-r%type_pkg[rversion],
+	cran-ranger-r%type_pkg[rversion],
 	cran-rcpp-r%type_pkg[rversion],
 	cran-robustbase-r%type_pkg[rversion],
 	cran-sp-r%type_pkg[rversion],
@@ -57,15 +62,10 @@ InstallScript: <<
   
   mkdir -p %i/lib/R/%type_raw[rversion]/site-library
   pushd %b/.. && $BIN_R --verbose CMD INSTALL --library=%i/lib/R/%type_raw[rversion]/site-library VIM
-  if [ "%type_num[rversion]" -lt "34" ]; then
-	  install_name_tool -id %p/lib/R/%type_raw[rversion]/site-library/VIM/libs/VIM.dylib %i/lib/R/%type_raw[rversion]/site-library/VIM/libs/VIM.dylib
-  else
-	  install_name_tool -id %p/lib/R/%type_raw[rversion]/site-library/VIM/libs/VIM.so %i/lib/R/%type_raw[rversion]/site-library/VIM/libs/VIM.so
-  fi
+  install_name_tool -id %p/lib/R/%type_raw[rversion]/site-library/VIM/libs/VIM.so %i/lib/R/%type_raw[rversion]/site-library/VIM/libs/VIM.so
 <<
 Shlibs: <<
-  ( %type_raw[rversion] >= 3.4 ) %p/lib/R/%type_raw[rversion]/site-library/VIM/libs/VIM.so 0.0.0 %n (>= 4.1.0-1)
-  ( %type_raw[rversion] << 3.4 ) %p/lib/R/%type_raw[rversion]/site-library/VIM/libs/VIM.dylib 0.0.0 %n (>= 4.1.0-1)
+  %p/lib/R/%type_raw[rversion]/site-library/VIM/libs/VIM.so 0.0.0 %n (>= 4.1.0-1)
 <<
 DescDetail: <<
 This package introduces new tools for the visualization of missing and/or
@@ -80,7 +80,7 @@ separate package VIMGUI allows an easy handling of the implemented plot
 methods.
 <<
 DescPackaging: <<
-  R (>= 3.1.0)
+  R (>= 3.5.0)
 <<
 
 <<

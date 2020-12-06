@@ -11,7 +11,14 @@ Homepage: http://search.cpan.org/dist/Package-DeprecationManager/
 Source: mirror:cpan:authors/id/D/DR/DROLSKY/Package-DeprecationManager-%v.tar.gz
 Source-MD5: 7b46e92aaae3047ede3c67c1714ab88e
 
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 UpdatePOD: true
 
 Depends: <<
@@ -26,7 +33,7 @@ BuildDepends: <<
 	extutils-makemaker-pm%type_pkg[perl] (>= 6.56-1)
 <<
 
-InfoTest: TestDepends: test-fatal-pm, test-simple-pm%type_pkg[perl] (>= 0.94-1), test-output-pm%type_pkg[perl], test-requires-pm, test-warnings-pm%type_pkg[perl]
+InfoTest: TestDepends: test-fatal-pm, test-simple-pm%type_pkg[perl] (>= 0.94-1), test-output-pm, test-requires-pm, test-warnings-pm%type_pkg[perl]
 
 DocFiles: CONTRIBUTING.md Changes LICENSE README.md
 

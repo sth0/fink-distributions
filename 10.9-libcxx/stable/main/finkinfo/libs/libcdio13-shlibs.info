@@ -2,7 +2,7 @@ Package: libcdio13-shlibs
 # Version 0.92 removes the libcdio_cdda and libcdio_paranoia libraries.
 # Also jumps to libN=15.
 Version: 0.83
-Revision: 3
+Revision: 5
 Description: CD Input and Control Library
 License: GPL
 Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
@@ -10,14 +10,15 @@ Depends: <<
 	libiconv
 <<
 BuildDepends: <<
+	fink (>= 0.32),
 	fink-package-precedence,
 	libiconv-dev,
 	pkgconfig
 <<
 Source: mirror:gnu:libcdio/libcdio-%v.tar.bz2
 Source-MD5: 2c15a3b459a6fcf9469a2ebfd6476381
-Source2: mirror:debian:pool/main/libc/libcdio/libcdio_%v-4.debian.tar.gz
-Source2-MD5: e0976e6656443991b6c23767226f5134
+Source2: mirror:debian:pool/main/libc/libcdio/libcdio_%v-4.3.debian.tar.xz
+Source2-MD5: 7d46883d61ccbfa63143251146f48650
 PatchFile: %n.patch
 PatchFile-MD5: cfd6115c6bca45d5bf211bc2cb63134c
 PatchScript: <<
@@ -34,8 +35,10 @@ PatchScript: <<
 	# nieder (0.80) Add these missing .pc files to the install list:
 	#perl -pi -e 's|libcdio.pc  \\|libcdio_cdda.pc libcdio_paranoia.pc $&|g' Makefile.in
 
-	# Fix detection for 10.9 and 10.10
-	perl -pi -e 's|0-2|0-4|g' configure
+	# Fix detection for newer 10.x. See:
+	# http://git.savannah.gnu.org/cgit/libcdio.git/commit/configure.ac?id=4b25820f5bc460f5226ca9181d52db15cf960d11
+	# and parent revisions thereof. Fixed in 0.93
+	perl -pi -e 's|darwin1\[0-2\]|darwin[1-9][0-9]|g' configure
 
 	# Patch configure to not link like Puma on Yosemite
 	perl -pi.bak -e 's|10\.\[012\]\*|10.[012][,.]*|g' configure
@@ -163,12 +166,14 @@ SplitOff10: <<
 	Conflicts: <<
 		libcdio-dev,
 		libcdio13-dev,
-		libcdio15-dev
+		libcdio15-dev,
+		libcdio19-2.1-dev
 	<<
 	Replaces: <<
 		libcdio-dev,
 		libcdio13-dev,
-		libcdio15-dev
+		libcdio15-dev,
+		libcdio19-2.1-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -212,12 +217,14 @@ SplitOff11: <<
 	Conflicts: <<
 		libiso9660-dev,
 		libiso9660.8-dev,
-		libiso9660.9-dev
+		libiso9660.9-dev,
+		libiso9660.11-2.1-dev
 	<<
 	Replaces: <<
 		libiso9660-dev,
 		libiso9660.8-dev,
-		libiso9660.9-dev
+		libiso9660.9-dev,
+		libiso9660.11-2.1-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -237,11 +244,13 @@ SplitOff12: <<
 	<<
 	Conflicts: <<
 		libcdio-dev,
-		libudf0-dev
+		libudf0-dev,
+		libudf0-2.1-dev
 	<<
 	Replaces: <<
 		libcdio-dev,
-		libudf0-dev
+		libudf0-dev,
+		libudf0-2.1-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -262,11 +271,13 @@ SplitOff13: <<
 	<<
 	Conflicts: <<
 		libcdio-dev,
-		libcdio-cdda1-dev
+		libcdio-cdda1-dev,
+		libcdio-cdda2-dev
 	<<
 	Replaces: <<
 		libcdio-dev,
-		libcdio-cdda1-dev
+		libcdio-cdda1-dev,
+		libcdio-cdda2-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -284,11 +295,13 @@ SplitOff14: <<
 	<<
 	Conflicts: <<
 		libcdio-dev,
-		libcdio-paranoia1-dev
+		libcdio-paranoia1-dev,
+		libcdio-paranoia2-dev
 	<<
 	Replaces: <<
 		libcdio-dev,
-		libcdio-paranoia1-dev
+		libcdio-paranoia1-dev,
+		libcdio-paranoia2-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -306,11 +319,13 @@ SplitOff15: <<
 	<<
 	Conflicts: <<
 		libcdio-dev,
-		libcdio++0-dev
+		libcdio++0-dev,
+		libcdio++1-2.1-dev
 	<<
 	Replaces: <<
 		libcdio-dev,
-		libcdio++0-dev
+		libcdio++0-dev,
+		libcdio++1-2.1
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -336,11 +351,13 @@ SplitOff16: <<
 	<<
 	Conflicts: <<
 		libiso9660-dev,
-		libiso9660++0-dev
+		libiso9660++0-dev,
+		libiso9660++0-2.1-dev
 	<<
 	Replaces: <<
 		libiso9660-dev,
-		libiso9660++0-dev
+		libiso9660++0-dev,
+		libiso9660++0-2.1
 	<<
 	BuildDependsOnly: true
 	Files: <<

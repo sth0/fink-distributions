@@ -1,23 +1,25 @@
 Info2: <<
 Package: gdb
-Version: 8.1
-Revision: 2
+Version: 10.1
+Revision: 1
 Maintainer: None <fink-devel@lists.sourceforge.net>
 License: GPL3
-Source: http://ftp.gnu.org/gnu/gdb/gdb-%v.tar.xz
-Source-MD5: f46487561f9a16916a8102316f7fd105
+Source: mirror:gnu:%n/%n-%v.tar.xz
+Source-Checksum: SHA256(f82f1eceeec14a3afa2de8d9b0d3c91d5a3820e23e0a01bbb70ef9f0276b62c0)
 PatchFile: %n.patch
-PatchFile-MD5: eeb5a1f23abcdea73f9ea4598ec2ce9f
-SourceDirectory: gdb-%v
+PatchFile-MD5: 92481fdcd7d6769d3e0a183db298268d
 Depends: <<
 	expat1-shlibs,
 	gc-shlibs,
-	guile20-shlibs,
+	gmp5-shlibs,
+	guile22-shlibs,
 	libgettext8-shlibs,
 	libiconv,
-	libncurses5-shlibs,
-	python27,
-	python27-shlibs
+	libmpfr6-shlibs,
+	libncursesw5-shlibs,
+	libsource-highlight4-shlibs,
+	python37,
+	python37-shlibs
 <<
 BuildDepends: <<
 	expat1,
@@ -26,28 +28,33 @@ BuildDepends: <<
 	gc,
 	gettext-tools,
 	gmp5,
-	guile20,
-	guile20-dev,
+	guile22,
+	guile22-dev,
 	libgettext8-dev,
 	libiconv-dev,
+	libmpfr6,
 	libncurses5,
-	python27,
+	libncursesw5,
+	libsource-highlight4,
+	pkgconfig,
+	python37,
 	texinfo (>= 5.1-2)
 <<
-SetLDFLAGS: -L%p/lib/python2.7/config
+SetLDFLAGS: -L%p/lib/python3.7/config-3.7m-darwin
 ConfigureParams: <<
 	--program-prefix=fsf- \
 	--with-expat \
-	--with-python=%p/bin/python2.7 \
+	--with-python=%p/bin/python3.7 \
 	--disable-gdbtk \
 	--enable-tui \
-	--disable-werror
+	--disable-werror \
+	--with-guile
 <<
 SetCFLAGS: -O2 -g -Wno-unused-value
 Architecture: x86_64, i386
 DocFiles: COPYING COPYING3 README
 InfoDocs: fsf-gdb.info
-Homepage: http://www.gnu.org/software/gdb/
+Homepage: https://www.gnu.org/software/gdb/
 Description: The GNU Project Debugger
 DescDetail: <<
 GDB, the GNU Project debugger, allows you to see what is going on
@@ -63,14 +70,7 @@ PatchScript: <<
 	perl -pi -e 's|machine/setjmp.h|setjmp.h|' gdb/darwin-nat.c
 <<
 CompileScript: <<
-        #!/bin/sh -ev
-	if [ "%m" = "i386" ]
-	then
-		./configure %c --enable-64-bit-bfd
-	else
-		./configure %c
-	fi
-	make
+	%{default_script}
 	fink-package-precedence .
 <<
 InstallScript:<<
@@ -78,7 +78,7 @@ InstallScript:<<
 	make install DESTDIR=%d
 	cd %i/share/info
 	rm annotate.info stabs.info bfd.info
-	infofiles="1 2 3 4 5 6"
+	infofiles="1 2 3 4 5 6 7 8"
 	for infofile in $infofiles ; do
 		mv gdb.info-$infofile fsf-gdb.info-$infofile
 	done
@@ -108,10 +108,6 @@ PreRmScript: <<
 	fi
 	/usr/bin/find %p/share/gdb/python/gdb -name '*.pyc' -delete
 	/usr/bin/find %p/share/gdb/python/gdb -name '*.pyo' -delete
-<<
-DescPort: <<
-probe.c: Fix for clang from Xcode 7 and Xcode 8.
-https://news.ycombinator.com/item?id=16281213
 <<
 DescUsage: <<
 The programs in this package are prefixed with fsf- (gdb is "fsf-gdb",

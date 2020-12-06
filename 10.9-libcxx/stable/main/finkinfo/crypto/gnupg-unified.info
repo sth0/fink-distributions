@@ -1,5 +1,5 @@
 Package: gnupg-unified
-Version: 1.4.21
+Version: 1.4.23
 Revision: 2
 Description: Gnu privacy guard - A Free PGP replacement
 License: GPL
@@ -12,7 +12,7 @@ Depends: <<
 	libiconv,
 	libusb-shlibs,
 	openldap24-shlibs,
-	readline6-shlibs
+	readline7-shlibs
 <<
 BuildDepends: <<
 	bzip2,
@@ -22,7 +22,7 @@ BuildDepends: <<
 	libiconv-dev,
 	libusb,
 	openldap24,
-	readline6,
+	readline7,
 	texinfo (>= 4.1-3)
 <<
 Conflicts: <<
@@ -41,12 +41,17 @@ CustomMirror: <<
 	Primary: https://gnupg.org/ftp/gcrypt/
 <<
 Source: mirror:custom:gnupg/gnupg-%v.tar.bz2
-Source-MD5: 9bdeabf3c0f87ff21cb3f9216efdd01d
+Source-MD5: b1df02c73572f27bc859ac05ff2259ab
 Source2: mirror:sourceforge:fink/gnupg-docs-20021001.tar.gz
 Source2-MD5: 5e34b5be84adc6a898e164b99fce45d8
 Source2ExtractDir: gnupg-%v
 
-ConfigureParams: --libexecdir='${prefix}/lib' --with-libiconv-prefix=%p --enable-dependency-tracking
+ConfigureParams: <<
+	--libexecdir='${prefix}/lib' \
+	--with-libiconv-prefix=%p \
+	--enable-dependency-tracking \
+	--program-suffix=1
+<<
 CompileScript: <<
 	%{default_script}
 	fink-package-precedence .
@@ -64,6 +69,31 @@ InstallScript: <<
 	rm -rf %i/share/locale/locale.alias %i/share/man/man1/gpg-zip*
 <<
 DocFiles: AUTHORS BUGS COPYING ChangeLog README TODO PROJECTS THANKS
+
+PostInstScript: <<
+update-alternatives --install %p/bin/gpg gpg %p/bin/gpg1 1 \
+	--slave %p/bin/gpg-zip gpg-zip %p/bin/gpg-zip1 \
+	--slave %p/bin/gpgsplit gpgsplit %p/bin/gpgsplit1 \
+	--slave %p/bin/gpgv gpgv %p/bin/gpgv1 \
+	--slave %p/lib/gnupg/gpgkeys_curl gpgkeys_curl %p/lib/gnupg/gpgkeys_curl1 \
+	--slave %p/lib/gnupg/gpgkeys_finger gpgkeys_finger %p/lib/gnupg/gpgkeys_finger1 \
+	--slave %p/lib/gnupg/gpgkeys_hkp gpgkeys_hkp %p/lib/gnupg/gpgkeys_hkp1 \
+	--slave %p/lib/gnupg/gpgkeys_ldap gpgkeys_ldap %p/lib/gnupg/gpgkeys_ldap1 \
+	--slave %p/share/man/man1/gpg-zip.1 gpg-zip.1 %p/share/man/man1/gpg-zip1.1 \
+	--slave %p/share/man/man1/gpg.1 gpg.1 %p/share/man/man1/gpg1.1 \
+	--slave %p/share/man/man1/gpgv.1 gpgv.1 %p/share/man/man1/gpgv1.1
+echo "You can inspect the links by running:"
+echo "  update-alternatives --list gpg"
+echo "  update-alternatives --display gpg"
+<<
+
+PreRmScript: <<
+  if [ $1 != "upgrade" ]; then
+     update-alternatives --verbose --remove gpg %p/bin/gpg1
+  else
+    echo "Do not remove during upgrade"
+  fi
+<<
 
 InfoDocs: gnupg1.info
 
@@ -90,4 +120,7 @@ To create an initial key pair run 'gpg --gen-key'
 Consult the manual for a good intro: 
 %p/share/doc/%n/documentation/handbook/
 <<
-
+DescPackaging: <<
+* Suffix the programs with '1' so that we can coexist with gnupg2, then use u-a
+to create the unversioned executable names.
+<<

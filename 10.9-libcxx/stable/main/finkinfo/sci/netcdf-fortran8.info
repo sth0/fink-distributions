@@ -1,0 +1,117 @@
+Info2: <<
+Package: netcdf-fortran8
+Version: 4.5.3
+Revision: 1
+BuildDependsOnly: true
+Maintainer: None <fink-devel@lists.sourceforge.net>
+
+Type: gcc (9)
+
+Depends: %n-shlibs (= %v-%r), gcc%type_pkg[gcc]-compiler
+BuildDepends: <<
+	netcdf-c18 (>= 4.7.4),
+	netcdf-bin (>= 4.7.4),
+	libcurl4, 
+	szip,
+	flag-sort,
+	fink-package-precedence
+<<
+Conflicts: <<
+	netcdf (<= 3.6.1-1003), 
+	netcdf-absoft, 
+	netcdf-g95, 
+	netcdf-gfortran, 
+	netcdf7-gfortran,
+	netcdf-fortran7
+<<
+Replaces: <<
+	netcdf (<= 3.6.1-1003), 
+	netcdf-absoft, 
+	netcdf-g95, 
+	netcdf-gfortran, 
+	netcdf7-gfortran,
+	netcdf-fortran7
+<<
+
+SourceRename: netcdf-fortran-%v.tar.gz
+Source: https://github.com/Unidata/netcdf-fortran/archive/v%v.tar.gz
+Source-MD5: 47bf6eed50bd50b23b7e391dc1f8b5c4
+Source-Checksum: SHA1(c6f9491f1ffe4be7febecf9878ed82c388237a34)
+
+PatchScript: perl -pi -e 's/(10\.\[012\])\*/\1\,.\*/' configure
+
+SetCFLAGS: -O2
+SetLDFLAGS: -lsz -Wl,-dead_strip_dylibs
+
+ConfigureParams: <<
+	--enable-shared --disable-static \
+	FFLAGS=-O2 FCFLAGS=-O2 \
+	FC='flag-sort -r %p/lib/gcc%type_raw[gcc]/bin/gfortran' \
+	F77='flag-sort -r %p/lib/gcc%type_raw[gcc]/bin/gfortran' \
+	F90='flag-sort -r %p/lib/gcc%type_raw[gcc]/bin/gfortran' \
+	--mandir='${prefix}/share/man' \
+	--infodir='${prefix}/share/info' \
+	--docdir='${prefix}/share/doc/netcdf' 
+<<
+CompileScript: <<
+	%{default_script}
+	fink-package-precedence .
+<<
+InfoTest: <<
+  	TestDepends: sed
+<<
+InstallScript: <<
+	#!/bin/sh -ev
+	make install DESTDIR=%d
+	# undo the "hack"
+	perl -pi -e 's,fc=.*,fc=\"%p/lib/gcc%type_raw[gcc]/bin/gfortran",' %i/bin/nf-config
+	mkdir -p %i/share/doc
+	mkdir -p %i/share/info
+	# Add examples for F77 and F90
+	mkdir -p %i/share/doc/%N/examples
+	cp -r examples/F* examples/Makefile %i/share/doc/%N/examples
+<<
+SplitOff: <<
+	Package: %N-shlibs
+	Depends: netcdf-c18-shlibs (>= 4.7.4), gcc%type_pkg[gcc]-shlibs
+	Files: lib/libnetcdff.*.dylib
+	Shlibs: %p/lib/libnetcdff.7.dylib 8.0.0 %n (>= 4.5.1-1)
+	DocFiles: COPYRIGHT README.md RELEASE_NOTES.md F03Interfaces_LICENSE
+	Description: Array-based data access, Fortran library
+<<
+DocFiles: COPYRIGHT README.md RELEASE_NOTES.md F03Interfaces_LICENSE docs/
+Description: Array-based data access, Fortran headers/doc
+DescDetail: <<
+The netCDF (network Common Data Form) library defines a machine-independent
+format for representing scientific data. Together, the interface, library,
+and format support the creation, access, and sharing of scientific data.
+
+This package provides a library, documentation, and examples for interfacing
+with Fortran 77 and Fortran 90 code using the gfortran compiler.  Because the
+library links to libraries from gccN-shlibs, a particular gccN had to be 
+chosen.
+<<
+DescPackaging: <<
+This should have been "netcdf-fortran_7_", but the previous version was
+already incorrectly named netcdf-fortran7, so we inherited this issue.
+
+Manually move docs from the tarball to avoid potentially triggering a rebuild.
+
+Bump revision and versioned dependencies on hdf5.X and netcdf-c15
+when HDF5 (hdf5.X) version is updated.
+
+Specify full path to the "gfortran" executable in gccN-compiler to avoid 
+extra double-underscores.  (Thanks, libtool!)
+
+Add flag-sort to avoid adding BuildConflict on earlier versions of the package
+or packages built with an earlier gfortran because it picked up
+%p/include/netcdf.mod (in the test suite) with things like this:
+
+-I. -I.. -I../libsrc -I/sw/include -I../fortran
+<<
+DescPort: <<
+FFLAGS=-O2 FCFLAGS=-O2 is essential to avoid debugging mode flags (-g).
+<<
+Homepage: http://www.unidata.ucar.edu/software/netcdf/
+License: OSI-Approved
+<<

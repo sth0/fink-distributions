@@ -1,11 +1,18 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Info2: <<
 Package: module-build-pm%type_pkg[perl]
-Version: 0.42.24
+Version: 0.42.29
 Revision: 1
 Epoch: 1
 
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 Description: Alternative installer for Perl modules
 License: Artistic
 Homepage: http://search.cpan.org/dist/Module-Build/
@@ -23,10 +30,10 @@ Depends: <<
  module-metadata-pm%type_pkg[perl] (>= 1.000002-1),
  par-dist-pm,
  perl-ostype-pm%type_pkg[perl],
- pod-readme-pm, 
- perl%type_pkg[perl]-core, 
+ pod-readme-pm,
+ perl%type_pkg[perl]-core,
  software-license-pm%type_pkg[perl],
- test-harness-pm%type_pkg[perl] (>= 3.16), 
+ test-harness-pm%type_pkg[perl] (>= 3.16),
  version-pm%type_pkg[perl] (>= 0.88-1)
 <<
 
@@ -41,10 +48,31 @@ Conflicts: %N-man, %N-bin
 Replaces: %N-man, %N-bin
 
 # Unpack Phase.
-Source: mirror:cpan:authors/id/L/LE/LEONT/Module-Build-0.4224.tar.gz
-Source-MD5: b74c2f6e84b60aad3a3defd30b6f0f4d
+Source: mirror:cpan:authors/id/L/LE/LEONT/Module-Build-0.4229.tar.gz
+Source-Checksum: SHA256(1fe491a6cda914b01bc8e592faa2b5404e9f35915ca15322f8f2a8d8f9008c18)
 
 DefaultScript: ModuleBuild
+CompileScript: <<
+	#!/bin/bash -ev
+	let osmajor=`uname -r | cut -f 1 -d .`
+	if [ $osmajor -ge 18 ]; then
+		sdkpath=`xcrun --sdk macosx --show-sdk-path 2>/dev/null`
+		export CFLAGS="-I$sdkpath/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE"
+	fi
+	%{default_script}
+<<
+
+InfoTest: <<
+	TestScript: <<
+		#!/bin/bash -ev
+		let osmajor=`uname -r | cut -f 1 -d .`
+		if [ $osmajor -ge 18 ]; then
+			sdkpath=`xcrun --sdk macosx --show-sdk-path 2>/dev/null`
+			export CFLAGS="-I$sdkpath/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE"
+		fi
+		%{default_script}
+	<<
+<<
 
 # Install Phase.
 InstallScript: <<
@@ -73,7 +101,7 @@ between "ExtUtils::MakeMaker" and "Module::Build".
 <<
 
 DescPackaging: <<
-In version 0.34, removed the bin SplitOff and moved the config_data file to /sw/lib/%n/, to prevent 
+In version 0.34, removed the bin SplitOff and moved the config_data file to /sw/lib/%n/, to prevent
 conflicts with perl-core.
 
 Dependency for module-signature-pm is disabled, it has lots of (maybe even crypto) deps and it's optional

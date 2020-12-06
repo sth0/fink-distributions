@@ -1,0 +1,100 @@
+Package: mpv
+Version: 0.29.1
+Revision: 2
+Distribution: 10.9, 10.10, 10.11
+Description: Multimedia player
+License: GPL
+Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
+Depends: <<
+	lcms2-shlibs (>= 2.6),
+	libarchive31-shlibs,
+	libass5-shlibs (>= 0.12.1-1),
+	libavcodec58-4.0-shlibs (>= 4.1),
+	libavdevice58-4.0-shlibs (>= 4.1),
+	libavfilter7-4.0-shlibs (>= 4.1),
+	libavformat58-4.0-shlibs (>= 4.1),
+	libavutil56-4.0-shlibs (>= 4.1),
+	libbluray1-shlibs,
+	libcaca-shlibs,
+	libcdio-cdda2-shlibs,
+	libcdio-paranoia2-shlibs,
+	libcdio19-2.1-shlibs,
+	libiconv,
+	libjpeg9-shlibs,
+	libncurses5-shlibs,
+	libpostproc55-4.0-shlibs (>= 4.1),
+	librubberband2-shlibs,
+	libswresample3-4.0-shlibs (>= 4.1),
+	libswscale5-4.0-shlibs (>= 4.1)
+<<
+BuildDepends: <<
+	docutils-py27,
+	fink-package-precedence,
+	flag-sort,
+	jack-dev,
+	lcms2 (>= 2.6),
+	libarchive31,
+	libass5-dev (>= 0.12.1-1),
+	libavcodec58-4.0-dev (>= 4.1),
+	libavdevice58-4.0-dev (>= 4.1),
+	libavfilter7-4.0-dev (>= 4.1),
+	libavformat58-4.0-dev (>= 4.1),
+	libavutil56-4.0-dev (>= 4.1),
+	libbluray1-dev,
+	libcaca-dev,
+	libcdio-cdda2-dev,
+	libcdio-paranoia2-dev,
+	libcdio19-2.1-dev,
+	libiconv-dev,
+	libjpeg9,
+	libpostproc55-4.0-dev (>= 4.1),
+	librubberband2-dev,
+	libswresample3-4.0-dev (>= 4.1),
+	libswscale5-4.0-dev (>= 4.1),
+	pkgconfig
+<<
+Source: https://github.com/mpv-player/mpv/archive/v%v.tar.gz
+Source-MD5: 2cd070c6aed980786177b7cb5b73664b
+Source-Checksum: SHA1(83f2bc0eb5a8bec9a9d5efc7de0e19a442238ac5)
+SourceRename: mpv-%v.tar.gz
+Source2: https://waf.io/waf-1.8.12
+Source2-MD5: cef4ee82206b1843db082d0b0506bf71
+Source2-Checksum: SHA1(45afd4fe66effe6b79b3e6fd7fa0c6076d867488)
+UseMaxBuildJobs: false
+SetCFLAGS: -MD
+SetCC: flag-sort -v cc
+ConfigureParams: <<
+	--disable-x11 \
+	--disable-libsmbclient \
+	--disable-dvdread \
+	--enable-cdda \
+	--enable-lcms2 \
+	--disable-sdl2 \
+	--disable-pulse \
+	--disable-jack \
+	--disable-alsa \
+	--disable-lua
+<<
+CompileScript: <<
+	#!/bin/sh -ev
+	cp ../waf-1.8.12 %b/waf
+	chmod 755 waf
+	./waf configure %c
+	./waf build -v $MAKEFLAGS
+	fink-package-precedence --depfile-ext='\.d' .
+	TOOLS/osxbundle.py -s build/mpv
+<<
+InstallScript: <<
+	DESTDIR=%d ./waf install
+<<
+AppBundles: build/mpv.app
+DocFiles: Copyright LICENSE.GPL README.md RELEASE_NOTES
+Homepage: https://github.com/mpv-player/mpv
+DescDetail: <<
+Movie player based on MPlayer and mplayer2. It supports a 
+wide variety of video file formats, audio and video codecs, 
+and subtitle types.
+<<
+DescPort: <<
+* flag-sort needed to push CPPFLAGS=-I%p/include to the end of header search paths to avoid hiding an internal header (!lart waf).
+<<

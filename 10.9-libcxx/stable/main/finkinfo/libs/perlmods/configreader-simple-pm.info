@@ -1,0 +1,21 @@
+Package: configreader-simple-pm
+Version: 1.29.3
+Revision: 1
+Description: Simple configuration file parser
+Type: perl
+License: Artistic
+Maintainer: Benjamin Reed <configreader-simple-pm@fink.raccoonfink.com>
+BuildDepends: <<
+	test-output-pm,
+	test-warn-pm
+<<
+Source: mirror:cpan:modules/by-module/ConfigReader/ConfigReader-Simple-1.293.tar.gz
+Source-MD5: 48a28818e68b5cfe956aceefcee08a4e
+UpdatePOD: true
+DocFiles: Changes LICENSE
+Homepage: http://search.cpan.org/dist/ConfigReader-Simple
+DescDetail: <<
+ConfigReader::Simple reads and parses simple configuration files.
+It is designed to be smaller and simpler than the ConfigReader
+module and is more suited to simple configuration files.
+<<

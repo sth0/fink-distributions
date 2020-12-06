@@ -1,11 +1,18 @@
 Info2: <<
 Package: test-numeric-pm%type_pkg[perl]
 Version: 0.3
-Revision: 3
-Type: perl (5.16.2 5.18.2)
+Revision: 4
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 Description: Testing utilities for numbers
 License: Artistic
-Maintainer: Kevin Horton <khorton02@gmail.com>
+Maintainer: None <fink-devel@lists.sourceforge.net>
 
 # Dependencies.
 # Optional dependency Test-inline removed, as it doesn't seem to work
@@ -33,16 +40,16 @@ InstallScript: <<
 	%{default_script}
 	mv %i/share/man %i/lib/perl5/%type_raw[perl]
 <<
-DocFiles: MANIFEST
 
 # Additional Info:
-DescDetail: << 
-  This module contains utilities to test numbers to determine if data is 
+DescDetail: <<
+  This module contains utilities to test numbers to determine if data is
   numeric, if numbers are even or odd, test for integers, formatted, etc.
 <<
-# DescPackaging:<<
-# <<
-Homepage: http://search.cpan.org/~evdb/Test-Numeric-0.3/lib/Test/Numeric.pm
+DescPackaging: <<
+  Previous maintainer: Kevin Horton <khorton02@gmail.com>
+<<
+Homepage: https://metacpan.org/release/Test-Numeric
 
 # End of Info2
 <<

@@ -3,7 +3,8 @@ Info2: <<
 Package: python%type_pkg[python]
 # OPENSSL110 FTBFS
 # Will never support OPENSSL110. 3.5+ do.
-Version: 3.4.9
+Version: 3.4.10
+# Final version of 3.4
 Revision: 1
 Type: python 3.4
 Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
@@ -18,7 +19,7 @@ Depends: <<
 	libgettext8-shlibs,
 	liblzma5-shlibs,
 	libncursesw5-shlibs,
-	openssl100-shlibs (>= 1.0.2o-1),
+	openssl100-shlibs (>= 1.0.2r-1),
 	readline7-shlibs,
 	sqlite3-shlibs  (>= 3.24.0-1),
 	tcltk (>= 8.4.1-1),
@@ -38,7 +39,7 @@ BuildDepends: <<
 	libncursesw5,
 	readline7,
 	sqlite3-dev (>= 3.24.0-1),
-	openssl100-dev (>= 1.0.2o-1),
+	openssl100-dev (>= 1.0.2r-1),
 	tcltk-dev (>= 8.4.1-1),
 	x11-dev
 <<
@@ -48,12 +49,12 @@ Recommends: pip-py%type_pkg[python], setuptools-tng-py%type_pkg[python]
 Provides: argparse-py%type_pkg[python], futures-py%type_pkg[python], enum34-py%type_pkg[python], pathlib-py%type_pkg[python]
 
 Source: https://www.python.org/ftp/python/%v/Python-%v.tar.xz
-Source-Checksum: SHA256(59629676ba2b01a798f5211d8f63c26ee52f1d5133cf37583e0bf1bad50c2bd9)
+Source-Checksum: SHA256(d46a8f6fe91679e199c671b1b0a30aaf172d2acb5bcab25beb35f16c3d195b4e)
 # Upstream no longer provides doc tarballs. :(
 #Source2: https://www.python.org/ftp/python/doc/3.4.3/python-3.4.3-docs-html.tar.bz2
 #Source2-MD5: cb6bd508aff25471fb4f32cc848a8c5b
 PatchFile: %n.patch
-PatchFile-MD5: f4072bf83a399fc8516920d70f492d6c
+PatchFile-MD5: 12ef0f8067e3682542c1cd773e62ca28
 PatchScript: <<
 	#!/bin/sh -ex
 	sed 's|@PREFIX@|%p|g' < %{PatchFile} | patch -p1
@@ -89,6 +90,16 @@ ConfigureParams: <<
 <<
 
 CompileScript: <<
+#!/bin/sh -ex
+
+	# for OS X 10.14, ensure full SDK is available, but include it after any fink specific versions.
+	if [ "$(uname -r | cut -d. -f1)" -ge 18 ]; then
+		SDK_PATH="$(xcrun --sdk macosx --show-sdk-path)"
+		export CFLAGS="-Wno-nullability-completeness"
+		export CPPFLAGS="-I%p/include -I%p/include/ncursesw -I$SDK_PATH/usr/include"
+		perl -pi -e "s|/usr/include|$SDK_PATH/usr/include|" setup.py
+	fi
+
 	# https://bugs.python.org/issue28456 and radar://28372390
 	# https://daniel.haxx.se/blog/2016/10/11/poll-on-mac-10-12-is-broken/
 	./configure %c
@@ -99,27 +110,37 @@ CompileScript: <<
 <<
 
 # Tests have started hanging for me.
-#InfoTest: <<
-#	TestConflicts: apple-gdb
-#	TestScript: <<
-#		# Change install_name of lib during tests since DYLD_LIBRARY_PATH doesn't work on 10.11+.
-#		install_name_tool -change %p/lib/python%type_raw[python]/config-%type_raw[python]m/libpython%type_raw[python]m.dylib %b/libpython%type_raw[python]m.dylib python.exe
-#		/usr/bin/find `ls -d %b/build/lib*` -name *.so -exec install_name_tool -change %p/lib/python%type_raw[python]/config-%type_raw[python]m/libpython%type_raw[python]m.dylib %b/libpython%type_raw[python]m.dylib {} \;
-#		install_name_tool -id %b/libpython%type_raw[python]m.dylib libpython%type_raw[python]m.dylib
-#		
-#		# test_socket can fail with some DNS settings.
-#		LANG=en_US.UTF-8 make -k test EXTRATESTOPTS='-w -unone -x test_socket' || exit 2
-#		
-#		# Put install_name back.
-#		install_name_tool -change %b/libpython%type_raw[python]m.dylib %p/lib/python%type_raw[python]/config-%type_raw[python]m/libpython%type_raw[python]m.dylib python.exe
-#		/usr/bin/find `ls -d %b/build/lib*` -name *.so -exec install_name_tool -change %b/libpython%type_raw[python]m.dylib %p/lib/python%type_raw[python]/config-%type_raw[python]m/libpython%type_raw[python]m.dylib {} \;
-#		install_name_tool -id %p/lib/python%type_raw[python]/config-%type_raw[python]m/libpython%type_raw[python]m.dylib libpython%type_raw[python]m.dylib
-#		
-#		# Remove stray .pyc that get made during tests to keep validator happy.
-#		find ./Tools -name "*.pyc" -delete
-#		find ./Tools -name "__pycache__" -delete
-#	<<
-#<<
+InfoTest: <<
+	TestConflicts: apple-gdb
+	TestScript: <<
+		#!/bin/sh -ex
+		# Change install_name of lib during tests since DYLD_LIBRARY_PATH is not exported to test_subprocess on 10.11+.
+		if [ -x python.exe ]; then
+			python_exe=python.exe
+		else
+			python_exe=python
+		fi
+		install_name_tool -change %p/lib/python%type_raw[python]/config-%type_raw[python]m/libpython%type_raw[python]m.dylib %b/libpython%type_raw[python]m.dylib $python_exe
+		/usr/bin/find `ls -d %b/build/lib*` -name *.so -exec install_name_tool -change %p/lib/python%type_raw[python]/config-%type_raw[python]m/libpython%type_raw[python]m.dylib %b/libpython%type_raw[python]m.dylib {} \;
+		install_name_tool -id %b/libpython%type_raw[python]m.dylib libpython%type_raw[python]m.dylib
+
+		# test_socket can fail with some DNS settings.
+		# multiprocessing_spawn fails on "KeyboardInterrupt not raised by wait",
+		# the other 4 hang indefinitely
+		EXTRATESTOPTS='-w -unone -x test_socket test_distutils test_ssl test_multiprocessing_spawn test_asyncio test_httpservers test_logging test_xmlrpc'
+		LANG=en_US.UTF-8 make -k test EXTRATESTOPTS="$EXTRATESTOPTS" || TESTRETURN=$?
+
+		# Put install_name back.
+		install_name_tool -change %b/libpython%type_raw[python]m.dylib %p/lib/python%type_raw[python]/config-%type_raw[python]m/libpython%type_raw[python]m.dylib $python_exe
+		/usr/bin/find `ls -d %b/build/lib*` -name *.so -exec install_name_tool -change %b/libpython%type_raw[python]m.dylib %p/lib/python%type_raw[python]/config-%type_raw[python]m/libpython%type_raw[python]m.dylib {} \;
+		install_name_tool -id %p/lib/python%type_raw[python]/config-%type_raw[python]m/libpython%type_raw[python]m.dylib libpython%type_raw[python]m.dylib
+
+		# Remove stray .pyc that get made during tests to keep validator happy.
+		find ./Tools -name "*.pyc" -delete
+		find ./Tools -name "__pycache__" -delete
+		exit $TESTRETURN
+	<<
+<<
 
 InstallScript: <<
 #!/bin/sh -ex
@@ -257,6 +278,12 @@ DescPort: <<
 	
 	Upstream patch from https://bugs.python.org/issue27369 to fix tests
 	with expat 2.2.0.
+
+	No longer change stack size of interpreter in configure. Causes test
+	failures in 10.14.4. https://bugs.python.org/issue34602
+
+	Call build executable by correct filename in test suite
+	(python on case-sensitive, python.exe on -insensitive file systems).
 <<
 License: OSI-Approved
 Homepage: http://www.python.org

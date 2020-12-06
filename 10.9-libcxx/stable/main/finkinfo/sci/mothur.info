@@ -1,40 +1,54 @@
 Package: mothur
-Version: 1.40.5
+Version: 1.44.3
 Revision: 1
 Description: Microbial ecology software suite
 License: GPL3
 Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
 Depends: <<
-	boost1.63-nopython-shlibs,
-	boost1.63-python36-shlibs,
-	libncurses5-shlibs,
-	readline7-shlibs
+	boost1.68-nopython-shlibs,
+	hdf5-cpp.100.v1.10-shlibs,
+	hdf5.100.v1.10-shlibs,
+	libgsl25-shlibs,
+	readline8-shlibs
 <<
 BuildDepends: <<
-	boost1.63-nopython,
-	boost1.63-python36,
+	boost1.68-nopython,
 	fink-package-precedence,
-	libncurses5-dev,
-	readline7
+	hdf5-cpp.100.v1.10,
+	hdf5.100.v1.10,
+	libgsl25-dev,
+	readline8
 <<
 Source: https://github.com/mothur/mothur/archive/v%v.tar.gz
-Source-MD5: d57847849fdb961c3f66c9b9fdf3057b
-Source-Checksum: SHA1(071027d188b7bd7aab2dbde918e6f5b57c642619)
+Source-Checksum: SHA256(a9825ccbb7f60b527f63c16e07f9dd45373bdc8ee65c8f2f0b45f8b2113b2e6f)
 SourceRename: %n-%v.tar.gz
+#SourceDirectory: mothur-v.%v
 PatchScript: <<
-	perl -pi -e 's|-I \%%|-I\%%|g; s|-I \$|-I\$|g' Makefile
+	perl -pi -e 's|-I \%%|-I\%%|g; s|-I \$|-I\$|g; s|-L \$|-L\$|g' Makefile
 <<
 SetCXXFLAGS: -MD
 GCC: 4.0
 CompileScript: <<
 	#!/bin/sh -ev
 	/usr/bin/make -w \
+		OPTIMIZE=yes \
 		USEREADLINE=yes \
 		USEBOOST=yes \
-		BOOST_INCLUDE_DIR="%p/opt/boost-1_63/include" \
-		BOOST_LIBRARY_DIR="%p/opt/boost-1_63/lib/"
+		BOOST_INCLUDE_DIR="%p/opt/boost-1_68/include" \
+		BOOST_LIBRARY_DIR="%p/opt/boost-1_68/lib/" \
+		USEHDF5=yes \
+		HDF5_LIBRARY_DIR="%p/opt/hdf5.v1.10/lib" \
+		HDF5_INCLUDE_DIR="%p/opt/hdf5.v1.10/include" \
+		USEGSL=yes \
+		GSL_LIBRARY_DIR="%p/lib"
 	fink-package-precedence --depfile-ext='\.d' .
 <<
-InstallScript: mkdir -p %i/bin && cp -p mothur uchime %i/bin/ 
+InstallScript: mkdir -p %i/bin && cp -p mothur uchime %i/bin/
 DocFiles: LICENSE.md README.md
 Homepage: http://www.mothur.org/
+DescPort: <<
+* Do not set GSL_INCLUDE_DIR because that gets prepended early on and
+then libcanberra0::canberra.h hides internal canberra.h. CXXFLAGS
+already has -I%p/include (at the very end), and that's enough to get our
+libgsl.
+<<

@@ -1,9 +1,9 @@
 Info2:<<
 Package: mtr%type_pkg[-nox]
 Type: -nox (boolean)
-Version: 0.86
-Revision: 1
-Maintainer: Hisashi T Fujinaka <htodd@users.sourceforge.net>
+Version: 0.93
+Revision: 3
+Maintainer: Hisashi T Fujinaka <htodd@twofifty.com>
 Depends: <<
 	(%type_raw[-nox] = .) cairo-shlibs (>= 1.12.14-1),
 	(%type_raw[-nox] = .) atk1-shlibs (>= 1.28.0-1),
@@ -33,10 +33,9 @@ BuildDepends: <<
 Conflicts: mtr, mtr-nox
 Replaces: mtr, mtr-nox
 Source: ftp://ftp.bitwizard.nl/mtr/mtr-%v.tar.gz
-Source-MD5: 8d63592c9d4579ef20cf491b41843eb2
-SourceDirectory: %{ni}-%v
+Source-checksum: SHA1(853cfaf0a9822e7add3eb82ccdb360e84f36ffa5)
 PatchFile: %{ni}.patch
-PatchFile-MD5: 1f00d754e4f14a366e47b61edc7d3c43
+PatchFile-checksum: SHA1(8f0b4df7fe6c0fd8747d07ac1478aed328041ba6)
 PatchScript: <<
 #!/bin/sh -ev
 	%{default_script}
@@ -50,12 +49,10 @@ PatchScript: <<
 <<
 
 ConfigureParams: <<
- --mandir=%p/share/man \
  --sbindir=%p/bin \
  --enable-dependency-tracking \
  (%type_raw[-nox] = .) --with-gtk \
  (%type_raw[-nox] = -nox) --without-gtk \
- LIBS="-lresolv" \
  PKG_CONFIG_PATH="%p/lib/glib-2.0/pkgconfig-strict:$PKG_CONFIG_PATH"
 <<
 # apple's libresolv seems sufficient, which avoids autoconf defaulting
@@ -67,8 +64,13 @@ CompileScript: <<
 	%{default_script}
 	fink-package-precedence .
 <<
-InstallScript: make install DESTDIR=%d
-DocFiles: AUTHORS COPYING FORMATS NEWS README SECURITY TODO
+InstallScript: <<
+make install DESTDIR=%d
+<<
+PostInstScript: <<
+chmod u+s %p/bin/mtr-packet
+<<
+DocFiles: AUTHORS BSDCOPYING COPYING NEWS SECURITY TODO
 Description: Combines 'traceroute' and 'ping'
 DescDetail: <<
 mtr is a simple network diagnostic tool, which combines the functionality of 

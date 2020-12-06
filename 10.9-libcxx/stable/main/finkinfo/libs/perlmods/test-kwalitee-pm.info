@@ -8,7 +8,7 @@ BuildDepends: <<
 	fink (>= 0.30.2),
 	module-build-tiny-pm%type_pkg[perl] (>= 0.037),
 	test-checkdeps-pm%type_pkg[perl] (>= 0.006),
-	test-deep-pm%type_pkg[perl],
+	test-deep-pm,
 	test-simple-pm%type_pkg[perl] (>= 1.001014-1),
 	test-warnings-pm%type_pkg[perl] (>= 0.009)
 <<
@@ -19,7 +19,14 @@ Depends: <<
 <<
 Source: mirror:cpan:authors/id/E/ET/ETHER/Test-Kwalitee-%v.tar.gz
 Source-MD5: 2b3ccaec94e75ab574b0e773f74ca884
-Type: perl (5.16.2 5.18.2)
+Type: perl (5.16.2 5.18.2 5.18.4)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
 DefaultScript: ModuleBuild
 DocFiles: CONTRIBUTING Changes LICENSE README
 Description: Automatic measures of software kwalitee

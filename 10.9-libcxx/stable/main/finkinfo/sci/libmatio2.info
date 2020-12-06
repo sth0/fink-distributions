@@ -1,10 +1,10 @@
 Package: libmatio2
 # 1.5.4+ mess with SONAME.  Stable again at libN=4 with 1.5.6?
 Version: 1.5.3
-Revision: 1
+Revision: 2
 Description: MAT File I/O Library
 License: BSD
-### free for anyone to take over after contacting me
+### free to update and take over
 Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
 BuildDependsOnly: true
 Depends: <<
@@ -20,17 +20,32 @@ BuildDepends: <<
 Source: mirror:sourceforge:matio/matio-%v.tar.gz
 Source-MD5: 59c0c613c82e79da8e84d60d0403a55c
 Source-Checksum: SHA1(c8d9f943840e15a0af57390d05d3c69d1ea046f6)
-Conflicts: libmatio, libmatio2, libmatio4
-Replaces: libmatio, libmatio2, libmatio4
+Conflicts: <<
+	libmatio,
+	libmatio2,
+	libmatio4,
+	libmatio9
+<<
+Replaces: <<
+	libmatio,
+	libmatio2,
+	libmatio4,
+	libmatio9
+<<
 SetCFLAGS: -MD
 PatchScript: <<
 	# Patch configure to not link like Puma on Yosemite
 	perl -pi.bak -e 's|10\.\[012\]\*|10.[012][,.]*|g' configure
 <<
-ConfigureParams: --mandir=%p/share/man --with-hdf5=%p --enable-shared --disable-static
+ConfigureParams: <<
+	--mandir=%p/share/man \
+	--with-hdf5=%p \
+	--enable-shared \
+	--disable-static
+<<
 CompileScript: <<
 	%{default_script}
-	fink-package-precedence --depfile-ext='\.d' --prohibit-bdep=libmatio,libmatio2,libmatio4 .
+	fink-package-precedence --depfile-ext='\.d' --prohibit-bdep=libmatio,libmatio2,libmatio4,libmatio9 .
 <<
 InfoTest: <<
 	TestScript: make check || exit 2
