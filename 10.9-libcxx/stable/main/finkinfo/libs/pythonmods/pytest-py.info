@@ -1,9 +1,9 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Info4: <<
 Package: pytest-py%type_pkg[python]
-Version: 7.4.4
+Version: 8.3.2
 Revision: 1
-Type: python (3.7 3.8 3.9 3.10)
+Type: python (3.8 3.9 3.10)
 
 Description: Cross-project testing tool for Python
 DescDetail: <<
@@ -20,7 +20,7 @@ License: BSD
 Homepage: http://pytest.org/
 
 Source: https://files.pythonhosted.org/packages/source/p/pytest/pytest-%v.tar.gz
-Source-Checksum: SHA256(2cf0005922c6ace4a3e2ec8b4080eb0d9753fdc93107415332f50ce9e7994280)
+Source-Checksum: SHA256(c132345d12ce551242c87269de812483f5bcc87cdbb4722e48487ba194f9fdce)
 
 Depends: <<
 	attrs-py%type_pkg[python] (>= 19.2.0-1),
