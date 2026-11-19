@@ -1,6 +1,6 @@
 Package: gdl
-Version: 1.0.4
-Revision: 2
+Version: 1.1.3
+Revision: 1
 Epoch: 1
 Description: GNU Data Language
 License: GPL
@@ -16,10 +16,10 @@ Depends: <<
 	libncurses5-shlibs (>= 5.4-20041023-1006),
 	libplplot18-5.15.0-shlibs,
 	libpng16-shlibs,
-	libproj19-shlibs,
+	libproj25-shlibs,
 	libtiff6-shlibs,
 	ncurses (>= 5.4-20041023-1006),
-	netcdf-c19-shlibs,
+	netcdf-c22-shlibs,
 	readline8-shlibs,
 	szip-shlibs,
 	udunits2-shlibs,
@@ -40,9 +40,9 @@ BuildDepends: <<
 	libncurses5 (>= 5.4-20041023-1006),
 	libplplot18-5.15.0-dev,
 	libpng16,
-	libproj19,
+	libproj25,
 	libtiff6,
-	netcdf-c19,
+	netcdf-c22,
 	pkgconfig,
 	readline8,
 	sed,
@@ -51,7 +51,9 @@ BuildDepends: <<
 	x11-dev
 <<
 Source: https://github.com/gnudatalanguage/gdl/releases/download/v%v/gdl-v%v.tar.gz
-Source-Checksum: SHA256(f248123c1c82710d070243e29b2dd445bc6fd378800f3bdaa4b8cb46962c5fb1)
+Source-Checksum: SHA256(7f2b39cec13d7589e7d810ca2197ffb080f80d3de0de440a8cba26e21cadf8a1)
+PatchFile: %n-2158.patch
+PatchFile-MD5: 62a08dee761e1baf9fd2ab326e21f523
 GCC: 4.0
 CompileScript: <<
 #!/bin/bash -efv
@@ -92,7 +94,7 @@ CompileScript: <<
 		-DOPENMP=OFF \
 		-DMPI_mpi_LIBRARY=NOT_FOUND \
 		-DMPI_mpi_cxx_LIBRARY=NOT_FOUND \
-		-DZLIBDIR=${sdk_path}/usr/include \
+		-DZLIBDIR=${sdk_path}/usr \
 		-DPLPLOTDIR=%p/lib/plplot18-5.15.0 \
 		-DPLPLOT_INCLUDE_DIR=%p/include \
 		-DPLPLOT_LIBRARIES=%p/lib/plplot18-5.15.0 \
@@ -123,7 +125,7 @@ InstallScript: <<
 InfoTest: <<
 	TestScript: <<
 	#!/bin/sh -ev
-		# fails test_delvarrnew.pro test_systime.pro
+		# fails test_systime.pro
 		# seems like timezone and shell oddities
 		# https://github.com/gnudatalanguage/gdl/issues/1541
 		cd build

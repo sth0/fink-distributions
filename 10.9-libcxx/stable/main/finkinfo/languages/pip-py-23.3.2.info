@@ -1,0 +1,71 @@
+# -*- coding: ascii; tab-width: 4 -*-
+Info4: << 
+Package: pip-py%type_pkg[python]
+Type: python (3.7)
+Version: 23.3.2
+Revision: 1
+
+Source: https://files.pythonhosted.org/packages/source/p/pip/pip-%v.tar.gz
+Source-Checksum: SHA256(7fd9972f96db22c8077a1ee2691b172c8089b17a5652a44494a9ecb0d78f9149)
+
+Depends: <<
+	python%type_pkg[python],
+	setuptools-tng-py%type_pkg[python],
+	wheel-py%type_pkg[python]
+<<
+BuildDepends: <<
+	bootstrap-modules-py%type_pkg[python],
+	setuptools-tng-py%type_pkg[python]
+<<
+Description: Python package management
+Maintainer: None <fink-devel@lists.sourceforge.net>
+DocFiles: AUTHORS.txt LICENSE.txt NEWS.rst README.rst docs
+CompileScript: <<
+	PYTHONPATH=%p/share/bootstrap-modules-python%type_pkg[python] %p/bin/python%type_raw[python] -m build --wheel --no-isolation --skip-dependency-check
+<<
+# tests not in PyPi tarball: https://github.com/pypa/pip/issues/6258
+#InfoTest: <<
+#	TestDepends: <<
+#		pytest-py%type_pkg[python]
+#	<<
+#	TestScript: <<
+#		%p/bin/python%type_raw[python] -m pytest -vv || exit 2
+#	<<
+#<<
+InstallScript: <<
+  #!/bin/bash -ev
+  PYTHONPATH=%p/share/bootstrap-modules-python%type_pkg[python] %p/bin/python%type_raw[python] -m installer --destdir %d dist/*.whl
+  for file in %i/bin/pip %i/bin/pip3; do
+    mv $file ${file}-py%type_raw[python]
+  done
+<<
+
+PostInstScript: <<
+  update-alternatives --verbose --install %p/bin/pip pip %p/bin/pip-py%type_raw[python] %type_pkg[python]
+<<
+
+PreRmScript: <<
+ if [ $1 != "upgrade" ]; then
+   update-alternatives --verbose --remove pip %p/bin/pip-py%type_raw[python]
+ else
+   echo "Skipping update-alternatives during an upgrade."
+ fi
+<<
+
+LICENSE: OSI-Approved
+HomePage: https://pip.pypa.io/
+
+DescDetail: <<
+pip is a tool for installing and managing Python packages, such as
+those found in the Python Package Index. It's a replacement for
+easy_install.
+
+Do not use pip to install on top of your fink tree.  That is a 
+bad bad bad idea.  Use --target with install to install packages
+to the side someplace.  Or better yet, use virtualenv.
+<< 
+DescPackaging: <<
+Former maintainer: Kurt Schwehr <goatbar@users.sourceforge.net>
+<<
+# Info4
+<<

@@ -1,13 +1,13 @@
 Info2: <<
 Package: image-exiftool-pm
-Version: 12.63
+Version: 13.55
 Revision: 1
 Description: Read and write image/movie meta information
 Type: perl
 License: Artistic/GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: https://exiftool.org/Image-ExifTool-%v.tar.gz
-Source-Checksum: SHA256(15162912ac37cdc6a7018498435a8348b5e6d7a10385f38b75e053695c9b5658)
+Source: mirror:cpan:authors/id/E/EX/EXIFTOOL/Image-ExifTool-%v.tar.gz
+Source-Checksum: SHA256(5f4c81d34ad406538c2871ad72dbfceb5d9b412b2f16cbbeb4d712d270846667)
 UpdatePOD: true
 DocFiles: Changes README
 Homepage: https://exiftool.org/
@@ -27,6 +27,7 @@ DescPackaging: <<
 <<
 DescUsage: <<
 	Various file-types and operations might have require certain
-	other specific perl modules.
+	other specific perl modules, some of which might be
+	perl-version varianted.
 <<
 <<

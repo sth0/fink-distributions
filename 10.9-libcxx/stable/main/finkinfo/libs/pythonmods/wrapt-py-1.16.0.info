@@ -1,0 +1,53 @@
+Info3: <<
+Package: wrapt-py%type_pkg[python]
+Version: 1.16.0
+Revision: 1
+Description: Decorators, wrappers and monkey patching mod
+License: BSD
+Maintainer: None <fink-devel@lists.sourceforge.net>
+Type: python (3.7)
+Source: https://files.pythonhosted.org/packages/source/w/wrapt/wrapt-%v.tar.gz
+Source-Checksum: SHA256(5f370f952971e7d17c7d1ead40e49f32345a7f7a5373571ef44d800d06b1899d)
+
+Depends: python%type_pkg[python]
+BuildDepends: <<
+	setuptools-tng-py%type_pkg[python]
+<<
+CompileScript: <<
+  %p/bin/python%type_raw[python] setup.py build_ext --include-dirs=%p/include --library-dirs=%p/lib
+  %p/bin/python%type_raw[python] setup.py build
+<<
+InfoTest: <<
+	TestDepends: <<
+		pytest-py%type_pkg[python]
+	<<
+  TestScript: <<
+    PYTHONPATH=$(ls -d %b/build/lib.macos*) %p/bin/python%type_raw[python] -m pytest -p no:relaxed -vv || exit 2
+    find ./build -name "*.pyc" -delete
+  <<
+<<
+InstallScript: <<
+  %p/bin/python%type_raw[python] setup.py install --root=%d
+<<
+DocFiles: PKG-INFO
+Homepage: https://github.com/GrahamDumpleton/wrapt
+DescDetail: <<
+The aim of the wrapt module is to provide a transparent object proxy
+for Python, which can be used as the basis for the construction of
+function wrappers and decorator functions.
+
+The wrapt module focuses very much on correctness. It therefore goes
+way beyond existing mechanisms such as functools.wraps() to ensure
+that decorators preserve introspectability, signatures, type checking
+abilities etc. The decorators that can be constructed using this
+module will work in far more scenarios than typical decorators and
+provide more predictable and consistent behaviour.
+
+To ensure that the overhead is as minimal as possible, a C extension
+module is used for performance critical components. An automatic
+fallback to a pure Python implementation is also provided where a
+target system does not have a compiler to allow the C extension to be
+compiled.
+<<
+# Info3
+<<

@@ -1,5 +1,5 @@
 Package: gawk
-Version: 5.3.1
+Version: 5.4.2
 
 Revision: 1
 Maintainer: None <fink-devel@lists.sourceforge.net>
@@ -24,7 +24,7 @@ Depends: <<
 <<
 
 Source: mirror:gnu:%n/%n-%v.tar.xz
-Source-Checksum: SHA256(694db764812a6236423d4ff40ceb7b6c4c441301b72ad502bb5c27e00cd56f78)
+Source-Checksum: SHA256(b95e4909533b5f988c6b5e5539b3b3ddf76e7d7df02ca2e5b5b7d6f62db78e6a)
 
 ConfigureParams: <<
 	--libexecdir=%p/lib \
@@ -44,12 +44,6 @@ DescDetail: <<
 Awk is a sophisticated text processing language commonly used in shell
 scripts. Note that many people actually prefer mawk over gawk because
 of speed.
-<<
-DescPackaging: <<
-Patching with
-https://git.savannah.gnu.org/cgit/gawk.git/commit/extension/?id=e0b7737
-to avoid building x86_64 binary (which fails to link arm64 libreadline etc.);
-omitting m4/pma.m4 which requires aclocal/automake 1.16.
 <<
 
 License: GPL

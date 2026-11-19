@@ -1,67 +1,56 @@
 Info2: <<
 Package: libimobiledevice-py%type_pkg[python]
-Type: python (2.7)
-Version: 1.1.4
-Revision: 6
+Type: python (3.8 3.9 3.10)
+Version: 1.4.0
+Revision: 1
 Description: Library to talk to iDevices
 License: LGPL
 
 # Dependencies:
-Depends: python%type_pkg[python], libimobiledevice4-shlibs (>= %v-1)
-BuildDepends: <<
-  pkgconfig,
-  automake1.14,
-  autoconf2.6,
-  libtool2,
-  cython-py%type_pkg[python],
-  usbmuxd2-dev,
-  libplist1,
-  libplist-py%type_pkg[python]-dev
+Depends: <<
+	libimobiledevice-glue10.0-shlibs,
+	libimobiledevice6-shlibs (>= %v-1),
+	libplist20.4-shlibs,
+	libusbmuxd20.7-shlibs,
+	openssl300-shlibs,
+	python%type_pkg[python]
 <<
+BuildDepends: <<
+	cython-py%type_pkg[python],
+	libimobiledevice-glue10.0-dev,
+	libimobiledevice6-dev (>= %v-1),
+	libplist-py%type_pkg[python]-dev,
+	libplist20.4,
+	libtatsu0-dev,
+	libusbmuxd20.7-dev,
+	openssl300-dev,
+	pkgconfig
+<<
+
 GCC: 4.0
 
 # Unpack Phase:
-Source: http://cgit.sukimashita.com/libimobiledevice.git/snapshot/libimobiledevice-84235e0834e57551028329723f4510e1dbe7bc11.tar.bz2
-Source-Checksum: SHA256(65289964e909f95375362677a6b941810b32eef82856566ebcd4021b807580b8)
-SourceDirectory: libimobiledevice-84235e0834e57551028329723f4510e1dbe7bc11
-
-Patchscript: <<
-# This corrects bug #280 of the bug tracker and can be deleted, once fixed by upstream
-  sed -i.bak 's|LIBIMOBILEDEVICE_INTERNAL inline void debug_buffer(|inline void debug_buffer(|g' src/debug.h
-# fix from git commit 0cac547eb79492e04176ad541fe6fb1d1f576824, Feb 27, 2013
-  sed -i.bak 's|cdef inline BaseError _error(|cdef BaseError _error(|g' cython/imobiledevice.pxd
-  sed -i.bak 's|cdef inline BaseError _error(|cdef BaseError _error(|g' cython/imobiledevice.pyx
-# fix from git commit 62ab50f64fa210304338a5bfccdc6a26fac5f0ec, May 13, 2013
-  sed -i.bak 's|\&c_session_id, \&ssl_enabled)|\&c_session_id, <int *>\&ssl_enabled)|g' cython/lockdown.pxi
+Source: https://github.com/libimobiledevice/libimobiledevice/releases/download/%v/libimobiledevice-%v.tar.bz2
+Source-Checksum: SHA256(23cc0077e221c7d991bd0eb02150a0d49199bcca1ddf059edccee9ffd914939d)
+PatchScript: <<
+	perl -pi -e 's|framework CoreFoundation|Wl,-framework,CoreFoundation|g; s|framework SystemConfiguration|Wl,-framework,SystemConfiguration|g' src/Makefile.in
 <<
 
-ConfigureParams: LDFLAGS="-L%p/lib/python%type_raw[python]/config -L%p/lib" PYTHON=%p/bin/python%type_raw[python] CFLAGS="-I%p/include -std=gnu89"
-
+ConfigureParams: <<
+	--disable-silent-rules \
+	PYTHON=%p/bin/python%type_raw[python]
+<<
 CompileScript: <<
 #!/bin/sh -ev
-  ./autogen.sh %c
-# Compile only what is needed for building the python stuff with cython
-  make -C src  all
-  make -C cython all
+  ./configure %c
+  make -w CFLAGS='-Wno-missing-field-initializers -Wno-deprecated-declarations'
 <<
 
 InstallScript: <<
-#!/bin/sh -ev
   make -C cython install DESTDIR=%d
-  install -d -m 755 %d/%p/include/imobiledevice/cython
-  cp cython/*.pxd   %d/%p/include/imobiledevice/cython
 <<
 
-DocFiles: AUTHORS COPYING* NEWS README
-
-SplitOff: <<
-  Package: %N-dev
-  BuildDependsOnly: true
-  Depends: %N
-  Conflicts: libimobiledevice-py25-dev, libimobiledevice-py26-dev, libimobiledevice-py27-dev 
-  Replaces:  libimobiledevice-py25-dev, libimobiledevice-py26-dev, libimobiledevice-py27-dev
-  Files: include
-<<
+DocFiles: AUTHORS COPYING* NEWS README.md
 
 # Additional Info
 DescDetail: <<
@@ -74,9 +63,9 @@ internals, backup/restore the device, manage SpringBoard icons, manage
 installed applications, retrieve addressbook/calendars/notes and bookmarks
 and synchronize music and video to the device.
 
-See the README file for some commandline tools to access iDevices.
+See the README.md file for some commandline tools to access iDevices.
 <<
 
-Homepage: http://www.libimobiledevice.org/
+Homepage: https://libimobiledevice.org/
 Maintainer: Karl-Michael Schindler <karl-michael.schindler@web.de>
 <<

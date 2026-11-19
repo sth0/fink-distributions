@@ -8,6 +8,7 @@ BuildDepends: <<
 	docbook-dtd,
 	docbook-xsl,
 	gettext-tools,
+	pod-parser-pm,
 	sgmls-pm,
 	term-readkey-pm5302,
 	libxslt-bin,
@@ -109,5 +110,5 @@ sub-modules:
   - XML: very configurable (preconfigured for DocBook, XHTML, Guide, WML).
 <<
 License: GPL
-Homepage: http://po4a.alioth.debian.org/
+Homepage: https://www.po4a.org/
 Maintainer: Justin F. Hallett <thesin@users.sourceforge.net>

@@ -1,6 +1,6 @@
 Package: gettext-tools
 Version: 0.22.5
-Revision: 1
+Revision: 4
 CustomMirror: <<
 	Primary: http://ftpmirror.gnu.org/gettext/
 	Secondary: http://downloads.sourceforge.net/fink/
@@ -11,19 +11,22 @@ PatchFile: libgettext8-shlibs.patch
 PatchFile-MD5: 40c5bb69aea2d78ca50c7bf011653a01
 PatchFile2: gettext-tools-tests.patch
 PatchFile2-MD5: f766ea0e37b9d2f68a49c51d7adea043
+PatchFile3: gettext-tools-clang.patch
+PatchFile3-MD5: a264383e1c06c661888a3f5161c0a2c5
 PatchScript: <<
  patch -p1 < %{PatchFile}
  sed 's|@FINKPREFIX@|%p|g' < %{PatchFile2} | patch -p1
+ patch -p1 < %{PatchFile3}
 <<
 Depends: <<
-	expat1-shlibs (>= 2.6.0-1),
+	expat1-shlibs (>= 2.9.0-1),
 	libgettext8-shlibs (>= %v-1),
 	libiconv (>= 1.14-6),
 	libncurses5-shlibs (>= 5.4-20041023-1011)
 <<
 Suggests: gettext-doc
 BuildDepends: <<
-	expat1 (>= 2.6.0-1),
+	expat1 (>= 2.9.0-1),
 	fink (>= 0.30.0),
 	libgettext8-dev (>= %v-1),
 	libiconv-dev (>= 1.14-6),

@@ -1,25 +1,27 @@
 Package: hello
-Version: 2.10
+Version: 2.12.3
 Revision: 1
 Maintainer: David Fang <fangism@users.sourceforge.net>
 Source: mirror:gnu:%n/%n-%v.tar.gz
-Source-Checksum: SHA256(31e066137a962676e89f69d1b65382de95a7ef7d914b8cb956f41ea72e0f516b)
+Source-Checksum: SHA256(0d5f60154382fee10b114a1c34e785d8b1f492073ae2d3a6f7b147687b366aa0)
 BuildDepends: <<
 	gettext-bin,
 	gettext-tools,
-	libgettext8-dev (>= 0.17-1)
+	libgettext8-dev (>= 0.17-1),
+	libiconv-dev
 <<
-Depends: libgettext8-shlibs (>= 0.17-1)
+Depends: <<
+	libgettext8-shlibs (>= 0.17-1),
+	libiconv
+<<
 BuildDependsOnly: True
 License: GPL
-ConfigureParams: --mandir='${prefix}/share/man' --infodir='${prefix}/share/info'
-UseMaxBuildJobs: true
 CompileScript: <<
 	#!/bin/sh -ev
 	mkdir build
 	cd build
 	../configure %c
-	make
+	make -w
 <<
 InfoTest: <<
 	TestDepends: fink-package-precedence

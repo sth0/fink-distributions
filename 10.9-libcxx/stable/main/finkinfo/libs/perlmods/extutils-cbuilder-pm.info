@@ -1,11 +1,11 @@
 Info2: <<
 Package: extutils-cbuilder-pm%type_pkg[perl]
 Version: 0.28.02.36
-Revision: 1
+Revision: 2
 Epoch: 1
 # dual-lifed in perl-core, so fink varianted to prevent PERL5LIB
 # search chaos
-Type: perl (5.16.2 5.18.2 5.18.4 5.28.2 5.30.2 5.30.3)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2 5.30.2 5.30.3 5.34.1)
 Distribution: <<
 	(%type_pkg[perl] = 5162) 10.9,
 	(%type_pkg[perl] = 5162) 10.10,
@@ -25,7 +25,7 @@ Depends: <<
 Source: mirror:cpan:authors/id/A/AM/AMBS/ExtUtils-CBuilder-0.280236.tar.gz
 Source-Checksum: SHA256(abc21827eb8a513171bf7fdecefce9945132cb76db945036518291f607b1491f)
 PatchFile: %{ni}.patch
-PatchFile-MD5: 1839e383e7735e79bd788580549f6c68
+PatchFile-MD5: e0dec2f9e961ddc7910142470595369f
 
 # Install Phase.
 InstallScript: <<

@@ -1,6 +1,6 @@
 Info2: <<
 Package: xml-twig-pm%type_pkg[perl]
-Version: 3.52
+Version: 3.55
 Revision: 1
 
 Replaces: xml-twig-pm (<= 3.14-10), xml-twig-pm560, xml-twig-pm580, xml-twig-pm581, xml-twig-pm586
@@ -18,9 +18,8 @@ Depends: <<
 	xml-parser-pm%type_pkg[perl] (>= 2.31-6),
 	xml-xpathengine-pm
 <<
-BuildDepends: fink (>= 0.20.1-1)
 Source: mirror:cpan:authors/id/M/MI/MIROD/XML-Twig-%v.tar.gz
-Source-Checksum: SHA256(fef75826c24f2b877d0a0d2645212fc4fb9756ed4d2711614ac15c497e8680ad)
+Source-Checksum: SHA256(69326e5edc05c759ccc78fbe05ca63759a035fe7a5337b8ddba6c3dd42f64f6c)
 # There is a bug in fink's perl packages which sets perlpath to %p/bin/perl
 # instead of %p/bin/perlx.y.z so the tests fail if perlxyz isn't installed
 # in addition to perlxyz-core. This patch works around the bug.
@@ -41,6 +40,7 @@ PatchScript: <<
 InfoTest: <<
   TestDepends: <<
   	io-captureoutput-pm,
+	io-stringy-pm (>= 2.110),
   	test-cpan-meta-json-pm%type_pkg[perl],
 	test-harness-pm%type_pkg[perl] (>= 3.23-1),
   	unicode-map8-pm%type_pkg[perl],
@@ -83,7 +83,7 @@ PostInstScript: <<
 PreRmScript: <<
   update-alternatives --remove xml_grep %p/bin/xml_grep-%type_pkg[perl]
 <<
-Type: perl (5.16.2 5.18.2 5.18.4 5.28.2 5.30.2 5.30.3)
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2 5.30.2 5.30.3 5.34.1)
 Distribution: <<
 	(%type_pkg[perl] = 5162) 10.9,
 	(%type_pkg[perl] = 5162) 10.10,

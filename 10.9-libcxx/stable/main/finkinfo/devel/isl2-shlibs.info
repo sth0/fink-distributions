@@ -1,0 +1,78 @@
+Package: isl2-shlibs
+# Legacy packaging mistake: libversion is "13"
+Version: 0.14.1
+Revision: 4
+BuildDepends: <<
+	autoconf2.6,
+	automake1.15,
+	gmp5,
+	libtool2
+<<
+Depends: <<
+	gmp5-shlibs
+<<
+Source: http://repo.or.cz/w/isl.git/snapshot/f2460131b6ac935a1263e7c729cc8268f64db3ec.tar.gz
+Source-Checksum: SHA256(e1d3b95c728da219390ec285c83552f6bb52fbf91fe7c3c2fcd9c7709c3c17da)
+SourceRename: isl-%v.tar.gz
+SourceDirectory: isl-f246013
+ConfigureParams: <<
+	--mandir=%p/share/man \
+	--infodir=%p/share/info \
+	--with-gmp-prefix=%p \
+	--disable-static
+<<
+InfoTest: TestScript: make check || :
+PatchScript: <<
+	. ./autogen.sh
+	perl -pi -e 's|="-O1"|="-O3"|g' ./configure
+<<
+InstallScript: <<
+	make install DESTDIR=%d 
+<<
+Shlibs: <<
+	%p/lib/libisl.13.dylib 15.0.0 %n (>= 0.14-1)
+<<
+DocFiles: AUTHORS LICENSE README ChangeLog
+SplitOff: <<
+	Package: isl2
+	BuildDependsOnly: True
+	Depends: %N (= %v-%r)
+	Conflicts: <<
+		cloog-org,
+		isl,
+		isl2,
+		isl3,
+		isl22
+	<<
+	Replaces: <<
+		cloog-org,
+		isl,
+		isl2,
+		isl3,
+		isl22
+	<<
+	Files: <<
+		include
+		lib/libisl.{dylib,la}
+		lib/libisl.13.dylib-gdb.py
+		lib/pkgconfig
+	<<
+	DocFiles: AUTHORS LICENSE README ChangeLog
+<<
+License: BSD
+Description: Integer Set Library
+DescDetail: <<
+Isl is a library for manipulating sets and relations of integer points bounded
+by linear constraints. Supported operations on sets include intersection, 
+union, set difference, emptiness check, convex hull, (integer) affine hull,
+integer projection, and computing the lexicographic minimum using parametric
+integer programming. It also includes an ILP solver based on generalized basis
+reduction.
+<<
+DescPackaging: <<
+The FSF gcc 4.2.1 compiler requires the optimization to be reduced to
+-O1 but this bug is not present in Apple's gcc 4.2.1 compiler so this
+change is reverted in the PatchScript.
+<<
+Homepage: https://libisl.sourceforge.io
+Maintainer: None <fink-devel@lists.sourceforge.net>

@@ -1,0 +1,98 @@
+Package: libimobiledevice6-shlibs
+Version: 1.4.0
+Revision: 1
+Description: Library to talk to iDevices
+License: LGPL
+
+# Dependencies:
+Depends: <<
+	libgcrypt20-shlibs,
+	libplist20.4-shlibs,
+	libusbmuxd20.7-shlibs,
+	openssl300-shlibs
+<<
+BuildDepends: <<
+	fink-package-precedence,
+	libgcrypt20,
+	libplist20.4,
+	libtatsu0-dev,
+	libusbmuxd20.7-dev,
+	openssl300-dev,
+	pkgconfig
+<<
+
+# Unpack Phase:
+Source: https://github.com/libimobiledevice/libimobiledevice/releases/download/%v/libimobiledevice-%v.tar.bz2
+Source-Checksum: SHA256(23cc0077e221c7d991bd0eb02150a0d49199bcca1ddf059edccee9ffd914939d)
+
+PatchScript: <<
+	perl -pi -e 's|framework CoreFoundation|Wl,-framework,CoreFoundation|g; s|framework SystemConfiguration|Wl,-framework,SystemConfiguration|g' src/Makefile.in
+<<
+ConfigureParams: <<
+	--disable-silent-rules \
+	--without-cython
+<<
+CompileScript: <<
+  ./configure %c
+  make CFLAGS='-Wno-deprecated-declarations'
+  fink-package-precedence .
+<<
+
+Shlibs: <<
+	%p/lib/libimobiledevice-1.0.6.dylib 8.0.0 %n (>= 1.4.0-1)
+<<
+DocFiles: AUTHORS COPYING* NEWS README.md
+
+SplitOff: <<
+	Package: libimobiledevice6
+	Description: Library to talk to iDevices (tools)
+	Depends: <<
+		%n (>= %v-1),
+		libtatsu0-shlibs
+	<<
+	Files: <<
+		bin
+		share/man
+	<<
+	DocFiles: AUTHORS COPYING* NEWS README.md
+<<
+
+Splitoff2: <<
+  Package: libimobiledevice6-dev
+  Description: Library to talk to iDevices (dev)
+  Conflicts: <<
+  	libimobiledevice-dev,
+  	libimobiledevice4-dev,
+  	libimobiledevice6-dev
+  <<
+  Replaces: <<
+  	libimobiledevice-dev,
+  	libimobiledevice4-dev,
+  	libimobiledevice6-dev
+  <<
+  Depends: %N (= %v-1)
+  BuildDependsOnly: true
+  Files: <<
+    include
+    lib/libimobiledevice-1.0.{a,dylib,la}
+    lib/pkgconfig
+  <<
+  DocFiles: AUTHORS COPYING* NEWS README.md 
+<<
+
+# Additional Info
+DescDetail: <<
+libimobiledevice is a software library that talks the protocols to support
+iPhone, iPod Touch, iPad and Apple TV devices.  Unlike other projects, it
+does not depend on using any existing proprietary libraries and does not
+require jailbreaking.  It allows other software to easily access the
+device's filesystem, retrieve information about the device and it's
+internals, backup/restore the device, manage SpringBoard icons, manage
+installed applications, retrieve addressbook/calendars/notes and bookmarks
+and synchronize music and video to the device.
+
+See the README file for some commandline tools to access iDevices.
+<<
+
+Homepage: http://www.libimobiledevice.org/
+Maintainer: Karl-Michael Schindler <karl-michael.schindler@web.de>

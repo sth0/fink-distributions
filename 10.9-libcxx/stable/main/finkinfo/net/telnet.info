@@ -1,7 +1,6 @@
 Package: telnet
 Version: 60
-Revision: 1
-Distribution: 10.13, 10.14, 10.14.5, 10.15, 11.0
+Revision: 2
 BuildDepends: xcode.app
 Source: https://github.com/apple-opensource/remote_cmds/archive/refs/tags/%v.tar.gz
 SourceRename: remote_cmds-%v.tar.gz
@@ -10,31 +9,48 @@ Source2: https://github.com/apple-opensource/libtelnet/archive/refs/tags/13.tar.
 Source2Rename: libtelnet-13.tar.gz
 Source2-Checksum: SHA256(4e3c12534ce160fa580f02b9563522f6d73c7a84c30d794a7a7edf50b449c4b0)
 SourceDirectory: remote_cmds-%v/telnet.tproj
+PatchFile: %n.patch
+PatchFile-MD5: a99a867fa0eeb7044141c9331e39f010
 PatchScript: <<
 #!/bin/sh -ev
 perl -pi -e "s|-DFORWARD |-DFORWARD -I.|g" Makefile
-perl -pi -e "s|-ltelnet|../../libtelnet-13/build/Release/libtelnet.a|g" Makefile
+perl -pi -e "s|-ltelnet|../Build/Products/Release/libtelnet.a|g" Makefile
 ln -s ../../libtelnet-13 libtelnet
 perl -pi -e "s|ARCHS_STANDARD_32_64_BIT|ARCHS_STANDARD|g" libtelnet/libtelnet.xcodeproj/project.pbxproj
-echo "RC_ARCHS = x86_64" >> Makefile
+echo "RC_ARCHS = %m" >> Makefile
 cp ../APPLE_LICENSE APPLE_LICENSE
 cp ../../libtelnet-13/LICENSE LICENSE
+patch -p2 < %{PatchFile}
 <<
 CompileScript: <<
 #!/bin/sh -ev
+	set +v
+	# Launch needs private frameworks that only get installed once Xcode.app is run, not simply installed.
+	if `xcodebuild -checkFirstLaunchStatus`; then
+		echo "\nGood, Xcode PrivateFrameworks needed by Launch have been installed.\n"
+	else
+		echo "\n-----WARNING-----WARNING-----WARNING-----"
+		echo "XCode.app must be run once to install private frameworks."
+		echo "%N will fail to build without these private frameworks."
+		echo "Alternatively run 'sudo xcodebuild -runFirstLaunch' manually."
+		echo "-----WARNING-----WARNING-----WARNING-----\n"
+		exit 1
+	fi
+	set -v
+
 xcodevers=`xcodebuild -version 2>/dev/null | head -n 1 | cut -f 2 -d ' ' | cut -f 1 -d.`
 mkdir -p ../finkbuild/%n
  # Don't use new Xcode build system with Xcode10+
 if [[ $xcodevers -ge 10 ]]; then
     export SDKROOT=`xcrun --show-sdk-path`
-    XCODE_BUILD_FLAG="-UseNewBuildSystem=no"
+    XCODE_BUILD_FLAG="-scheme libtelnet -derivedDataPath `dirname %b` -UseNewBuildSystem=no"
     export MACOSX_DEPLOYMENT_TARGET=`xcrun --show-sdk-version`
 fi
 cd ../../libtelnet-13
-xcodebuild $XCODE_BUILD_FLAG -project libtelnet.xcodeproj -alltargets -configuration Release
+xcodebuild $XCODE_BUILD_FLAG -project libtelnet.xcodeproj -configuration Release
 cd ../remote_cmds-%v/telnet.tproj
 # Doesn't build with Fink's make
-  /usr/bin/make \
+  /usr/bin/make -w \
   SRCROOT=../finkbuild/%n/Sources \
   OBJROOT=../finkbuild/%n/Build \
   SYMROOT=../finkbuild/%n/Debug \

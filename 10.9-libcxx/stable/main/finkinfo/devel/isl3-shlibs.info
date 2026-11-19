@@ -1,0 +1,78 @@
+Package: isl3-shlibs
+# Legacy packaging mistake: libversion is "15"
+# last of the i_n=15 series (isl3 in Fink)
+Version: 0.18
+Revision: 2
+BuildDepends: <<
+	fink (>= 0.34),
+	gmp5
+<<
+Depends: <<
+	gmp5-shlibs,
+	libgmpxx5-shlibs
+<<
+Source: https://libisl.sourceforge.io/isl-%v.tar.xz
+Source-Checksum: SHA256(0f35051cc030b87c673ac1f187de40e386a1482a0cfdf2c552dd6031b307ddc4)
+ConfigureParams: <<
+	--mandir=%p/share/man \
+	--infodir=%p/share/info \
+	--with-gmp-prefix=%p \
+	--disable-static \
+	--disable-silent-rules
+<<
+InfoTest: TestScript: make check || :
+PatchScript: <<
+	perl -pi -e 's|="-O1"|="-O3"|g' ./configure
+	# Patch to avoid flat namespace linkage on Yosemite and later.
+	perl -pi -e 's/(10\.\[012\])\*/\1\,.\*/' configure
+<<
+InstallScript: <<
+	make install DESTDIR=%d 
+<<
+Shlibs: <<
+	%p/lib/libisl.15.dylib 19.0.0 %n (>= 0.18-1)
+<<
+DocFiles: AUTHORS LICENSE README ChangeLog
+SplitOff: <<
+	Package: isl3
+	BuildDependsOnly: True
+	Depends: %N (= %v-%r)
+	Conflicts: <<
+		cloog-org,
+		isl,
+		isl2,
+		isl3,
+		isl22
+	<<
+	Replaces: <<
+		cloog-org,
+		isl,
+		isl2,
+		isl3,
+		isl22
+	<<
+	Files: <<
+		include
+		lib/libisl.{dylib,la}
+		lib/libisl.15.dylib-gdb.py
+		lib/pkgconfig
+	<<
+	DocFiles: AUTHORS LICENSE README ChangeLog
+<<
+License: BSD
+Description: Integer Set Library
+DescDetail: <<
+Isl is a library for manipulating sets and relations of integer points bounded
+by linear constraints. Supported operations on sets include intersection, 
+union, set difference, emptiness check, convex hull, (integer) affine hull,
+integer projection, and computing the lexicographic minimum using parametric
+integer programming. It also includes an ILP solver based on generalized basis
+reduction.
+<<
+DescPackaging: <<
+The FSF gcc 4.2.1 compiler requires the optimization to be reduced to
+-O1 but this bug is not present in Apple's gcc 4.2.1 compiler so this
+change is reverted in the PatchScript.
+<<
+Homepage: https://libisl.sourceforge.io
+Maintainer: None <fink-devel@lists.sourceforge.net>

@@ -1,18 +1,18 @@
 Package: term-table-pm
-Version: 0.015
+Version: 0.028
 Revision: 1
 Type: perl
 Source: mirror:cpan:authors/id/E/EX/EXODIST/Term-Table-%v.tar.gz
-Source-Checksum: SHA256(d8a18b2801f91f0e5d747147ce786964a76f91d18568652908a3dc06a9b948d5)
-Depends: <<
-	importer-pm (>= 0.024)
-<<
+Source-Checksum: SHA256(f2ba62a52f32d18aea8a8ca73299bef0e52409332cfe514a9c475316f6d5351c)
 # * Unicode::LineBreak is perl-varianted and only recommended; not
 #   setting a dep to avoid needing to variant here
 # * Unicode::GCString is part of Unicode::LineBreak package
 # * Term::Size::Any is not currently in fink
-BuildDepends: <<
-	test-simple-pm (>= 1.302097)
+# * Test2::Tools::Tiny >= 1.302097 as TestDepends is optional
+#   (fallback to Test::More that is in all perls' core) to avoid
+#   circular deps.
+InfoTest: <<
+	TestDepends: devel-hide-pm
 <<
 DocFiles: Changes LICENSE README.md
 UpdatePOD: true

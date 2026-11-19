@@ -1,0 +1,22 @@
+diff -Nurd podofo-1.0.4.orig/CMakeLists.txt podofo-1.0.4/CMakeLists.txt
+--- podofo-1.0.4.orig/CMakeLists.txt	2026-05-01 06:44:08
++++ podofo-1.0.4/CMakeLists.txt	2026-08-01 14:46:15
+@@ -299,6 +299,7 @@
+ 
+ if(PODOFO_BUILD_UNSUPPORTED_TOOLS)
+     add_subdirectory(tools)
++    add_subdirectory(man)
+ endif()
+ 
+ # Enable packaging
+diff -Nurd podofo-1.0.4.orig/src/podofo/libpodofo.pc.in podofo-1.0.4/src/podofo/libpodofo.pc.in
+--- podofo-1.0.4.orig/src/podofo/libpodofo.pc.in	2026-05-01 06:44:08
++++ podofo-1.0.4/src/podofo/libpodofo.pc.in	2026-08-01 14:46:15
+@@ -6,7 +6,5 @@
+ Name: @CMAKE_PROJECT_NAME@
+ Description: A C++ library to work with the PDF file format
+ Version: @PODOFO_VERSION@
+-Requires.private: @PODOFO_PKGCONFIG_REQUIRES_PRIVATE@
+ Libs: -L${libdir} -lpodofo
+-Libs.private: @PODOFO_PKGCONFIG_LIBS_PRIVATE@
+ Cflags: -I${includedir}

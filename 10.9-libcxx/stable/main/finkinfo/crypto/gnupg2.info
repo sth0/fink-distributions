@@ -1,6 +1,6 @@
 Package: gnupg2
 # NEEDGPGERRORCONF
-Version: 2.2.42
+Version: 2.5.22
 Revision: 1
 Description: Gnu privacy guard - A Free PGP replacement
 License: GPL/OpenSSL
@@ -8,11 +8,11 @@ BuildDepends: <<
 	bzip2-dev,
 	fink (>= 0.32),
 	fink-package-precedence,
-	libassuan2 (>= 2.5.0-1),
+	libassuan9 (>= 3.0.0),
 	libcurl4,
-	libgcrypt20 (>= 1.7.0-1),
+	libgcrypt20 (>= 1.11.0-1),
 	libgettext8-dev,
-	libgpg-error (>= 1.46-2),
+	libgpg-error (>=  1.56-1),
 	libiconv-dev,
 	libksba8 (>= 1.6.3-1),
 	libssh2.1,
@@ -23,15 +23,15 @@ BuildDepends: <<
 	pkgconfig,
 	readline8,
 	sqlite3-dev,
-	texinfo (>= 4.1-3)
+	texinfo (>= 6.8)
 <<
 Depends: <<
 	bzip2-shlibs,
-	libassuan2-shlibs (>= 2.5.0-1),
+	libassuan9-shlibs (>= 3.0.0),
 	libcurl4-shlibs,
-	libgcrypt20-shlibs (>= 1.7.0-1),
+	libgcrypt20-shlibs (>= 1.11.0-1),
 	libgettext8-shlibs,
-	libgpg-error-shlibs (>= 1.46-2),
+	libgpg-error-shlibs (>=  1.56-1),
 	libiconv,
 	libksba8-shlibs (>= 1.6.3-1),
 	libusb1-shlibs,
@@ -44,31 +44,26 @@ Depends: <<
 RunTimeDepends: pinentry | pinentry-fltk | pinentry-gtk2 | pinentry-qt | pinentry-qt5
 Conflicts: gpg-agent (<= 1.9.20-1), gnupg-unified (<= 1.4.23-1)
 Replaces: gpg-agent (<= 1.9.20-1)
-Source: https://www.gnupg.org/ftp/gcrypt/gnupg//gnupg-%v.tar.bz2
-Source-Checksum: SHA256(9189fbd4ec83ad243a4e499d5cb7fe72e4532176817e5ea880ed36a71dd82557)
+Source: https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-%v.tar.bz2
+Source-Checksum: SHA256(96e27b020ad26510388e06f5f07f3f70a4ed8916ee995f1b72b7a024e6d9d87e)
 Source2: mirror:sourceforge:fink/gnupg-docs-20021001.tar.gz
 Source2-Checksum: SHA256(af6739940e864b8c74c39137916abf4ed0a9841aa4b0acc2ea8341c7c7289217)
 Source2ExtractDir: gnupg-%v
-PatchFile: %n-implicit-declarations.patch
-PatchFile-MD5: 2d2beee4128a2cb466769d04d33a7057
-# glib fails to find the right stdint.h  It picks clang's internal one rather
-# than the system header. Use same fix as macports of passing configure
-#  gl_cv_absolute_stdint_h=/usr/include/stdint.h.
+SetCPPFLAGS: -I%p/include/libusb-1.0
+
 ConfigureParams: <<
-  CPPFLAGS="$CPPFLAGS -I%p/include/libusb-1.0" \
-  --libexecdir='${prefix}/lib/gnupg' \
-  --with-libiconv-prefix=%p \
-  --enable-dependency-tracking \
-  --enable-gpg-is-gpg2 \
-  gl_cv_absolute_stdint_h=/usr/include/stdint.h
+	--libexecdir=%p/lib/gnupg \
+	--program-suffix=2 \
+	--enable-dependency-tracking
 <<
+
 CompileScript: <<
 	%{default_script}
 	fink-package-precedence .
 <<
 
 InfoTest: <<
-  TestScript: make check || exit 2
+	TestScript: make -j1 check || exit 2
 <<
 
 InstallScript: <<
@@ -78,15 +73,19 @@ InstallScript: <<
 	mv gnupg-docs/* %i/share/doc/%n/documentation
 	mv %i/share/doc/gnupg/* %i/share/doc/gnupg2
 	rmdir %i/share/doc/gnupg
-
-	# make a symlink from bin/gpg2 since some things like to to look for that
-	# Change this to use u-a
-	#ln -s %p/bin/gpg %i/bin/gpg2
 <<
 DocFiles: AUTHORS COPYING ChangeLog README TODO THANKS
 
 PostInstScript: <<
 update-alternatives --install %p/bin/gpg gpg %p/bin/gpg2 2 \
+	--slave %p/bin/gpg-agent gpg-agent %p/bin/gpg-agent2 \
+	--slave %p/bin/gpg-card gpg-card %p/bin/gpg-card2 \
+	--slave %p/bin/gpg-connect-agent gpg-connect-agent %p/bin/gpg-connect-agent2 \
+	--slave %p/bin/gpgconf gpgconf %p/bin/gpgconf2 \
+	--slave %p/bin/gpgscm gpgscm %p/bin/gpgscm2 \
+	--slave %p/bin/gpgsm gpgsm %p/bin/gpgsm2 \
+	--slave %p/bin/gpgsplit gpgsplit %p/bin/gpgsplit2 \
+	--slave %p/bin/gpgtar gpgtar %p/bin/gpgtar2 \
 	--slave %p/bin/gpgv gpgv %p/bin/gpgv2 \
 	--slave %p/share/man/man1/gpg.1 gpg.1 %p/share/man/man1/gpg2.1 \
 	--slave %p/share/man/man1/gpgv.1 gpgv.1 %p/share/man/man1/gpgv2.1
@@ -122,7 +121,6 @@ Consult the manual for a good intro:
 <<
 DescPackaging: <<
 * Specifically looks for pth (%p/bin/pth-config)
-* LDAP configure check looks for obsolete ldap_open, so try ldap_create instead.	
 <<
 Homepage: https://www.gnupg.org/
 Maintainer: None <fink-devel@lists.sourceforge.net>

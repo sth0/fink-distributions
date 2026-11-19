@@ -1,0 +1,109 @@
+Package: libgeotiff5-shlibs
+Version: 1.7.4
+Revision: 1
+Description: GeoTIFF handling library
+License: BSD
+Homepage: http://trac.osgeo.org/geotiff/
+Maintainer: BABA Yoshihiko <babayoshihiko@mac.com>
+Source: http://download.osgeo.org/geotiff/libgeotiff/libgeotiff-%v.tar.gz
+Source-Checksum: SHA256(c598d04fdf2ba25c4352844dafa81dde3f7fd968daa7ad131228cd91e9d3dc47)
+
+Depends: <<
+	libjpeg9-shlibs,
+	libproj25-shlibs,
+	libtiff6-shlibs (>= 4.5.0)
+<<
+BuildDepends: <<
+	fink (>= 0.32),
+	fink-package-precedence,
+	flag-sort,
+	libjpeg9,
+	libproj25,
+	libtiff6 (>= 4.5.0),
+	pkgconfig
+<<
+# upstream fix for changes with proj 9.8.0
+PatchFile: libgeotiff5-proj980.patch
+PatchFile-MD5: 6c4d83e5a267ddf5c91f9e9d5e3e3e0d
+PatchScript: patch -p2 < %{PatchFile}
+
+# using flag-sort to circumvent a bug in upstream code (confusion between
+# CFLAGS and CPPFLAGS) - see https://github.com/OSGeo/libgeotiff/issues/52
+SetCC: flag-sort -r gcc
+SetCXX: flag-sort -r g++
+SetCPPFLAGS: -Os
+ConfigureParams: <<
+	--with-zip=/usr/include \
+	--with-jpeg=%p \
+	--disable-doxygen-doc \
+	--disable-static
+<<
+CompileScript: <<
+	./configure %c
+	make NOUNDEFINED=-no-undefined
+	fink-package-precedence --prohibit-bdep=libgeotiff5 .
+<<
+InfoTest: <<
+	TestScript: make check || exit 2
+<<
+InstallScript: <<
+#!/bin/sh -xe
+  make install prefix=%i
+<<
+DocFiles: AUTHORS COPYING ChangeLog INSTALL LICENSE NEWS README README_BIN
+Shlibs: %p/lib/libgeotiff.5.dylib 8.0.0 %n (>= 1.7.4-1)
+
+SplitOff: <<
+	Package: libgeotiff5
+	Depends: %N (= %v-%r)
+	Conflicts: <<
+		libgeotiff,
+		libgeotiff2,
+		libgeotiff5
+	<<
+	Replaces: <<
+		libgeotiff,
+		libgeotiff2,
+		libgeotiff5
+	<<
+	BuildDependsOnly: True
+	Files: <<
+		include
+		lib/libgeotiff.{dylib,la}
+	<<
+	DocFiles: AUTHORS COPYING ChangeLog INSTALL LICENSE NEWS README README_BIN
+<<
+
+SplitOff2: <<
+	Package: libgeotiff-bin
+	Depends: <<
+  		%N (>= %v-%r),
+  		libjpeg9-shlibs,
+		libproj25-shlibs,
+		libtiff6-shlibs (>= 4.5.0)
+	<<
+	Replaces: <<
+		libgeotiff,
+		libgeotiff2,
+		libgeotiff2-bin,
+		libgeotiff5-bin
+	<<
+	Files: <<
+		bin
+		share/man
+	<<
+	DocFiles: AUTHORS COPYING ChangeLog INSTALL LICENSE NEWS README README_BIN
+<<
+
+SplitOff3: <<
+	Package: libgeotiff5-bin
+	Description: OBSOLETE: use 'libgeotiff-bin' instead
+	RuntimeDepends: <<
+		libgeotiff-bin (>= %v-%r),
+		fink-obsolete-packages
+	<<
+	InstallScript: <<
+		mkdir -p %i/share/doc/installed-packages
+		touch %i/share/doc/installed-packages/%n
+	<<
+<<

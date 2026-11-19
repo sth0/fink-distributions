@@ -1,31 +1,33 @@
-diff -Nurd nmap-7.94.orig/configure nmap-7.94/configure
---- nmap-7.94.orig/configure	2023-05-01 13:44:45.000000000 -0400
-+++ nmap-7.94/configure	2024-02-19 01:57:06.000000000 -0500
-@@ -7779,9 +7779,8 @@
+diff -Nurd nmap-7.991.orig/configure nmap-7.991/configure
+--- nmap-7.991.orig/configure	2026-08-05 17:12:13
++++ nmap-7.991/configure	2026-09-15 07:37:45
+@@ -7837,9 +7837,8 @@
  fi
  
  
--LDFLAGS="$LDFLAGS -L$NBASEDIR"
- CPPFLAGS="$CPPFLAGS -I\$(top_srcdir)/$NBASEDIR"
+-LDFLAGS="$LDFLAGS -L\$(top_srcdir)/$NBASEDIR"
+-CPPFLAGS="$CPPFLAGS -I\$(top_srcdir)/$NBASEDIR"
 -LIBNBASE_LIBS="-lnbase"
-+LIBNBASE_LIBS="$NBASEDIR/libnbase.a"
++CPPFLAGS="-I\$(top_srcdir)/$NBASEDIR $CPPFLAGS"
++LIBNBASE_LIBS="\$(top_srcdir)/$NBASEDIR/libnbase.a"
  
  
  
-@@ -7809,9 +7808,8 @@
+@@ -7867,9 +7866,8 @@
  fi
  
  
--LDFLAGS="$LDFLAGS -L$NSOCKDIR/src/"
- CPPFLAGS="$CPPFLAGS -I\$(top_srcdir)/$NSOCKDIR/include"
+-LDFLAGS="$LDFLAGS -L\$(top_srcdir)/$NSOCKDIR/src/"
+-CPPFLAGS="$CPPFLAGS -I\$(top_srcdir)/$NSOCKDIR/include"
 -LIBNSOCK_LIBS="-lnsock"
-+LIBNSOCK_LIBS="$NSOCKDIR/src/libnsock.a"
++CPPFLAGS="-I\$(top_srcdir)/$NSOCKDIR/include $CPPFLAGS"
++LIBNSOCK_LIBS="\$(top_srcdir)/$NSOCKDIR/src/libnsock.a"
  
  
  
-diff -Nurd nmap-7.94.orig/ncat/Makefile.in nmap-7.94/ncat/Makefile.in
---- nmap-7.94.orig/ncat/Makefile.in	2022-10-21 17:15:45.000000000 -0400
-+++ nmap-7.94/ncat/Makefile.in	2024-02-19 01:57:06.000000000 -0500
+diff -Nurd nmap-7.991.orig/ncat/Makefile.in nmap-7.991/ncat/Makefile.in
+--- nmap-7.991.orig/ncat/Makefile.in	2026-08-05 17:12:13
++++ nmap-7.991/ncat/Makefile.in	2026-09-15 07:37:45
 @@ -47,7 +47,7 @@
  NBASELIB = $(NBASEDIR)/libnbase.a
  
@@ -54,9 +56,31 @@ diff -Nurd nmap-7.94.orig/ncat/Makefile.in nmap-7.94/ncat/Makefile.in
  else
  LUA_SRCS =
  LUA_OBJS =
-diff -Nurd nmap-7.94.orig/nping/Makefile.in nmap-7.94/nping/Makefile.in
---- nmap-7.94.orig/nping/Makefile.in	2020-10-05 19:00:30.000000000 -0400
-+++ nmap-7.94/nping/Makefile.in	2024-02-19 01:57:06.000000000 -0500
+diff -Nurd nmap-7.991.orig/ndiff/pyproject.toml nmap-7.991/ndiff/pyproject.toml
+--- nmap-7.991.orig/ndiff/pyproject.toml	2026-08-05 17:12:13
++++ nmap-7.991/ndiff/pyproject.toml	2026-09-15 08:16:08
+@@ -5,7 +5,7 @@
+ [project]
+ name = "ndiff"
+ license = {text = "Nmap License (https://nmap.org/book/man-legal.html)"}
+-dynamic = ["version"]
++version = "@VERSION@"
+ authors = [{name = "The Nmap Project"}]
+ description = "Nmap scan diff tool"
+ readme = {file = "README", content-type = "text/plain"}
+@@ -22,9 +22,6 @@
+ 
+ [tool.setuptools]
+ py-modules = ["ndiff"]
+-
+-[tool.setuptools.dynamic]
+-version = {attr = "Version.VERSION"}
+ 
+ #[tool.setuptools.packages.find]
+ #include = ["ndiff"]
+diff -Nurd nmap-7.991.orig/nping/Makefile.in nmap-7.991/nping/Makefile.in
+--- nmap-7.991.orig/nping/Makefile.in	2026-08-05 17:12:13
++++ nmap-7.991/nping/Makefile.in	2026-09-15 07:37:45
 @@ -43,7 +43,7 @@
  # Should only be enabled during debugging and not in any real release.
  # DEFS += -DMTRACE=1
@@ -66,9 +90,9 @@ diff -Nurd nmap-7.94.orig/nping/Makefile.in nmap-7.94/nping/Makefile.in
  export CFLAGS = $(CXXFLAGS)
  # CFLAGS = $(DEFS) $(INCLS)
  STATIC =
-diff -Nurd nmap-7.94.orig/nsock/src/Makefile.in nmap-7.94/nsock/src/Makefile.in
---- nmap-7.94.orig/nsock/src/Makefile.in	2017-08-23 04:52:40.000000000 -0400
-+++ nmap-7.94/nsock/src/Makefile.in	2024-02-19 01:57:06.000000000 -0500
+diff -Nurd nmap-7.991.orig/nsock/src/Makefile.in nmap-7.991/nsock/src/Makefile.in
+--- nmap-7.991.orig/nsock/src/Makefile.in	2026-08-05 17:12:13
++++ nmap-7.991/nsock/src/Makefile.in	2026-09-15 07:37:45
 @@ -17,7 +17,7 @@
  INCLS = -I../include
  CFLAGS = @CFLAGS@ $(CCOPT)
@@ -78,23 +102,24 @@ diff -Nurd nmap-7.94.orig/nsock/src/Makefile.in nmap-7.94/nsock/src/Makefile.in
  STATIC =
  SHTOOL = ./shtool
  INSTALL = $(SHTOOL) install
-diff -Nurd nmap-7.94.orig/nsock/src/configure nmap-7.94/nsock/src/configure
---- nmap-7.94.orig/nsock/src/configure	2019-05-20 12:21:41.000000000 -0400
-+++ nmap-7.94/nsock/src/configure	2024-02-19 01:57:06.000000000 -0500
-@@ -5013,9 +5013,8 @@
+diff -Nurd nmap-7.991.orig/nsock/src/configure nmap-7.991/nsock/src/configure
+--- nmap-7.991.orig/nsock/src/configure	2026-08-05 17:12:13
++++ nmap-7.991/nsock/src/configure	2026-09-15 07:37:45
+@@ -5289,9 +5289,8 @@
  
  NSOCKTESTDIR="../tests"
  
 -LDFLAGS="$LDFLAGS -L$NBASEDIR"
- CPPFLAGS="$CPPFLAGS -I$NBASEDIR"
+-CPPFLAGS="$CPPFLAGS -I$NBASEDIR"
 -LIBNBASE_LIBS="$LIBS -lnbase"
++CPPFLAGS="-I$NBASEDIR $CPPFLAGS"
 +LIBNBASE_LIBS="$NBASEDIR/libnbase.a"
  
  
  
-diff -Nurd nmap-7.94.orig/nsock/tests/Makefile.in nmap-7.94/nsock/tests/Makefile.in
---- nmap-7.94.orig/nsock/tests/Makefile.in	2022-09-20 19:37:28.000000000 -0400
-+++ nmap-7.94/nsock/tests/Makefile.in	2024-02-19 01:57:06.000000000 -0500
+diff -Nurd nmap-7.991.orig/nsock/tests/Makefile.in nmap-7.991/nsock/tests/Makefile.in
+--- nmap-7.991.orig/nsock/tests/Makefile.in	2026-08-05 17:12:13
++++ nmap-7.991/nsock/tests/Makefile.in	2026-09-15 07:37:45
 @@ -8,7 +8,7 @@
  NBASELIB=$(NBASEDIR)/libnbase.a
  

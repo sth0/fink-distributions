@@ -1,0 +1,132 @@
+Package: libproj25-shlibs
+Version: 9.8.0
+Revision: 1
+Maintainer: None <fink-devel@lists.sourceforge.net>
+
+Source: https://download.osgeo.org/proj/proj-%v.tar.gz
+Source-Checksum: SHA256(a8b493b00cf4d08b712b9e063ed5e53e2be90fcde46770e9dbd773341f378f43)
+#Source2: https://download.osgeo.org/proj/proj-data-1.3.tar.gz
+#Source2ExtractDir: proj-%v/nad
+#Source2-MD5: 7d202814fa70ff56f70fa4776a62b4f3
+
+Depends: <<
+	proj-data (>= %v-%r),
+	libcurl4-shlibs,
+	libtiff6-shlibs,
+	sqlite3-shlibs
+<<
+BuildDepends: <<
+	cmake,
+	fink-buildenv-modules,
+	fink-package-precedence,
+	gtest-dev,
+	libcurl4,
+	libtiff6,
+	pkgconfig,
+	sqlite3-dev
+<<
+GCC: 4.0
+CompileScript: <<
+#!/bin/bash -ev
+	. %p/sbin/fink-buildenv-cmake.sh
+	mkdir finkbuild
+	pushd finkbuild
+		cmake $FINK_CMAKE_ARGS \
+		..
+		make
+		fink-package-precedence --depfile-ext='\.d' --prohibit-bdep=libproj25 ..
+<<
+InfoTest: <<
+	TestScript: <<
+	#!/bin/sh -ev
+		pushd finkbuild
+			make test || exit 2
+	<<
+<<
+InstallScript: <<
+#!/bin/sh -ev
+	pushd finkbuild
+		make install DESTDIR=%d
+		mv %i/share/doc/proj %i/share/doc/%N
+<<
+Shlibs: %p/lib/libproj.25.dylib 25.0.0 %n (>= 9.7.0-1)
+SplitOff: <<
+	Package: libproj25
+	Depends: %N (= %v-%r)
+	BuildDependsOnly: true
+	Conflicts: <<
+		proj,
+		libproj9,
+		libproj19,
+		libproj22,
+		libproj25
+	<<
+	Replaces: <<
+		proj,
+		libproj9,
+		libproj9-shlibs (<< 4.9.2-5),
+		libproj19,
+		libproj22,
+		libproj25
+	<<
+	Files: <<
+		include
+		lib/cmake
+		lib/libproj.dylib
+		lib/pkgconfig
+	<<
+	DocFiles: AUTHORS.md ChangeLog CITATION COPYING NEWS.md README.md
+<<
+SplitOff2: <<
+	Package: proj-bin
+	Depends: <<
+		%N (>= %v-%r)
+	<<
+	Files: <<
+		bin
+		share/bash-completion
+		share/man
+	<<
+	DocFiles: AUTHORS.md ChangeLog CITATION COPYING NEWS.md README.md
+<<
+SplitOff3: <<
+	Package: proj-data
+	Description: Cartographic projection data
+	Replaces: <<
+		proj (<< 4.8.0-5),
+		libproj9 (<< 4.9.2-5)
+	<<
+	Files: <<
+		share/proj
+	<<
+	DocFiles: AUTHORS.md ChangeLog CITATION COPYING NEWS.md README.md
+<<
+DocFiles: AUTHORS.md ChangeLog CITATION COPYING NEWS.md README.md
+Description: Cartographic projections library
+License: BSD
+Homepage: https://trac.osgeo.org/proj/
+DescDetail: <<
+PROJ.4 Cartographic Projections library provides a library and command
+line tools to go between different coordinate frames (e.g. geographic
+lat/lon and utm).  PROJ.4 is in use by GRASS, MapServer, PostGIS,
+Thuban, OGDI and OGRCoordinateTransformation and many other programs.
+
+The library was originally written by Gerald Evenden then at the USGS.
+
+Find EPSG Codes: http://spatialreference.org/
+<<
+DescPackaging: <<
+As of v7.2.0, data files in share/proj moved to own splitoff (matches
+Debian). Upstream has huge addon data file that used to be Source2.
+These can be fetched instead at runtime. Can also make own package for
+them, and point this package to them following directions here:
+https://proj.org/usage/environmentvars.html#envvar-PROJ_LIB
+https://proj.org/resource_files.html#external-resources-and-packaged-grids
+<<
+DescPort: <<
+Please contact the maintainer of Grass before upgrading to a new
+version of proj to make sure that there are no incompatibilities.
+
+http://www.sharpgis.net/2007/07/27/TheMicrosoftLiveMapsAndGoogleMapsProjection.aspx
+http://crschmidt.net/blog/archives/243/google-projection-900913/
+<<

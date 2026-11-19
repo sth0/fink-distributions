@@ -1,0 +1,19 @@
+diff -Nurd nano-9.0.orig/lib/openat-die.c nano-9.0/lib/openat-die.c
+--- nano-9.0.orig/lib/openat-die.c	2026-04-08 11:03:27
++++ nano-9.0/lib/openat-die.c	2026-05-28 19:04:54
+@@ -22,13 +22,13 @@
+ #include <stdlib.h>
+ 
+ #ifndef GNULIB_LIBPOSIX
+-# include <error.h>
++# include "error.h"
+ #endif
+ 
+ #include "exitfail.h"
+ 
+ #include "gettext.h"
+-#define _(msgid) dgettext (GNULIB_TEXT_DOMAIN, msgid)
++#define _(msgid) gettext (msgid)
+ 
+ _Noreturn void
+ openat_save_fail (int errnum)

@@ -1,0 +1,29 @@
+Info2: <<
+Package: poe-filter-thruput-pm%type_pkg[perl]
+Version: 1.00
+Revision: 1
+Type: perl (5.16.2 5.18.2 5.18.4 5.28.2 5.30.2 5.30.3 5.34.1)
+Distribution: <<
+	(%type_pkg[perl] = 5162) 10.9,
+	(%type_pkg[perl] = 5162) 10.10,
+	(%type_pkg[perl] = 5162) 10.11,
+	(%type_pkg[perl] = 5162) 10.12,
+	(%type_pkg[perl] = 5162) 10.13
+<<
+Description: Byte-counting segment of a pipeline
+License: Artistic/GPL
+Maintainer: Daniel Macks <dmacks@netspace.org>
+Homepage: https://metacpan.org/dist/POE-Filter-ThruPut/
+Depends: <<
+	perl%type_pkg[perl]-core,
+ 	poe-pm%type_pkg[perl]
+<<
+Source: mirror:cpan:authors/id/B/BI/BINGOS/POE-Filter-ThruPut-%v.tar.gz
+Source-Checksum: SHA256(ee38654c6ee39ce5cd991d6c74063d98eca65c3d3110791eabde9cc38a097276)
+DocFiles: Changes LICENSE README
+UpdatePOD: true
+InstallScript: <<
+	%{default_script}
+	mv %i/share/man %i/lib/perl5/%type_raw[perl]
+<<
+<<

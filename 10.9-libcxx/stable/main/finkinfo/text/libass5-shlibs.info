@@ -1,7 +1,6 @@
 Package: libass5-shlibs
-# 0.13.1 needs fontconfig >= 2.10.92
 Version: 0.13.0
-Revision: 1
+Revision: 2
 Description: Portable ASS/SSA subtitle renderer library
 License: BSD
 Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
@@ -58,8 +57,16 @@ SplitOff: <<
 	Description: Portable ASS/SSA subtitle renderer (dev pkg)
 	Files: include lib/pkgconfig lib/libass.dylib lib/libass.la
 	Depends: %N (= %v-%r)
-	Conflicts: libass4-dev, libass5-dev
-	Replaces: libass4-dev, libass5-dev
+	Conflicts: <<
+		libass4-dev,
+		libass5-dev,
+		libass9-dev
+	<<
+	Replaces: <<
+		libass4-dev,
+		libass5-dev,
+		libass9-dev
+	<<
 	BuildDependsOnly: true
 <<
 Homepage: https://github.com/libass/libass

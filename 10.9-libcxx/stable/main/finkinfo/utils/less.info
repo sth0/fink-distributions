@@ -1,15 +1,17 @@
 Package: less
-Version: 668
+Version: 710
 Revision: 1
 Maintainer: None <fink-devel@lists.sourceforge.net>
 BuildDepends: <<
 	fink-package-precedence,
+	libncurses5 (>= 5.9-20110507-1),
 	libncursesw5 (>= 5.9-20110507-1)
 <<
 Depends: libncursesw5-shlibs (>= 5.9-20110507-1)
 Source: http://www.greenwoodsoftware.com/less/%n-%v.tar.gz
-Source-Checksum: SHA256(2819f55564d86d542abbecafd82ff61e819a3eec967faa36cd3e68f1596a44b8)
+Source-Checksum: SHA256(d1008fb78dcae1323ddab664bcb352a61f022b1b131bd8018548e021d975ec7a)
 SetCPPFLAGS: -MD
+ConfigureParams: --libexecdir=%p/bin
 CompileScript: <<
 	%{default_script}
 	fink-package-precedence --depfile-ext='\.d' .
@@ -22,7 +24,7 @@ InfoTest: <<
 	<<
 <<
 InstallScript: make install-strip DESTDIR=%d
-DocFiles: README COPYING LICENSE NEWS
+DocFiles: COPYING LICENSE NEWS README
 #
 Description: Featureful text pager
 DescDetail: <<

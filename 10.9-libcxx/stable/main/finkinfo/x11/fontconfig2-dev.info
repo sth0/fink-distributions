@@ -1,6 +1,6 @@
 Package: fontconfig2-dev
 Version: 2.14.2
-Revision: 1
+Revision: 2
 Description: Font configuration library
 License: Restrictive/Distributable
 Maintainer: The Gnome Core Team <fink-gnome-core@lists.sourceforge.net>
@@ -16,7 +16,7 @@ BuildDepends: <<
 	json-c5,
 	libgettext8-dev,
 	libiconv-dev,
-	ppkg-config
+	pkgconfig (>= 1.0)
 <<
 # looks for python3 interp (autoconf macro only knows up to 3.9)
 #	python3 | python39 | python38 | python37 | python36 | python35 | python34
@@ -39,14 +39,13 @@ ConfigureParams: <<
 	--enable-dependency-tracking \
 	--with-cache-dir=%p/var/cache/fontconfig-2.4 \
 	--with-default-fonts=/System/Library/Fonts \
-	--with-add-fonts=/Library/Fonts,/Network/Library/Fonts,/System/Library/Fonts,/opt/X11/lib/X11/fonts,/usr/X11/lib/X11/fonts,/usr/share/fonts \
+	--with-add-fonts=/Library/Fonts,/Network/Library/Fonts,/System/Library/Fonts,/opt/X11/share/fonts,/opt/X11/lib/X11/fonts,/usr/X11/lib/X11/fonts,/usr/share/fonts \
 	--disable-silent-rules \
 	--disable-static \
 	--enable-iconv \
 	--with-libiconv=%p \
 	ac_cv_path_PYTHON=/usr/bin/false \
-	am_cv_pathless_PYTHON=false \
-	PKG_CONFIG=%p/bin/ppkg-config
+	am_cv_pathless_PYTHON=false
 <<
 CompileScript: <<
 	%{default_script}

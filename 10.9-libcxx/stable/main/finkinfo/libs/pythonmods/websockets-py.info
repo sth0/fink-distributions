@@ -1,23 +1,23 @@
 Info2: <<
 Package: websockets-py%type_pkg[python]
-# 11+ requires NEWSETUPTOOLS
-Version: 10.4
+Version: 15.0.1
 Revision: 1
 Description: Implementation of the WebSocket Protocol
 License: BSD
 # Free to modify, update, and take over
 Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
-Type: python (3.8 3.9 3.10)
+Type: python (3.10)
 Depends: <<
 	python%type_pkg[python]
 <<
 BuildDepends: <<
-	setuptools-tng-py%type_pkg[python]
+	bootstrap-modules-py%type_pkg[python],
+	setuptools-tng-py%type_pkg[python] (>= 61.2)
 <<
 Source: https://files.pythonhosted.org/packages/source/w/websockets/websockets-%v.tar.gz
-Source-Checksum: SHA256(eef610b23933c54d5d921c92578ae5f89813438fded840c2e9809d378dc765d3)
+Source-Checksum: SHA256(82544de02076bafba038ce055ee6412d68da13ab47f0c60cab827346de828dee)
 CompileScript: <<
-	%p/bin/python%type_raw[python] setup.py build_ext --inplace
+	PYTHONPATH=%p/share/bootstrap-modules-python%type_pkg[python] %p/bin/python%type_raw[python] -m build --wheel --no-isolation --skip-dependency-check
 <<
 # tests are designed to NOT be run by distro packagers
 #InfoTest: <<
@@ -29,7 +29,12 @@ CompileScript: <<
 #	<<
 #<<
 InstallScript: <<
-	%p/bin/python%type_raw[python] setup.py install --root=%d
+	#!/bin/sh -ev
+	PYTHONPATH=%p/share/bootstrap-modules-python%type_pkg[python] %p/bin/python%type_raw[python] -m installer --destdir %d dist/*.whl
+	for file in websockets; do
+	# don't bother using U-A for now
+		mv %i/bin/${file} %i/bin/${file}-py%type_pkg[python]
+    done
 <<
 DocFiles: LICENSE README.rst
 Homepage: https://github.com/python-websockets/websockets

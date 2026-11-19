@@ -1,21 +1,18 @@
 Package: libgcrypt20-shlibs
 # NEEDGPGERRORCONF
-Version: 1.10.3
+Version: 1.12.2
 Revision: 2
 Source: https://gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-%v.tar.bz2
-Source-Checksum: SHA256(8b0870897ac5ac67ded568dcfadf45969cfa8a6beb0fd60af2a9eadc2a3272aa)
-Depends: libgpg-error-shlibs (>= 1.46-2)
+Source-Checksum: SHA256(7ce33c2492221a0436f96a8500215e9f3e3dcb5fd26a757cd415e7a843babd5e)
+Depends: libgpg-error-shlibs (>= 1.56)
 BuildDepends: <<
 	fink-package-precedence,
-	libgpg-error (>= 1.46-2)
+	libgpg-error (>= 1.56)
 <<
 ConfigureParams: <<
 	--enable-dependency-tracking
 <<
-#PatchFile: %n.patch
-#PatchFile-MD5: 3a10be8aef6d367cdcda366dced064a3
 PatchScript: <<
-	%{default_script}
 	# Patch configure to not link like Puma on Yosemite
 	perl -pi.bak -e 's|10\.\[012\]\*|10.[012][,.]*|g' configure
 <<
@@ -33,7 +30,7 @@ InfoTest: <<
 	<<
 <<
 InstallScript: make install DESTDIR=%d
-Shlibs: %p/lib/libgcrypt.20.dylib 25.0.0 %n (>= 1.10.1-1)
+Shlibs: %p/lib/libgcrypt.20.dylib 28.0.0 %n (>= 1.12.0-1)
 DocFiles: AUTHORS COPYING* ChangeLog NEWS README* THANKS TODO
 SplitOff: <<
 	Package: libgcrypt20

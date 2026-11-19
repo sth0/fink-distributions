@@ -1,0 +1,78 @@
+Package: hwloc-shlibs
+Version: 1.11.13
+Revision: 5
+Source: http://www.open-mpi.org/software/hwloc/v1.11/downloads/hwloc-%v.tar.bz2
+Source-Checksum: SHA256(a4494b7765f517c0990d1c7f09d98cb87755bb6b841e4e2cbfebca1b14bac9c8)
+BuildDepends: <<
+	cairo,
+	libncurses5,
+	libxml2.16,
+	xcode (>= 5.1)
+<<
+Depends: <<
+	libxml2.16-shlibs
+<<
+# See: https://github.com/open-mpi/hwloc/issues/639
+PatchFile: %n.patch
+PatchFile-MD5: 7bb0f6f91cc02fc832821a4c86e1fee2
+ConfigureParams: <<
+	--without-x \
+	--libexecdir=%p/lib
+<<
+InstallScript: <<
+	make install DESTDIR=%d
+<<
+InfoTest: TestScript: make check || exit 2
+Shlibs: <<
+	%p/lib/libhwloc.5.dylib 13.0.0 %n (>= 1.11.3-1)
+<<
+SplitOff: <<
+	Package: hwloc-dev
+	Depends: %N (= %v-%r)
+	BuildDependsOnly: true
+	Conflicts: hwloc-dev, hwloc15-dev
+	Replaces: hwloc-dev, hwloc15-dev
+	DocFiles: AUTHORS COPYING NEWS README
+	Files: <<
+		include
+		lib/libhwloc.{dylib,la}
+		lib/pkgconfig
+		share/man/man3
+	<<
+<<
+SplitOff2: <<
+	Package: hwloc
+	Depends: <<
+		%N (>= %v-%r),
+		cairo-shlibs,
+		libncurses5-shlibs,
+		libxml2.16-shlibs
+	<<
+	DocFiles: AUTHORS COPYING NEWS README
+	Files: <<
+		bin
+		share/applications
+		share/doc/hwloc
+		share/hwloc
+		share/man
+	<<
+<<
+###
+DocFiles: AUTHORS COPYING NEWS README
+###
+Description: Portable Hardware Locality
+DescDetail: <<
+The Portable Hardware Locality (hwloc) software package provides a
+portable abstraction (across OS, versions, architectures, ...) of 
+the hierarchical topology of modern architectures, including NUMA
+memory nodes, sockets, shared caches, cores and simultaneous
+multithreading.
+<<
+DescPackaging: <<
+Build against Xcode 5.1 to insure that clang doesn't miscompile
+hwloc resulting in testsuite failures. This can probably be
+reduced to an earlier Xcode with clang 3.3svn when tested.
+<<
+License: BSD
+Homepage: https://www.open-mpi.org/projects/hwloc/
+Maintainer: None <fink-devel@lists.sourceforge.net>

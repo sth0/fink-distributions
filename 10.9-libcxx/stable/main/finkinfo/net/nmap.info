@@ -1,27 +1,28 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Info2: <<
 Package: nmap
-Version: 7.94
+Version: 7.991
 Revision: 1
 GCC: 4.0
 Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
 Type: python 3.10
 
-# next version will likely support pcre2
-# https://github.com/nmap/nmap/issues/1335
-# so not bothering to import upstream or debian patches for that
+# needs libssh2.1 >= 1.11.0 for libssh2_userauth_banner()
 BuildDepends: <<
+	build-py%type_pkg[python],
 	fink-package-precedence,
 	libpcap1,
-	libpcre1,
-	libssh2.1,
+	libpcre2,
+	libssh2.1 (>= 1.11.0-1),
 	lua54-dev,
-	openssl300-dev
+	openssl300-dev,
+	pip-py%type_pkg[python],
+	setuptools-tng-py%type_pkg[python]
 <<
 Depends: <<
 	libpcap1-shlibs,
-	libpcre1-shlibs,
-	libssh2.1-shlibs,
+	libpcre2-shlibs,
+	libssh2.1-shlibs (>= 1.11.0-1),
 	lua54-shlibs,
 	openssl300-shlibs,
 	python%type_pkg[python]
@@ -31,25 +32,21 @@ Replaces: nmap-nox (<< 4.76-2), nmap (<< 4.76-2), nmap-update (<< 7.90)
 Recommends: zenmap
 
 Source: https://nmap.org/dist/%n-%v.tar.bz2
-Source-Checksum: SHA256(d71be189eec43d7e099bac8571509d316c4577ca79491832ac3e1217bc8f92cc)
+Source-Checksum: SHA256(a5d507f29437bef3bedd4771ff9aaa8fc1c2a109ddba1f5b1cf12027456929be)
 
 PatchFile: %n.patch
-PatchFile-MD5: 8773ae6dfbb1929a756391bf8d1dfb8f
+PatchFile-MD5: 4880659fc5230f022df2fdedb45e0c24
 PatchScript: <<
-	%{default_script}
+	sed 's|@VERSION@|%v|g' < %{PatchFile} | patch -p1
 
 	# Don't use -no-cpp-precomp as it's a no-op.
 	perl -pi -e 's/needs_cpp_precomp=yes/needs_cpp_precomp=no/g' configure
-
-	## don't conflict with the c++ header <version>
-	#mv libpcap/VERSION libpcap/VERSION.txt
-	#^-- don't care, we're not using the included libpcap
 
 	# Fix some -I/-L ordering (more fixed in .patch). This is
 	# annoying, but there are also static libs that we need to link
 	# directly rather than risk -L dynamic shadowing them, so may as
 	# well do it all the right way rather than flag-sort --dmacks
-	find . -name configure | xargs perl -pi -e 's/(CPPFLAGS)="(\$CPPFLAGS)\s+(-I.*)"/\1="\3 \2"/;s/(LDFLAGS)="(\$LDFLAGS)\s+(-L.*)"/\1="\3 \2"/'
+	find . -name configure | xargs perl -pi.bak -e 's/(CPPFLAGS)="(\$CPPFLAGS)\s+(-I.*)"/\1="\3 \2"/;s/(LDFLAGS)="(\$LDFLAGS)\s+(-L.*)"/\1="\3 \2"/'
 <<
 
 SetCFLAGS: -Os
@@ -61,7 +58,7 @@ ConfigureParams: <<
 	--with-libpcap \
 	--with-openssl \
 	--with-libpcre \
-	--with-lbssh2 \
+	--with-libssh2 \
 	--with-libdnet=included \
 	--with-liblua \
 	--with-liblinear=included \
@@ -76,6 +73,7 @@ CompileScript: <<
 <<
 InstallScript: <<
 	make install DESTDIR=%d
+	%p/bin/python%type_raw[python] %p/lib/python%type_raw[python]/compileall.py -f -d %p/lib/python%type_raw[python] %i/lib/python%type_raw[python]
 <<
 
 DocFiles: CHANGELOG HACKING LICENSE docs/README docs/*.txt
@@ -110,6 +108,12 @@ DescPackaging: <<
 	Previously maintained by Jeremy Higgs <fink@higgs-family.net>
 
 	Version 3.46 thanks to Alex Barclay <prozac@utulsa.edu>
+
+	As of 7.991, building ndiff fails due to not finding
+	Version.py. Roll back upstream change that implemented it:
+		https://github.com/nmap/nmap/commit/f024e40189ae9c042717d40c466724821e1262c1
+	and just hardcode its result.
+
 <<
 License: GPL2
 Homepage: https://nmap.org/
