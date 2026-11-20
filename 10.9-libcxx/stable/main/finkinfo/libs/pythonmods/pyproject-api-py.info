@@ -1,19 +1,21 @@
 # -*- coding: ascii; tab-width: 4 -*-
 Info4: <<
 Package: pyproject-api-py%type_pkg[python]
-Version: 1.9.0
+Version: 1.11.4
 Revision: 1
-Type: python (3.9 3.10)
+Type: python (3.10)
 Description: Python providing api to pyproject for tox
 License: BSD
 Homepage: https://pypi.org/project/pyproject-api
 Maintainer: Scott Hannahs <shannahs@users.sourceforge.net>
 
 Source: https://files.pythonhosted.org/packages/source/p/pyproject_api/pyproject_api-%v.tar.gz
-Source-Checksum: SHA256(7e8a9854b2dfb49454fae421cb86af43efbb2b2454e5646ffb7623540321ae6e)
+Source-Checksum: SHA256(42332ebb8e5e510a3a9ea498cedb5723134ddd46ddfe2d07693917b2ebea22a7)
 
 Depends: <<
-	python%type_pkg[python]
+	python%type_pkg[python],
+	hatchling-py%type_pkg[python],
+	hatch-vcs-py%type_pkg[python]
 <<
 BuildDepends: <<
 	bootstrap-modules-py%type_pkg[python],
